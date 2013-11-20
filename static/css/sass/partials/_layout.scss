@@ -1,0 +1,108 @@
+html,
+body {
+	font-family: $base-font-family;
+	height: 100%;
+	overflow: hidden;
+	-webkit-user-select: none;
+  	-moz-user-select: none;
+  	-ms-user-select: none;
+  	user-select: none;
+
+	h1, h2, h3, h4, h5, h6 {
+		font-family: $base-font-family;
+	}
+}
+
+header {
+	position: absolute;
+	height: 60px;
+	top: 0;
+	left: 0;
+	right: 0;
+	padding: 0 40px;
+
+	@media #{$screen-tablet} {
+		padding: 0 20px;
+	}
+}
+
+.content {
+	position: absolute;
+	top: 60px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 20px 40px;
+	background-color: #2e587c;
+	background: url(../img/header-bg.png) repeat-x top;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#2e587c), to(#073054));
+	background: -webkit-linear-gradient(top, #073054, #2e587c);
+	background: -moz-linear-gradient(top, #073054, #2e587c);
+	background: -ms-linear-gradient(top, #073054, #2e587c);
+	background: -o-linear-gradient(top, #073054, #2e587c);
+
+	@media #{$screen-tablet} {
+		padding: 20px;
+	}
+
+	#toolbar {
+		height: 70px;
+		margin-bottom: 20px;
+
+		@media #{$screen-tablet} {
+			display: none;
+		}
+	}
+
+	.content-wrapper {
+		position: absolute;
+		left: 40px;
+		right: 40px;
+		bottom: 20px;
+		top: 105px;
+
+		@media #{$screen-tablet} {
+			right: 0;
+			left: 0;
+			top: 20px;
+		}
+
+		> div {
+			border-radius: 6px;
+		}
+	
+		#map {
+			background: #AAA;
+			height: 100%;
+			left: 0;
+			position: absolute;
+			right: 365px;
+
+			@media #{$screen-tablet} {
+				right: 20px;
+				left: 20px;
+			}
+		}
+
+		#sidebar {
+			background: white;
+			height: 100%;
+			right: 0;
+			position: absolute;
+			width: 340px;
+
+			@media #{$screen-tablet} {
+				right: -340px;
+				border-radius: 6px 0 0 6px;
+				box-shadow: 0 0 10px rgba(0,0,0,0);
+
+				transition: all 0.5s;
+
+				&.active {
+					right: 0;
+					box-shadow: 0 0 10px rgba(0,0,0,0.5);
+				}
+			}
+		}
+	}
+}

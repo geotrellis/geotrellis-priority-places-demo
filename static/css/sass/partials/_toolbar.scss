@@ -1,0 +1,105 @@
+#toolbar {
+	> .tool {
+		padding: 12px 10px;
+		background-color: #52718c;
+		background: url(../img/btngroup-bg.png) repeat-x top;
+		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#21405a), to(#52718c));
+		background: -webkit-linear-gradient(top, #52718c, #21405a);
+		background: -moz-linear-gradient(top, #52718c, #21405a);
+		background: -ms-linear-gradient(top, #52718c, #21405a);
+		background: -o-linear-gradient(top, #52718c, #21405a);
+		box-shadow: 1px 1px 5px black;
+		color: white;
+		width: 94px;
+		border-radius: 6px;
+		height: 100%;
+		text-align: center;
+
+		&:hover {
+			background: #b2dcff;
+			box-shadow: 0 2px 0 rgba(0,0,0,0.25);
+			cursor: pointer;
+			color: #073054;
+		}
+
+		&.left {
+			float: left;
+			margin-right: 10px;
+
+			&:last-of-type {
+				margin-right: 0;
+			}
+		}
+		&.right {
+			float: right;
+			margin-left: 10px;
+
+			&:last-child {
+				margin-left: 0;
+			}
+		}
+		&.tool-lg {
+			width: 180px;
+		}
+
+		> .glyphicon {
+			font-size: 1.5em;
+		}
+		> .tool-title {
+			font-size: 0.75em;
+			font-weight: 700;
+			margin-top: 4px;
+		}
+	}
+
+	.slider {
+		width: 86% !important;
+		margin: 0 10px;
+	}
+
+	.tool-opacity {
+		> .tool-title {
+			text-align: left;
+			margin-bottom: 5px;
+			margin-top: 0;
+		}
+	}
+
+	.tool-ramp {
+		margin-right: 0 !important;
+
+		.ramp-img {
+			width: 100%;
+			margin-bottom: 5px;
+		}
+		.ramp-high {
+			font-size: 0.75em;
+			float: right;
+		}
+		.ramp-low {
+			font-size: 0.75em;
+			float: left;
+		}
+	}
+}
+
+.color-ramp-selector {
+	img {
+		float: left;
+		clear: both;
+		margin-bottom: 6px;
+		opacity: .5;
+
+		&:hover {
+			opacity: 1;
+			cursor: pointer;
+		}
+		&.active {
+			opacity: 1;
+		}
+
+		&:last-child {
+			margin-bottom: 10px;
+		}
+	}
+}

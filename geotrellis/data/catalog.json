@@ -1,0 +1,21 @@
+{
+ "catalog": "Catalog of Asheville data",
+ "stores": [
+  {
+   "store": "factors",
+   "params": {
+     "type": "fs",
+     "path": "data/factors",
+     "cacheAll": "yes"
+    }
+  },
+  {
+   "store": "layers",
+   "params": {
+     "type": "fs",
+     "path": "data/layers",
+     "cacheAll": "yes"
+    }
+  }
+ ]
+}

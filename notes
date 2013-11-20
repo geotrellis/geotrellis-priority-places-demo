@@ -1,0 +1,4 @@
+WMS layer with parcels:
+http://tomcatgis.ashevillenc.gov/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=coagis:bc_property&styles=&bbox=845633.391,625229.271,1055373.13,771961.267&width=512&height=358&srs=EPSG:2264&format=application/openlayers
+
+http://projects.bryanmcbride.com/leaflet/wms_info.html

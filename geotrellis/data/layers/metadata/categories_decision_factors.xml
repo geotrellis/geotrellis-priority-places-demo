@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<categories-decision-factors type="array">
+  <categories-decision-factor>
+    <category-id type="integer">1</category-id>
+    <decision-factor-id type="integer">2</decision-factor-id>
+    <id type="integer">50</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">1</category-id>
+    <decision-factor-id type="integer">4</decision-factor-id>
+    <id type="integer">51</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">1</category-id>
+    <decision-factor-id type="integer">6</decision-factor-id>
+    <id type="integer">52</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">1</category-id>
+    <decision-factor-id type="integer">7</decision-factor-id>
+    <id type="integer">53</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">1</category-id>
+    <decision-factor-id type="integer">9</decision-factor-id>
+    <id type="integer">54</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">1</category-id>
+    <decision-factor-id type="integer">15</decision-factor-id>
+    <id type="integer">55</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">10</category-id>
+    <decision-factor-id type="integer">2</decision-factor-id>
+    <id type="integer">57</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">10</category-id>
+    <decision-factor-id type="integer">4</decision-factor-id>
+    <id type="integer">58</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">10</category-id>
+    <decision-factor-id type="integer">15</decision-factor-id>
+    <id type="integer">3314850</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">3</category-id>
+    <decision-factor-id type="integer">5</decision-factor-id>
+    <id type="integer">3314851</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">3</category-id>
+    <decision-factor-id type="integer">8</decision-factor-id>
+    <id type="integer">3314852</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">3</category-id>
+    <decision-factor-id type="integer">10</decision-factor-id>
+    <id type="integer">3314853</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">7</category-id>
+    <decision-factor-id type="integer">16</decision-factor-id>
+    <id type="integer">3314856</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">7</category-id>
+    <decision-factor-id type="integer">17</decision-factor-id>
+    <id type="integer">3314857</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">7</category-id>
+    <decision-factor-id type="integer">18</decision-factor-id>
+    <id type="integer">3314858</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">7</category-id>
+    <decision-factor-id type="integer">19</decision-factor-id>
+    <id type="integer">3382497</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">9</category-id>
+    <decision-factor-id type="integer">20</decision-factor-id>
+    <id type="integer">3450148</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">9</category-id>
+    <decision-factor-id type="integer">22</decision-factor-id>
+    <id type="integer">3450151</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">1</category-id>
+    <decision-factor-id type="integer">1</decision-factor-id>
+    <id type="integer">3517811</id>
+  </categories-decision-factor>
+  <categories-decision-factor>
+    <category-id type="integer">10</category-id>
+    <decision-factor-id type="integer">1</decision-factor-id>
+    <id type="integer">3517812</id>
+  </categories-decision-factor>
+</categories-decision-factors>

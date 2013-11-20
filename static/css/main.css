@@ -1,0 +1,314 @@
+input[type="checkbox"].css-checkbox {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0; }
+  input[type="checkbox"].css-checkbox:checked + label.css-label {
+    background-position: 0 -20px; }
+  input[type="checkbox"].css-checkbox + label.css-label {
+    padding-left: 25px;
+    height: 20px;
+    display: inline-block;
+    line-height: 20px;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    font-size: 12px;
+    font-weight: 700;
+    vertical-align: middle;
+    cursor: pointer; }
+
+.css-label {
+  background-image: url(http://csscheckbox.com/checkboxes/web-two-style.png); }
+
+html,
+body {
+  font-family: "Open Sans";
+  height: 100%;
+  overflow: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+  html h1, html h2, html h3, html h4, html h5, html h6,
+  body h1,
+  body h2,
+  body h3,
+  body h4,
+  body h5,
+  body h6 {
+    font-family: "Open Sans"; }
+
+header {
+  position: absolute;
+  height: 60px;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0 40px; }
+  @media only screen and (max-width: 767px) {
+    header {
+      padding: 0 20px; } }
+
+.content {
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 40px;
+  background-color: #2e587c;
+  background: url(../img/header-bg.png) repeat-x top;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#2e587c), to(#073054));
+  background: -webkit-linear-gradient(top, #073054, #2e587c);
+  background: -moz-linear-gradient(top, #073054, #2e587c);
+  background: -ms-linear-gradient(top, #073054, #2e587c);
+  background: -o-linear-gradient(top, #073054, #2e587c); }
+  @media only screen and (max-width: 767px) {
+    .content {
+      padding: 20px; } }
+  .content #toolbar {
+    height: 70px;
+    margin-bottom: 20px; }
+    @media only screen and (max-width: 767px) {
+      .content #toolbar {
+        display: none; } }
+  .content .content-wrapper {
+    position: absolute;
+    left: 40px;
+    right: 40px;
+    bottom: 20px;
+    top: 105px; }
+    @media only screen and (max-width: 767px) {
+      .content .content-wrapper {
+        right: 0;
+        left: 0;
+        top: 20px; } }
+    .content .content-wrapper > div {
+      border-radius: 6px; }
+    .content .content-wrapper #map {
+      background: #AAA;
+      height: 100%;
+      left: 0;
+      position: absolute;
+      right: 365px; }
+      @media only screen and (max-width: 767px) {
+        .content .content-wrapper #map {
+          right: 20px;
+          left: 20px; } }
+    .content .content-wrapper #sidebar {
+      background: white;
+      height: 100%;
+      right: 0;
+      position: absolute;
+      width: 340px; }
+      @media only screen and (max-width: 767px) {
+        .content .content-wrapper #sidebar {
+          right: -340px;
+          border-radius: 6px 0 0 6px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0);
+          transition: all 0.5s; }
+          .content .content-wrapper #sidebar.active {
+            right: 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); } }
+
+header {
+  background: #5188cb; }
+  header h1 {
+    margin: 5px 0 0;
+    font-size: 1.5em;
+    line-height: 60px;
+    float: left;
+    color: white;
+    background: url(../images/logo@2x.png) no-repeat;
+    background-size: 100%;
+    width: 203px;
+    height: 50px;
+    text-indent: -9999px; }
+
+#toggle-sidebar {
+  float: right;
+  margin-top: 10px; }
+
+#toolbar > .tool {
+  padding: 12px 10px;
+  background-color: #52718c;
+  background: url(../img/btngroup-bg.png) repeat-x top;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#21405a), to(#52718c));
+  background: -webkit-linear-gradient(top, #52718c, #21405a);
+  background: -moz-linear-gradient(top, #52718c, #21405a);
+  background: -ms-linear-gradient(top, #52718c, #21405a);
+  background: -o-linear-gradient(top, #52718c, #21405a);
+  box-shadow: 1px 1px 5px black;
+  color: white;
+  width: 94px;
+  border-radius: 6px;
+  height: 100%;
+  text-align: center; }
+  #toolbar > .tool:hover {
+    background: #b2dcff;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    color: #073054; }
+  #toolbar > .tool.left {
+    float: left;
+    margin-right: 10px; }
+    #toolbar > .tool.left:last-of-type {
+      margin-right: 0; }
+  #toolbar > .tool.right {
+    float: right;
+    margin-left: 10px; }
+    #toolbar > .tool.right:last-child {
+      margin-left: 0; }
+  #toolbar > .tool.tool-lg {
+    width: 180px; }
+  #toolbar > .tool > .glyphicon {
+    font-size: 1.5em; }
+  #toolbar > .tool > .tool-title {
+    font-size: 0.75em;
+    font-weight: 700;
+    margin-top: 4px; }
+#toolbar .slider {
+  width: 86% !important;
+  margin: 0 10px; }
+#toolbar .tool-opacity > .tool-title {
+  text-align: left;
+  margin-bottom: 5px;
+  margin-top: 0; }
+#toolbar .tool-ramp {
+  margin-right: 0 !important; }
+  #toolbar .tool-ramp .ramp-img {
+    width: 100%;
+    margin-bottom: 5px; }
+  #toolbar .tool-ramp .ramp-high {
+    font-size: 0.75em;
+    float: right; }
+  #toolbar .tool-ramp .ramp-low {
+    font-size: 0.75em;
+    float: left; }
+
+.color-ramp-selector img {
+  float: left;
+  clear: both;
+  margin-bottom: 6px;
+  opacity: .5; }
+  .color-ramp-selector img:hover {
+    opacity: 1;
+    cursor: pointer; }
+  .color-ramp-selector img.active {
+    opacity: 1; }
+  .color-ramp-selector img:last-child {
+    margin-bottom: 10px; }
+
+#sidebar .scenarios {
+  padding: 10px;
+  border-bottom: 1px solid #f1f2f2;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 999;
+  background-color: #52718c;
+  background: url(../img/btngroup-bg.png) repeat-x top;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#21405a), to(#52718c));
+  background: -webkit-linear-gradient(top, #52718c, #21405a);
+  background: -moz-linear-gradient(top, #52718c, #21405a);
+  background: -ms-linear-gradient(top, #52718c, #21405a);
+  background: -o-linear-gradient(top, #52718c, #21405a);
+  border-radius: 6px 6px 0 0; }
+  #sidebar .scenarios > span {
+    display: inline-block;
+    color: white; }
+  #sidebar .scenarios > select {
+    display: inline-block;
+    width: 235px;
+    margin-left: 10px;
+    padding: 6px; }
+#sidebar .factors {
+  overflow: auto;
+  position: absolute;
+  bottom: 60px;
+  top: 55px;
+  left: 0;
+  right: 0; }
+  #sidebar .factors .factor {
+    margin: 10px 10px 10px 30px;
+    padding: 15px;
+    border-radius: 6px;
+    background-color: #f1f2f2;
+    opacity: 0.5;
+    position: relative;
+    width: 285px; }
+    #sidebar .factors .factor:hover {
+      background: #dae6f4; }
+    #sidebar .factors .factor.active {
+      opacity: 1; }
+    #sidebar .factors .factor .slider {
+      width: 190px;
+      margin-left: 25px; }
+      #sidebar .factors .factor .slider + .count {
+        display: inline-block;
+        font-weight: 700;
+        line-height: 14px;
+        font-size: 18px;
+        margin-left: 15px; }
+    #sidebar .factors .factor .factor-options {
+      position: absolute;
+      left: -20px;
+      top: 0; }
+      #sidebar .factors .factor .factor-options > a {
+        float: left;
+        clear: both;
+        cursor: pointer; }
+      #sidebar .factors .factor .factor-options > .tooltip {
+        margin-right: 15px;
+        min-width: 100px; }
+#sidebar .all-factors {
+  overflow: auto;
+  overflow-x: hidden;
+  position: absolute;
+  bottom: 60px;
+  top: 55px;
+  width: 100%;
+  right: 0;
+  background-color: white;
+  transition: width 0.5s; }
+  #sidebar .all-factors.hide-panel {
+    width: 0%; }
+  #sidebar .all-factors ul {
+    padding: 15px;
+    list-style: none;
+    width: 310px; }
+    #sidebar .all-factors ul ul {
+      height: auto;
+      transition: height 0.5s;
+      padding: 0;
+      margin: 10px 0 10px 23px; }
+    #sidebar .all-factors ul .collapsed > ul {
+      height: 0px;
+      overflow: hidden;
+      margin: 0; }
+    #sidebar .all-factors ul .collapsed .collapse-arrow {
+      opacity: 0.5; }
+    #sidebar .all-factors ul .collapse-arrow {
+      float: left;
+      margin-right: 5px;
+      margin-top: -2px;
+      font-size: 18px; }
+      #sidebar .all-factors ul .collapse-arrow:hover {
+        cursor: pointer;
+        opacity: 1; }
+#sidebar .manage {
+  position: absolute;
+  bottom: 0;
+  height: 60px;
+  left: 0;
+  right: 0;
+  padding: 13px;
+  border-top: 1px solid #f1f2f2;
+  box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.05); }
+
+.tooltip-inner {
+  padding: 8px 12px;
+  text-align: left; }

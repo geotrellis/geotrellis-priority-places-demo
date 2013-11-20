@@ -1,0 +1,21 @@
+header {
+	background: $bg-color;
+
+	h1 {
+		margin: 5px 0 0;
+		font-size: 1.5em;
+		line-height: 60px;
+		float: left;
+		color: white;
+		background: url(../images/logo@2x.png) no-repeat;
+		background-size: 100%;
+		width: 203px;
+		height: 50px;
+		text-indent: -9999px;
+	}
+}
+
+#toggle-sidebar {
+	float: right;
+	margin-top: 10px;
+}

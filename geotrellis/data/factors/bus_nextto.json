@@ -1,0 +1,16 @@
+{
+  "cellheight": 20.0, 
+  "cellwidth": 20.0, 
+  "cols": 1266, 
+  "datatype": "int8", 
+  "epsg": 3785, 
+  "layer": "bus_nextto", 
+  "rows": 1654, 
+  "type": "arg", 
+  "xmax": -9179452.41805008, 
+  "xmin": -9204772.41805008, 
+  "xskew": 0.0, 
+  "ymax": 4253702.1837475, 
+  "ymin": 4220622.1837475, 
+  "yskew": 0.0
+}

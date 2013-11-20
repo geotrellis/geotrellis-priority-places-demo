@@ -1,0 +1,6 @@
+{
+    "factors": [
+        { "id": "prox-regional-airport", "label": "Proximity to Regional Airport", "description": "Business owners may wish to be near the airport for easy access to flights for their employees, additionally certain industries require just-in-time air shipment of goods." },
+        { "id": "prox-transit-bus", "label": "Proximity to Asheville Bus Stop", "description": "Locating a business on transit encourages alternative modes of transportation for works." }
+    ]
+}
