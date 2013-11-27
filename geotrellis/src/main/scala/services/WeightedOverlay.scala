@@ -1,8 +1,11 @@
-package asheville
+package pps.services
+
+import pps._
 
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs._
 import geotrellis._
+import geotrellis.source._
 import geotrellis.raster.op._
 import geotrellis.statistics.op._
 import geotrellis.rest._
@@ -11,7 +14,10 @@ import geotrellis.raster._
 import geotrellis.feature._
 import geotrellis.feature.op.geometry.AsPolygonSet
 import geotrellis.feature.rasterize.{Rasterizer, Callback}
-import geotrellis.data.ColorRamps._
+import geotrellis.render.ColorRamps._
+
+import geotrellis.data.geojson._
+import geotrellis.util._
 
 import javax.ws.rs.core.Context
 
@@ -28,74 +34,65 @@ class WeightedOverlay {
   @GET
   def get(
     @DefaultValue(defaultBox) @QueryParam("bbox") bbox:String,
-    @DefaultValue("256") @QueryParam("cols") cols:String,
-    @DefaultValue("256") @QueryParam("rows") rows:String,
+    @DefaultValue("256") @QueryParam("cols") cols:Int,
+    @DefaultValue("256") @QueryParam("rows") rows:Int,
     @DefaultValue("wm_ForestedLands") @QueryParam("layers") layers:String,
     @DefaultValue("1") @QueryParam("weights") weights:String,
     @DefaultValue("") @QueryParam("mask") mask:String,
     @DefaultValue(defaultColors) @QueryParam("palette") palette:String,
     @DefaultValue("4") @QueryParam("colors") numColors:String,
-    @DefaultValue("image/png") @QueryParam("format") format:String,
     @DefaultValue("") @QueryParam("breaks") breaks:String,
     @DefaultValue("blue-to-red") @QueryParam("colorRamp") colorRampKey:String,
     @Context req:HttpServletRequest
   ):core.Response = {
-    val extentOp = string.ParseExtent(bbox)
-
-    val colsOp = string.ParseInt(cols)
-    val rowsOp = string.ParseInt(rows)
-
-    val reOp = extent.GetRasterExtent(extentOp, colsOp, rowsOp)
-
-    val layerOps = string.SplitOnComma(layers)
-    val weightOps = 
-      logic.ForEach(string.SplitOnComma(weights))(string.ParseInt(_))
-
-    val modelOp = Model(layerOps,weightOps,reOp)
-
-    val overlayOp = if(mask == "") { 
-      modelOp
-    } else {
-      val polyOp = io.LoadGeoJsonFeature(mask)
-      val feature = Main.server.run(polyOp)
-      val re = Main.server.run(reOp)
-      val reproj = Transformer.transform(feature,Projections.LatLong,Projections.WebMercator)
-      val polygon = Polygon(reproj.geom,0)
-
-      val maskRaster = Rasterizer.rasterizeWithValue(polygon,re) { x => 1 }
-      local.Mask(modelOp,maskRaster,NODATA,NODATA)
+    val extent = {
+      val Array(xmin,ymin,xmax,ymax) = bbox.split(",").map(_.toDouble)
+      Extent(xmin,ymin,xmax,ymax)
     }
+
+    val re = RasterExtent(extent,cols,rows)
+
+    val layerNames = layers.split(",")
+    val weightValues = weights.split(",").map(_.toInt)
+
+    val wo = 
+      layerNames.zip(weightValues)
+                .map { case (name,weight) =>
+                  RasterSource(name,re) * weight
+                 }
+                .reduce(_+_)
+
+  //   val overlayOp = if(mask == "") { 
+  //     modelOp
+  //   } else {
+  //     val poly = GeoJsonReader.parse(mask)
+  //     val polygon = Polygon(srs.LatLong.transform(poly.geom,srs.WebMercator),0)
+
+
+  //     // val reproj = Transformer.transform(feature,Projections.LatLong,Projections.WebMercator)
+  // //    val polygon = Polygon(reproj.geom,0)
+
+  //     val maskRaster = Rasterizer.rasterizeWithValue(polygon,re) { x => 1 }
+  //     local.Mask(modelOp,maskRaster,NODATA,NODATA)
+  //   }
  
-    val breaksOp = 
-      logic.ForEach(string.SplitOnComma(breaks))(string.ParseInt(_))
+    val breakValues = 
+      breaks.split(",").map(_.toInt)
     
-    val ramp = breaksOp.map { b => 
+    val ramp = {
       val cr = Colors.rampMap.getOrElse(colorRampKey,BlueToRed)
-      if(cr.toArray.length < b.length) { cr.interpolate(b.length) }
+      if(cr.toArray.length < breakValues.length) { cr.interpolate(breakValues.length) }
       else { cr }
     }
 
-    val png = Render.operation(overlayOp,ramp,breaksOp)
+    val png = 
+      wo.renderPng(ramp,breakValues)
 
-    Main.server.getResult(png) match {
+//overlayOp.renderPng(ramp,breaks)//Render.operation(overlayOp,ramp,breaksOp)
+
+    Main.server.getSource(png) match {
       case process.Complete(img,h) =>
-        format match {
-          case "info" => 
-            val histo = Main.server.run(stat.GetHistogram(overlayOp))
-            val t = Main.server.run(overlayOp).data.getType.toString
-            val ms = h.elapsedTime
-            val query = req.getQueryString
-            val url = "/wo?format=image/png&" + query
-            val html = InfoPage.infoPage(cols,rows,ms,url,
-s"""
-<p>$h</p>
-<p>${histo.toJSON}</p>
-<p>${t}</p>
-""")
-            OK(html)
-          case _ => 
-            OK.png(img)
-        }
+        OK.png(img)
       case process.Error(message,trace) =>
         ERROR(message + " " + trace)
              .allowCORS()

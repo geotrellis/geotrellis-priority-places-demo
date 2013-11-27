@@ -1,125 +1,129 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Asheville, NC - PriorityPlaces</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="css/vendor/bootstrap.css" rel="stylesheet" media="screen">
     <link href="css/vendor/bootstrap-slider.css" rel="stylesheet" media="screen">
+    <link href="css/vendor/leaflet.css" rel="stylesheet"/>
+    <link href="css/vendor/leaflet.draw.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
-</head>
-<body>
-	<header>
-		<h1>Asheville North Carolina</h1>
-		<div id="toggle-sidebar" class="visible-xs btn btn-primary">
-			<span class="glyphicon glyphicon-filter"></span>
-		</div>
-	</header>
-	<div class="content">
-		<div id="toolbar">
-			<div class="tool left">
-				<span class="glyphicon glyphicon-list"></span>
-				<div class="tool-title">Legend</div>
-			</div>
-			<div class="tool left">
-				<span class="glyphicon glyphicon-globe"></span>
-				<div class="tool-title">View Region</div>
-			</div>
-			<div class="tool left tool-address-search">
-				<span class="glyphicon glyphicon-search"></span>
-				<div class="tool-title">Find Address</div>
-			</div>
-			<div class="tool tool-lg left tool-opacity">
-				<div class="tool-title">Opacity</div>
-				<input type="text" class="opacity-slider" value="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="100" data-slider-tooltip="hide">
-			</div>
-			<div class="tool tool-lg left tool-ramp">
-				<img class="ramp-img" src="http://demo.geotrellis.com/chatta/img/ramps/yellow-to-red-heatmap.png">
-				<span class="ramp-low">Low</span>
-				<span class="ramp-high">High</span>
-			</div>
-			
-			<div class="tool right hidden-sm">
-				<span class="glyphicon glyphicon-cloud-download"></span>
-				<div class="tool-title">Export</div>
-			</div>
-			<div class="tool right hidden-sm">
-				<span class="glyphicon glyphicon-print"></span>
-				<div class="tool-title">Print</div>
-			</div>
-		</div>
-		<div class="content-wrapper">
-			<div id="map"></div>
-			<div id="sidebar">
-				<div class="scenarios">
-					<span>Scenarios:</span>
-					<select class="form-control">
-						<option>All Factors Template</option>
-						<option>Residential Potential Template</option>
-						<option>Custom Scenario</option>
-					</select>
-				</div>
-				<div class="factors"></div>
-				<div class="all-factors hide-panel"></div>				
-				<div class="manage">
-					<div class="manage-factors-btn btn btn-primary">Manage Decision Factors</div>
-					<div class="reset-factors-btn btn btn-default">Reset Factors</div>
-				</div>
-			</div>
-		</div>
+  </head>
+  <body>
+    <header>
+      <h1>Asheville North Carolina</h1>
+      <div id="toggle-sidebar" class="visible-xs btn btn-primary">
+	<span class="glyphicon glyphicon-filter"></span>
+      </div>
+    </header>
+    <div class="content">
+      <div id="toolbar">
+	<div class="tool left">
+	  <span class="glyphicon glyphicon-list"></span>
+	  <div class="tool-title">Legend</div>
 	</div>
+	<div class="tool left">
+	  <span class="glyphicon glyphicon-globe"></span>
+	  <div class="tool-title">View Region</div>
+	</div>
+	<div class="tool left tool-address-search">
+	  <span class="glyphicon glyphicon-search"></span>
+	  <div class="tool-title">Find Address</div>
+	</div>
+	<div class="tool tool-lg left tool-opacity">
+	  <div class="tool-title">Opacity</div>
+	  <input type="text" class="opacity-slider" value="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="100" data-slider-tooltip="hide">
+	</div>
+	<div class="tool tool-lg left tool-ramp">
+	  <img class="ramp-img" src="http://demo.geotrellis.com/chatta/img/ramps/yellow-to-red-heatmap.png">
+	  <span class="ramp-low">Low</span>
+	  <span class="ramp-high">High</span>
+	</div>
+	
+	<div class="tool right hidden-sm">
+	  <span class="glyphicon glyphicon-cloud-download"></span>
+	  <div class="tool-title">Export</div>
+	</div>
+	<div class="tool right hidden-sm">
+	  <span class="glyphicon glyphicon-print"></span>
+	  <div class="tool-title">Print</div>
+	</div>
+      </div>
+      <div class="content-wrapper">
+	<div id="map"></div>
+	<div id="sidebar">
+	  <div class="scenarios">
+	    <span>Scenarios:</span>
+	    <select class="form-control">
+	      <option>All Factors Template</option>
+	      <option>Residential Potential Template</option>
+	      <option>Custom Scenario</option>
+	    </select>
+	  </div>
+	  <div class="factors"></div>
+	  <div class="all-factors hide-panel"></div>				
+	  <div class="manage">
+	    <div class="manage-factors-btn btn btn-primary">Manage Decision Factors</div>
+	    <div class="reset-factors-btn btn btn-default">Reset Factors</div>
+	  </div>
+	</div>
+      </div>
+    </div>
 
-	<script type="text/x-handlebars-template" id="factor-template">
-		{{#each factors}}
-	        <div id="factor-{{id}}" class="factor active">
-				<input id="{{id}}-checkbox" class="css-checkbox" type="checkbox" checked />
-				<label for="{{id}}-checkbox" class="css-label">{{label}}</label>
+    <script type="text/x-handlebars-template" id="factor-template">
+      <div id="layer-{{id}}" class="factor active">
+	<input id="{{id}}-checkbox" class="css-checkbox" type="checkbox" checked />
+	<label for="{{id}}-checkbox" class="css-label">{{name}}</label>
 
-				<input type="text" class="slider" value="" data-slider-min="-5" data-slider-max="5" data-slider-step="1" data-slider-value="0.01" data-slider-tooltip="hide">
-				<div class="count">0</div>
+	<input type="text" class="slider" value="" data-slider-min="-5" data-slider-max="5" data-slider-step="1" data-slider-value="0.01" data-slider-tooltip="hide">
+	<div class="count">0</div>
 
-				<div class="factor-options">
-					<a class="factor-remove"><span class="glyphicon glyphicon-remove-sign"></span></a>
-					<a class="factor-info" data-toggle="tooltip" title="{{description}}"><span class="glyphicon glyphicon-question-sign"></span></a>
-				</div>
-			</div>
-		{{else}}
-  				<li>No factors found :(</li>
-		{{/each}}
+	<div class="factor-options">
+	  <a class="factor-remove"><span class="glyphicon glyphicon-remove-sign"></span></a>
+	  <a class="factor-info" data-toggle="tooltip" title="{{description}}"><span class="glyphicon glyphicon-question-sign"></span></a>
+	</div>
+      </div>
+    </script>
+
+    <script type="text/x-handlebars-template" id="factor-empty-template">
+      <li>Please choose factors.</li>
     </script>
 
     <script type="text/x-handlebars-template" id="all-factors-template">
-    	<ul>
-    		{{#each categories}}
-				<li id="{{id}}" class="collapsed">
-					<div class="collapse-arrow">
-						<span class="glyphicon glyphicon-collapse-up"></span>
-					</div>
-					<input id="{{id}}-checkbox" class="css-checkbox" type="checkbox" checked />
-					<label for="{{id}}-checkbox" class="css-label">{{label}}</label>
-					{{#if factors}}
-						<ul>
-							{{#each factors}}
-							<li>
-								<input id="{{key}}-checkbox" class="css-checkbox" type="checkbox" checked />
-								<label for="{{key}}-checkbox" class="css-label">{{this}}</label>
-							</li>
-							{{/each}}
-						</ul>
-					{{/if}}
-				</li>
-			{{else}}
-  				<li>No factors found :(</li>
-			{{/each}}
-		</ul>
+      <ul>
+    	{{#each categories}}
+	<li id="{{name}}" class="collapsed">
+	  <div class="collapse-arrow">
+	    <span class="glyphicon glyphicon-collapse-up"></span>
+	  </div>
+	  <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
+	  <label for="{{name}}-checkbox" class="css-label">{{name}}</label>
+	  {{#if layers}}
+	  <ul>
+	    {{#each layers}}
+	    <li>
+	      <input id="{{layer}}-checkbox" class="css-checkbox" type="checkbox" checked />
+	      <label for="{{layer}}-checkbox" class="css-label">{{name}}</label>
+	    </li>
+	    {{/each}}
+	  </ul>
+	  {{/if}}
+	</li>
+	{{else}}
+  	<li>No categories found.</li>
+	{{/each}}
+      </ul>
     </script>
 
     <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/vendor/leaflet-src.js"></script>
+    <script src="js/vendor/leaflet.draw.js"></script>
     <script src="js/vendor/handlebars.js"></script>
     <script src="js/vendor/underscore.js"></script>
     <script src="js/vendor/bootstrap.min.js"></script>
     <script src="js/vendor/bootstrap-slider.js"></script>
     <script src="js/app.js"></script>
-</body>
+  </body>
 </html>

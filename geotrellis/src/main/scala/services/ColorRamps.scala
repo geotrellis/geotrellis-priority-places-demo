@@ -1,4 +1,4 @@
-package asheville
+package pps.services
 
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.{GET, POST, Path, Consumes, DefaultValue, QueryParam}
@@ -6,7 +6,7 @@ import javax.ws.rs._
 import javax.ws.rs.core.{Response, Context, MediaType, MultivaluedMap}
 import geotrellis._
 import geotrellis.rest._
-import geotrellis.data.ColorRamps
+import geotrellis.render._
 
 import scala.collection.JavaConversions._
 

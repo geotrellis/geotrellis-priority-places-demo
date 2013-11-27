@@ -1,21 +1,23 @@
 import AssemblyKeys._
 
-name := "GeoTrellis Tutorial Project"
+name := "Priority Places"
 
-scalaVersion := "2.10.0"
+scalaVersion := "2.10.3"
 
-resolvers += Resolver.sonatypeRepo("snapshots")
-
-resolvers +=       "Geotools" at "http://download.osgeo.org/webdav/geotools/"
+resolvers ++=  Seq( 
+  "Geotools" at "http://download.osgeo.org/webdav/geotools/",
+  "spray repo" at "http://repo.spray.io",
+  Resolver.sonatypeRepo("snapshots")
+)
 
 libraryDependencies ++= Seq(
-  "com.azavea.geotrellis" %% "geotrellis" % "0.8.2-RC2",
-  "com.azavea.geotrellis" %% "geotrellis-server" % "0.8.2-RC2",
-  "org.geotools" % "gt-main" % "8.0-M4",
-  "org.geotools" % "gt-jdbc" % "8.0-M4",
-  "org.geotools.jdbc" % "gt-jdbc-postgis" % "8.0-M4",
-  "org.geotools" % "gt-coverage" % "8.0-M4",
-  "org.geotools" % "gt-coveragetools" % "8.0-M4"
+  "com.azavea.geotrellis" %% "geotrellis" % "0.9.0-SNAPSHOT",
+  "com.azavea.geotrellis" %% "geotrellis-server" % "0.9.0-SNAPSHOT",
+  "io.spray" % "spray-routing" % "1.2-RC4",
+  "io.spray" % "spray-can" % "1.2-RC4",
+  "org.geotools" % "gt-main" % "8.0-M4"
+  // "org.geotools" % "gt-coverage" % "8.0-M4",
+  // "org.geotools" % "gt-coveragetools" % "8.0-M4"
 )
 
 
@@ -31,3 +33,5 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) {
     case _ => MergeStrategy.first
   }
 }
+
+seq(Revolver.settings: _*)

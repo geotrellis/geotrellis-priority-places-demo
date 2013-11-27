@@ -1,4 +1,4 @@
-package asheville
+package pps.services
 
 import geotrellis.rest._
 

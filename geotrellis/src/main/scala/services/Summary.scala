@@ -1,4 +1,6 @@
-package asheville
+package pps.services
+
+import pps._
 
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.{GET, POST, Path, Consumes, DefaultValue, QueryParam}

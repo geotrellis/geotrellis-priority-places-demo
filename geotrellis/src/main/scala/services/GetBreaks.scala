@@ -1,8 +1,11 @@
-package asheville
+package pps.services
+
+import pps._
 
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs._
 import geotrellis._
+import geotrellis.source._
 import geotrellis.raster.op._
 import geotrellis.statistics.op._
 import geotrellis.rest._
@@ -10,7 +13,6 @@ import geotrellis.rest.op._
 import geotrellis.raster._
 import geotrellis.feature.op.geometry.AsPolygonSet
 import geotrellis.feature.rasterize.{Rasterizer, Callback}
-import geotrellis.data.ColorRamp
 
 import javax.ws.rs.core.Context
 
@@ -30,34 +32,45 @@ class GetBreaks {
   @GET
   def get(
     @DefaultValue(defaultBox) @QueryParam("bbox") bbox:String,
-    @DefaultValue("256") @QueryParam("cols") cols:String,
-    @DefaultValue("256") @QueryParam("rows") rows:String,
+    @DefaultValue("256") @QueryParam("cols") cols:Int,
+    @DefaultValue("256") @QueryParam("rows") rows:Int,
     @DefaultValue("wm_ForestedLands") @QueryParam("layers") layers:String,
     @DefaultValue("1") @QueryParam("weights") weights:String,
     @DefaultValue("") @QueryParam("mask") mask:String,
-    @DefaultValue("10") @QueryParam("numBreaks") numBreaks:String,
+    @DefaultValue("10") @QueryParam("numBreaks") numBreaks:Int,
     @Context req:HttpServletRequest
   ):core.Response = {
-    println(s"$weights\n$layers")
-    val extentOp = string.ParseExtent(bbox)
+    println("HERE")
+    val extent = {
+      val Array(xmin,ymin,xmax,ymax) = bbox.split(",").map(_.toDouble)
+      Extent(xmin,ymin,xmax,ymax)
+    }
+
+    val re = RasterExtent(extent,cols,rows)
+
+    val layerNames = layers.split(",")
+    val weightValues = weights.split(",").map(_.toInt)
+
+    val breaks = 
+      layerNames
+        .zip(weightValues)
+        .map { case (name,weight) =>
+          RasterSource(name,re) * weight
+         }
+        .reduce(_+_)
+        .histogram
+        .converge
+        .map(_.getQuantileBreaks(numBreaks))
+        .map { breaks =>
+          val breaksArray = breaks.mkString("[", ",", "]")
+          s"""{ "classBreaks" : $breaksArray }"""
+        }
+
+
+    // val classBreaks = stat.GetClassBreaks(histo, numBreaksOp)
+//    val op = ClassBreaksToJson(classBreaks)
     
-    val colsOp = string.ParseInt(cols)
-    val rowsOp = string.ParseInt(rows)
-
-    val reOp = extent.GetRasterExtent(extentOp, colsOp, rowsOp)
-
-    val layerOps = string.SplitOnComma(layers)
-    val weightOps = 
-      logic.ForEach(string.SplitOnComma(weights))(string.ParseInt(_))
-
-    val overlay = Model(layerOps,weightOps,reOp)
-
-    val numBreaksOp = string.ParseInt(numBreaks)
-    val histo = stat.GetHistogram(overlay)
-    val classBreaks = stat.GetClassBreaks(histo, numBreaksOp)
-    val op = ClassBreaksToJson(classBreaks)
-    
-    Main.server.getResult(op) match {
+    Main.server.getSource(breaks) match {
       case process.Complete(json,h) =>
         OK.json(json)
           .allowCORS()
