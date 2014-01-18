@@ -11,13 +11,11 @@ resolvers ++=  Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.azavea.geotrellis" %% "geotrellis" % "0.9.0-SNAPSHOT",
-  "com.azavea.geotrellis" %% "geotrellis-server" % "0.9.0-SNAPSHOT",
+  "com.azavea.geotrellis" %% "geotrellis" % "0.9.0-RC3",
+  "com.azavea.geotrellis" %% "geotrellis-services" % "0.9.0-RC3",
   "io.spray" % "spray-routing" % "1.2-RC4",
   "io.spray" % "spray-can" % "1.2-RC4",
   "org.geotools" % "gt-main" % "8.0-M4"
-  // "org.geotools" % "gt-coverage" % "8.0-M4",
-  // "org.geotools" % "gt-coveragetools" % "8.0-M4"
 )
 
 
