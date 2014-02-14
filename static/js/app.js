@@ -225,6 +225,21 @@ jQuery(function ($) {
                     m.setView(m.getBounds(),m.getZoom());
                 });
 
+                var parcelUrl = "http://tomcatgis.ashevillenc.gov/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=coagis:bc_property&styles=&bbox=845633.391,625229.271,1055373.13,771961.267&width=512&height=358&srs=EPSG:2264&format=application/openlayers"
+                var parcelLayer = 
+                    new L.TileLayer.WMS("http://tomcatgis.ashevillenc.gov/geoserver/wms", {
+                        layers: "coagis:bc_property",
+                        srs: "EPSG:2264",
+                        transparent: "true",
+                        format: "image/png"
+                    })
+
+                parcelLayer.addTo(m);
+                m.lc.addOverlay(parcelLayer);
+
+                var getFeatureInfo = "http://tomcatgis.ashevillenc.gov/geoserver/wms?REQUEST=GetFeatureInfo&EXCEPTIONS=application%2Fvnd.ogc.se_xml&BBOX=910345.362131%2C666979.970093%2C911977.553093%2C668119.303392&X=185&Y=118&INFO_FORMAT=text%2Fhtml&QUERY_LAYERS=coagis%3Abc_property&FEATURE_COUNT=50&Srs=EPSG%3A2264&Layers=coagis%3Abc_property&Styles=&WIDTH=510&HEIGHT=356&format=image%2Fpng"
+
+
                 return m;
             })();
         },
