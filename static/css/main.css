@@ -225,6 +225,31 @@ header {
 .leaflet-control-layers input[type="checkbox"] {
   margin-right: 4px; }
 
+.leaflet-popup a.leaflet-popup-close-button {
+  padding: 8px 20px 0 0; }
+.leaflet-popup .leaflet-popup-content-wrapper {
+  border-radius: 6px; }
+  .leaflet-popup .leaflet-popup-content-wrapper .leaflet-popup-content {
+    min-width: 250px;
+    margin: 15px 15px; }
+  .leaflet-popup .leaflet-popup-content-wrapper .parcel-details-header {
+    margin: -16px -16px 0;
+    background: #5188cb;
+    height: 34px;
+    border-radius: 6px 6px 0 0; }
+    .leaflet-popup .leaflet-popup-content-wrapper .parcel-details-header h5 {
+      margin: 0;
+      padding: 10px;
+      color: white;
+      font-size: 12px;
+      font-weight: 700; }
+  .leaflet-popup .leaflet-popup-content-wrapper .parcel-details-body {
+    max-height: 180px;
+    overflow-y: auto;
+    margin: 0 -16px; }
+    .leaflet-popup .leaflet-popup-content-wrapper .parcel-details-body table {
+      margin: 0; }
+
 #sidebar .scenarios {
   padding: 10px;
   border-bottom: 1px solid #f1f2f2;

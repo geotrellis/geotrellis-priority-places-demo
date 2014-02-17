@@ -15,3 +15,41 @@
         margin-right: 4px;
     }
 }
+
+.leaflet-popup {
+    
+    a.leaflet-popup-close-button {
+        padding: 8px 20px 0 0;
+    }
+    .leaflet-popup-content-wrapper {
+        border-radius: 6px;
+
+        .leaflet-popup-content {
+            min-width: 250px;
+            margin: 15px 15px;
+        }
+        .parcel-details-header {
+            margin: -16px -16px 0;
+            background: $bg-color;
+            height: 34px;
+            border-radius: 6px 6px 0 0;            
+
+            h5 {
+                margin: 0;
+                padding: 10px;
+                color: white;
+                font-size: 12px;
+                font-weight: 700;
+            }
+        }
+        .parcel-details-body {
+            max-height: 180px;
+            overflow-y: auto;
+            margin: 0 -16px;
+
+            table {
+                margin: 0;
+            }
+        }
+    }
+}
