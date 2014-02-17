@@ -29,7 +29,7 @@ PP.App = (function() {
             initialize : function(ls,cats) {
                 layers = ls;
                 var layersMap = 
-                    _.object(_.map(App.factors, function(layer) {
+                    _.object(_.map(ls, function(layer) {
                         return [layer.id, layer]
                     }));
 
@@ -133,10 +133,10 @@ PP.App = (function() {
         map = L.map('map').setView(viewCoords, 11);
         selected.addTo(map);
 
-        map.lc = L.control.layers(baseLayers).addTo(m);
+        map.lc = L.control.layers(baseLayers).addTo(map);
 
-        map.resize(function() {
-            m.setView(m.getBounds(),m.getZoom());
+        $('#map').resize(function() {
+            map.setView(map.getBounds(),map.getZoom());
         });
 
         var parcelUrl = "http://tomcatgis.ashevillenc.gov/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=coagis:bc_property&styles=&bbox=845633.391,625229.271,1055373.13,771961.267&width=512&height=358&srs=EPSG:2264&format=application/openlayers"
@@ -225,8 +225,8 @@ PP.App = (function() {
                 var layerStrings = getLayerStrings();
                 if(layerStrings.layers == "") { 
                     if (WOLayer) {
-                        App.map.lc.removeLayer(WOLayer);
-                        App.map.removeLayer(WOLayer);
+                        map.lc.removeLayer(WOLayer);
+                        map.removeLayer(WOLayer);
                         WOLayer = null;
                     }
                     return;
@@ -247,8 +247,8 @@ PP.App = (function() {
                         breaks = r.classBreaks;
 
                         if (WOLayer) {
-                            App.map.lc.removeLayer(WOLayer);
-                            App.map.removeLayer(WOLayer);
+                            map.lc.removeLayer(WOLayer);
+                            map.removeLayer(WOLayer);
                         };
 
                         // Call again in case things have changed.
@@ -266,14 +266,14 @@ PP.App = (function() {
                             //                                    transparent: true,
                             layers: layerStrings.layers,
                             weights: layerStrings.weights,
-                            colorRamp: App.model.getColorRamp(),
+                            colorRamp: model.getColorRamp(),
                             //                                    mask: geoJson,
                             attribution: 'Azavea'
                         })
 
                         WOLayer.setOpacity(opacity);
-                        WOLayer.addTo(App.map);
-                        App.map.lc.addOverlay(WOLayer, "Suitability Map");
+                        WOLayer.addTo(map);
+                        map.lc.addOverlay(WOLayer, "Suitability Map");
                     }
                 });
         };
@@ -281,7 +281,7 @@ PP.App = (function() {
         return {
             init : function() {
                 model.onChange(function () {
-                    App.weightedOverlay.update();
+                    weightedOverlay.update();
                 });
             },
             
@@ -329,8 +329,8 @@ PP.App = (function() {
                     updateLayerWeight(e);
                 });
                 $container.find('.factor-remove').on('click', function(e) {
-                    App.model.removeActiveLayer(layer);
-                    App.removeFactor(e);
+                    model.removeActiveLayer(layer);
+                    removeFactor(e);
                 });
             });
         };
@@ -347,7 +347,7 @@ PP.App = (function() {
 
         var toggleFactorsPanel = function() {
             $allFactorsPanel.toggleClass('hide-panel');
-            App.$manageFactorsBtn.toggleClass('active');
+            $manageFactorsBtn.toggleClass('active');
         };
 
         var toggleFactorCheckbox = function() {
@@ -375,7 +375,7 @@ PP.App = (function() {
         var updateOpacity = function(e) {
             // TODO: Change opacity for map layers
             // e.value gives you the value of the slider (0 - 100)
-            App.weightedOverlay.setOpacity(e.value);
+            weightedOverlay.setOpacity(e.value);
         };
 
         var updateColorRamp = function() {
