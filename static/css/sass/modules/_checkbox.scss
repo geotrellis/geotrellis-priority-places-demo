@@ -18,13 +18,24 @@ input[type="checkbox"].css-checkbox {
 		padding-left: 25px;
 		height: 20px; 
 		display: inline-block;
-		line-height: 20px;
 		background-repeat: no-repeat;
 		background-position: 0 0;
-		font-size: 12px;
-		font-weight: 700;
-		vertical-align: middle;
+		vertical-align: top;
 		cursor: pointer;
+
+        & + span {
+            min-height: 20px;
+            display: inline-block;
+            width: 230px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 16px;
+            margin-bottom: 3px;
+            
+            #tool-legend-popover & {
+                width: 195px;
+            }
+        }
 	}
 }
 

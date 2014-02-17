@@ -153,7 +153,8 @@ jQuery(function ($) {
 
             var $findAddressHTML = '' +
                 '<div class="find-address-container">' +
-                '   <label for="find-address-search">Find Address</label>' +
+                '   <button class="close">&times;</button>' +
+                '   <h4>Find Address</h4>' +
                 '   <div class="input-group">' +
                 '       <input type="text" class="form-control" id="find-address-search" placeholder="Search by address">' + 
                 '       <span class="input-group-btn">' +
@@ -236,6 +237,43 @@ jQuery(function ($) {
 
                 parcelLayer.addTo(m);
                 m.lc.addOverlay(parcelLayer);
+
+                // Just a sample popup for parcel details
+                var popup = L.popup();
+                var parcelDetailContent = '' +
+                '<div class="parcel-details-container">' +
+                '    <div class="parcel-details-header">' +
+                '        <h5>Sample Address</h5>' +
+                '    </div>' +
+                '    <div class="parcel-details-body">' +
+                '        <table class="table table-hover">' +
+                '            <tr>' +
+                '                <td>Pin Num</td> <td>3252622353254</td>' +
+                '            </tr>' +
+                '            <tr>' +
+                '                <td>Pin Num</td> <td>3252622353254</td>' +
+                '            </tr>' +
+                '            <tr>' +
+                '                <td>Pin Num</td> <td>3252622353254</td>' +
+                '            </tr>' +
+                '            <tr>' +
+                '                <td>Pin Num</td> <td>3252622353254</td>' +
+                '            </tr>' +
+                '            <tr>' +
+                '                <td>Pin Num</td> <td>3252622353254</td>' +
+                '            </tr>' +
+                '            <tr>' +
+                '                <td>Pin Num</td> <td>3252622353254</td>' +
+                '            </tr>' +
+                '        </table>' +
+                '    </div>' +
+                '</div>';
+
+                function parcelDetails(e) {
+                    popup.setLatLng(e.latlng).setContent(parcelDetailContent).openOn(m);
+                }
+
+                m.on('click', parcelDetails);
 
                 var getFeatureInfo = "http://tomcatgis.ashevillenc.gov/geoserver/wms?REQUEST=GetFeatureInfo&EXCEPTIONS=application%2Fvnd.ogc.se_xml&BBOX=910345.362131%2C666979.970093%2C911977.553093%2C668119.303392&X=185&Y=118&INFO_FORMAT=text%2Fhtml&QUERY_LAYERS=coagis%3Abc_property&FEATURE_COUNT=50&Srs=EPSG%3A2264&Layers=coagis%3Abc_property&Styles=&WIDTH=510&HEIGHT=356&format=image%2Fpng"
 

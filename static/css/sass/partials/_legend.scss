@@ -1,0 +1,75 @@
+// Partials: Legend
+
+#tool-legend-popover {
+    display: block;
+    top: 90px;
+    left: 40px;
+    bottom: 20px;
+    width: 276px;
+
+    @media #{$screen-tablet} {
+		display: none;
+	}
+
+    > .arrow {
+        left: 45px;
+    }
+    
+    > .popover-content {
+        > ul {
+    		overflow-x: auto;
+            position: absolute;
+            bottom: 0;
+            margin-bottom: 0;
+            top: 40px;
+            margin-top: 15px;
+            list-style: none;
+            padding: 0;
+            width: 259px;
+    
+            ul {
+    			height: auto;
+    			transition: height 0.5s;
+    			padding: 0;
+    			margin: 5px 0 15px 23px;
+                width: auto;
+    
+                > li {
+                    font-size: 12px;
+                    margin-bottom: 3px;
+                }
+                .legend-icon {
+                    width: 12px;
+                    height: 12px;
+                    display: inline-block;
+                    background: #f1f2f2;
+                    margin-right: 3px;
+                    top: 2px;
+                    position: relative;
+                }
+    		}
+    
+    		.collapsed {
+    			> ul {
+    				height: 0px;
+    				overflow: hidden;
+    				margin: 0;
+    			}
+    			.collapse-arrow {
+    				opacity: 0.5;
+    			}
+    		}
+    		.collapse-arrow {
+    			float: left;
+    			margin-right: 5px;
+    			margin-top: -2px;
+    			font-size: 18px;
+    
+    			&:hover {
+    				cursor: pointer;
+    				opacity: 1;
+    			}
+    		}
+        }
+	}
+}
