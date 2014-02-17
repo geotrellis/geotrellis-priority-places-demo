@@ -5,10 +5,13 @@ project/plugins/target
 project/target
 target
 .ensime
+.DS_Store
 TAGS
 \#*#
 *~
 .#*
 .lib
+.tmp
+.sass-cache
 *.aux.xml
 *.jar
