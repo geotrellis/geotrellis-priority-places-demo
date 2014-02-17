@@ -153,7 +153,8 @@ jQuery(function ($) {
 
             var $findAddressHTML = '' +
                 '<div class="find-address-container">' +
-                '   <label for="find-address-search">Find Address</label>' +
+                '   <button class="close">&times;</button>' +
+                '   <h4>Find Address</h4>' +
                 '   <div class="input-group">' +
                 '       <input type="text" class="form-control" id="find-address-search" placeholder="Search by address">' + 
                 '       <span class="input-group-btn">' +

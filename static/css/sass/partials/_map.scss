@@ -1,0 +1,17 @@
+// Partials: Map
+
+.leaflet-control-layers {
+    
+    &.leaflet-control-layers-expanded {
+        padding: 10px 15px;
+    }
+
+    .leaflet-control-layers-separator {
+        margin: 10px -15px 8px -15px;
+    }
+
+    input[type="radio"], 
+    input[type="checkbox"] {
+        margin-right: 4px;
+    }
+}

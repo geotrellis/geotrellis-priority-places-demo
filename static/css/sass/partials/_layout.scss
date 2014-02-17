@@ -90,6 +90,7 @@ header {
 			right: 0;
 			position: absolute;
 			width: 340px;
+            z-index: 1009;
 
 			@media #{$screen-tablet} {
 				right: -340px;
