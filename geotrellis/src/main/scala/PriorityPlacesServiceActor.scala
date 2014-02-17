@@ -29,7 +29,7 @@ class PriorityPlacesServiceActor extends Actor with PriorityPlacesService {
 trait PriorityPlacesService extends HttpService {
   implicit def executionContext = actorRefFactory.dispatcher
 
-  val directoryName = "/home/rob/proj/pp/priority-places/static/"
+  val directoryName = "../static/"
 
   val serviceRoute = {
     get {
