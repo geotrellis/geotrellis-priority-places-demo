@@ -1,7 +1,8 @@
 var PP = PP || {};
 
 PP.Constants = {
-    boundingBox : "-9222891.832889367,4212750.376909204,-9153945.633376136,4263045.941520849"
+    boundingBox : "-9222891.832889367,4212750.376909204,-9153945.633376136,4263045.941520849",
+    defaultOpacity : 0.9
 }
 
 PP.App = (function() {
@@ -151,6 +152,43 @@ PP.App = (function() {
         parcelLayer.addTo(map);
         map.lc.addOverlay(parcelLayer);
 
+        // Just a sample popup for parcel details
+        var popup = L.popup();
+        var parcelDetailContent = '' +
+            '<div class="parcel-details-container">' +
+            '    <div class="parcel-details-header">' +
+            '        <h5>Sample Address</h5>' +
+            '    </div>' +
+            '    <div class="parcel-details-body">' +
+            '        <table class="table table-hover">' +
+            '            <tr>' +
+            '                <td>Pin Num</td> <td>3252622353254</td>' +
+            '            </tr>' +
+            '            <tr>' +
+            '                <td>Pin Num</td> <td>3252622353254</td>' +
+            '            </tr>' +
+            '            <tr>' +
+            '                <td>Pin Num</td> <td>3252622353254</td>' +
+            '            </tr>' +
+            '            <tr>' +
+            '                <td>Pin Num</td> <td>3252622353254</td>' +
+            '            </tr>' +
+            '            <tr>' +
+            '                <td>Pin Num</td> <td>3252622353254</td>' +
+            '            </tr>' +
+            '            <tr>' +
+            '                <td>Pin Num</td> <td>3252622353254</td>' +
+            '            </tr>' +
+            '        </table>' +
+            '    </div>' +
+            '</div>';
+
+        function parcelDetails(e) {
+            popup.setLatLng(e.latlng).setContent(parcelDetailContent).openOn(map);
+        }
+
+        map.on('click', parcelDetails);
+
         // var getFeatureInfo = "http://tomcatgis.ashevillenc.gov/geoserver/wms?REQUEST=GetFeatureInfo&EXCEPTIONS=application%2Fvnd.ogc.se_xml&BBOX=910345.362131%2C666979.970093%2C911977.553093%2C668119.303392&X=185&Y=118&INFO_FORMAT=text%2Fhtml&QUERY_LAYERS=coagis%3Abc_property&FEATURE_COUNT=50&Srs=EPSG%3A2264&Layers=coagis%3Abc_property&Styles=&WIDTH=510&HEIGHT=356&format=image%2Fpng"
 
         // var geoServerLayers =
@@ -200,7 +238,7 @@ PP.App = (function() {
         var breaks = null;
 
         var WOLayer = null;
-        var opacity = 0.9;
+        var opacity = PP.Constants.defaultOpacity;
         var numBreaks = 10;
 
         var getLayerStrings = function() {
@@ -287,7 +325,9 @@ PP.App = (function() {
             
             setOpacity: function(v) {
                 opacity = v;
-                WOLayer.setOpacity(v);
+                if(WOLayer) { WOLayer.setOpacity(opacity); }
+                else { console.log("NO OVERLAY"); };
+                
             },
 
             getOpacity: function() { return opacity ; },
@@ -375,7 +415,7 @@ PP.App = (function() {
         var updateOpacity = function(e) {
             // TODO: Change opacity for map layers
             // e.value gives you the value of the slider (0 - 100)
-            weightedOverlay.setOpacity(e.value);
+            weightedOverlay.setOpacity(e.value / 100.0);
         };
 
         var updateColorRamp = function() {
@@ -420,7 +460,7 @@ PP.App = (function() {
             // Inputs
             $sidebar.on('change', '.css-checkbox', toggleFactorCheckbox);
             $scenarioSelect.on('change', updateScenario);
-            $opacitySlider.slider().on('slide', updateOpacity);
+            $opacitySlider.slider({ value: PP.Constants.defaultOpacity*100.0 }).on('slide', updateOpacity);
             $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
             $toolColorRamps.popover({ placement: 'bottom', container: '.content', html: true, content: $colorRampHTML });
             toolFindAddress.popover({ placement: 'bottom', container: '.content', html: true, content: $findAddressHTML });

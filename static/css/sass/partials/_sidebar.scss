@@ -14,6 +14,10 @@
 		background: -o-linear-gradient(top, #52718c, #21405a);
 		border-radius: 6px 6px 0 0;
 
+        @media #{$screen-tablet} {
+		    border-radius: 6px 0 0 0;
+        }
+
 		> span {
 			display: inline-block;
 			color: white;
