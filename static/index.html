@@ -20,7 +20,7 @@
     </header>
     <div class="content">
         <div id="toolbar">
-            <div class="tool left tool-legend active">
+            <div class="tool left tool-legend">
                 <span class="glyphicon glyphicon-list"></span>
                 <div class="tool-title">Legend</div>
             </div>
@@ -69,22 +69,13 @@
                 </div>
             </div>
         </div>
-        <div id="tool-legend-popover" class="popover fade bottom in">
+        <div id="tool-legend-popover" class="popover fade bottom">
             <div class="arrow"></div>
             <div class="popover-content">
-                <button class="close">&times;</button>
                 <h4>Toggle map layers</h4>
                 <ul>
                     <li id="{{name}}" class="">
-                        <div class="collapse-arrow">
-                            <span class="glyphicon glyphicon-collapse-down"></span>
-                        </div>
-                        <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
-                        <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span>
-                        <ul>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                        </ul>
+                        
                     </li>
                     <li id="{{name}}" class="">
                         <div class="collapse-arrow">
@@ -157,10 +148,7 @@
                 {{#if layers}}
                 <ul>
                     {{#each layers}}
-                    <li>
-                        <input id="{{layer}}-checkbox" class="css-checkbox" type="checkbox" checked />
-                        <label for="{{layer}}-checkbox" class="css-label">{{name}}</label>
-                    </li>
+                    <li><span class="legend-icon"></span> {{name}}</li>
                     {{/each}}
                 </ul>
                 {{/if}}
@@ -169,6 +157,30 @@
             <li>No categories found.</li>
             {{/each}}
         </ul>
+    </script>
+
+    <script type="text/x-handlebars-template" id="legend-template">
+	    {{#each legend}}
+        <li id="{{name}}" class="collapsed">
+            <div class="collapse-arrow">
+                <span class="glyphicon glyphicon-collapse-down"></span>
+            </div>
+            <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
+            <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span>
+            {{#if layers}}
+            <ul>
+                {{#each layers}}
+                <li>
+                    <input id="{{layer}}-checkbox" class="css-checkbox" type="checkbox" checked />
+                    <label for="{{layer}}-checkbox" class="css-label">{{name}}</label>
+                </li>
+                {{/each}}
+            </ul>
+            {{/if}}
+        </li>
+        {{else}}
+        <li>No categories found.</li>
+        {{/each}}
     </script>
 
     <script src="http://code.jquery.com/jquery.js"></script>

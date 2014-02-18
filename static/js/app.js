@@ -342,16 +342,17 @@ PP.App = (function() {
         var $allFactorsPanel = {};
         var $manageFactorsBtn = {};
         var $toolColorRamps = {};
+        var $toolLegend = {};
 
         var cacheElements = function () {
             // Panels
-
             $sidebar           = $('#sidebar');
             $allFactorsPanel   = $('.all-factors');
 
             // Buttons
             $manageFactorsBtn  = $('.manage-factors-btn');
             $toolColorRamps    = $('.tool-ramp');
+            $toolLegend        = $('.tool-legend');
         };
 
         var loadFactors = function() {
@@ -399,6 +400,15 @@ PP.App = (function() {
             $(this).parent().toggleClass('collapsed');
         };
 
+        var toggleToolActive = function(e) {
+            $(this).toggleClass('active');
+        };
+
+        var toggleLegend = function(e) {
+            $(this).toggleClass('active');
+            $('#tool-legend-popover').toggleClass('in');
+        };
+
         var updateLayerWeight = function(e) {
             // Sets the count with the slider's value -5 thru 5
             $(this).parent().next('.count').text(e.value);
@@ -438,7 +448,7 @@ PP.App = (function() {
 
             var $findAddressHTML = '' +
                 '<div class="find-address-container">' +
-                '   <label for="find-address-search">Find Address</label>' +
+                '   <h4>Find Address</h4>' +
                 '   <div class="input-group">' +
                 '       <input type="text" class="form-control" id="find-address-search" placeholder="Search by address">' + 
                 '       <span class="input-group-btn">' +
@@ -447,7 +457,7 @@ PP.App = (function() {
                 '   </div>' +
                 '</div>';
 
-            var toolFindAddress    = $('.tool-address-search');
+            var $toolFindAddress    = $('.tool-address-search');
             var $content           = $('.content');
             var $toggleSidebar     = $('#toggle-sidebar');
             var $scenarioSelect    = $('#scenario-select');
@@ -462,8 +472,9 @@ PP.App = (function() {
             $scenarioSelect.on('change', updateScenario);
             $opacitySlider.slider({ value: PP.Constants.defaultOpacity*100.0 }).on('slide', updateOpacity);
             $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
-            $toolColorRamps.popover({ placement: 'bottom', container: '.content', html: true, content: $colorRampHTML });
-            toolFindAddress.popover({ placement: 'bottom', container: '.content', html: true, content: $findAddressHTML });
+            $toolColorRamps.popover({ placement: 'bottom', container: '.content', html: true, content: $colorRampHTML }).on({'show.bs.popover': toggleToolActive, 'hide.bs.popover': toggleToolActive});
+            $toolFindAddress.popover({ placement: 'bottom', container: '.content', html: true, content: $findAddressHTML }).on({'show.bs.popover': toggleToolActive, 'hide.bs.popover': toggleToolActive});
+            $toolLegend.on('click', toggleLegend);
 
             // Bootstrap UI
             $content.on('click', '.color-ramp-selector img', updateColorRamp);
