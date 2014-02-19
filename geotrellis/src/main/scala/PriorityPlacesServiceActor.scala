@@ -21,12 +21,19 @@ import spray.http._
 import MediaTypes._
 import CachingDirectives._
 
+import scala.concurrent._
+import spray.http._
+import spray.client.pipelining._
+
 class PriorityPlacesServiceActor extends Actor with PriorityPlacesService {
   def actorRefFactory = context
   def receive = runRoute(serviceRoute)
 }
 
 trait PriorityPlacesService extends HttpService {
+  def parcelUrl(lat: Double, lng: Double) = 
+    s"http://opendataserver.ashevillenc.gov/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=coagis:bc_property&maxFeatures=1&outputFormat=json&srsName=EPSG:4326&BBOX=${lng-0.00001},${lat-0.00001},$lng,$lat,EPSG:4326"
+
   implicit def executionContext = actorRefFactory.dispatcher
 
   val directoryName = "../static/"
@@ -61,6 +68,17 @@ trait PriorityPlacesService extends HttpService {
                     failWith(new RuntimeException(message))
               }
             }
+          }
+        } ~
+        path("getParcel") {
+          parameters('lat.as[Double], 'lng.as[Double]) {
+            (lat,lng) =>
+              complete {
+                val pipeline = sendReceive ~> unmarshal[String]
+                val url = parcelUrl(lat,lng)
+                println(url)
+                pipeline(Get(parcelUrl(lat,lng)))
+              }
           }
         } ~
         path("wo") {
