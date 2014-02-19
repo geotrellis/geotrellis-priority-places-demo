@@ -152,43 +152,6 @@ PP.App = (function() {
         parcelLayer.addTo(map);
         map.lc.addOverlay(parcelLayer);
 
-        // Just a sample popup for parcel details
-        var popup = L.popup();
-        var parcelDetailContent = '' +
-            '<div class="parcel-details-container">' +
-            '    <div class="parcel-details-header">' +
-            '        <h5>Sample Address</h5>' +
-            '    </div>' +
-            '    <div class="parcel-details-body">' +
-            '        <table class="table table-hover">' +
-            '            <tr>' +
-            '                <td>Pin Num</td> <td>3252622353254</td>' +
-            '            </tr>' +
-            '            <tr>' +
-            '                <td>Pin Num</td> <td>3252622353254</td>' +
-            '            </tr>' +
-            '            <tr>' +
-            '                <td>Pin Num</td> <td>3252622353254</td>' +
-            '            </tr>' +
-            '            <tr>' +
-            '                <td>Pin Num</td> <td>3252622353254</td>' +
-            '            </tr>' +
-            '            <tr>' +
-            '                <td>Pin Num</td> <td>3252622353254</td>' +
-            '            </tr>' +
-            '            <tr>' +
-            '                <td>Pin Num</td> <td>3252622353254</td>' +
-            '            </tr>' +
-            '        </table>' +
-            '    </div>' +
-            '</div>';
-
-        function parcelDetails(e) {
-            popup.setLatLng(e.latlng).setContent(parcelDetailContent).openOn(map);
-        }
-
-        map.on('click', parcelDetails);
-
         // var getFeatureInfo = "http://tomcatgis.ashevillenc.gov/geoserver/wms?REQUEST=GetFeatureInfo&EXCEPTIONS=application%2Fvnd.ogc.se_xml&BBOX=910345.362131%2C666979.970093%2C911977.553093%2C668119.303392&X=185&Y=118&INFO_FORMAT=text%2Fhtml&QUERY_LAYERS=coagis%3Abc_property&FEATURE_COUNT=50&Srs=EPSG%3A2264&Layers=coagis%3Abc_property&Styles=&WIDTH=510&HEIGHT=356&format=image%2Fpng"
 
         // var geoServerLayers =
@@ -336,6 +299,135 @@ PP.App = (function() {
         };
     })();
 
+    var parcelDetails = (function() {
+        var getFeatureUrl = function(lat,lng) {
+            // return "http://opendataserver.ashevillenc.gov/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=coagis:bc_property&maxFeatures=50&outputFormat=json&srsName=EPSG:4326&BBOX=" + 
+            //     lat + "," + lng + "," + lat + "," + lng;
+            return "gt/getParcel?lat=" + lat + "&lng=" + lng;
+
+//"910616.2717089951%2C666971.5924350917%2C910616.2717089951%2C666971.5924350917"
+        }
+
+        // Example properties of returned GeoJSON of GetFeature call:
+        // var properties = 
+        //     {
+        //         "pinnum": "964924228300000",
+        //         "pin": "9649242283",
+        //         "pinext": "00000",
+        //         "owner": "HOLLAR KATHLEEN",
+        //         "nmptype": null,
+        //         "taxyear": "02",
+        //         "condounit": "     ",
+        //         "condobuilding": "          ",
+        //         "deedbook": "1042",
+        //         "deedpage": "0569",
+        //         "platbook": "0042",
+        //         "platpage": "0579",
+        //         "subname": "DOUBLEDAY ADDITION                 ",
+        //         "sublot": "PT 18                         ",
+        //         "subblock": "     ",
+        //         "subsect": "  ",
+        //         "updatedate": "20130427",
+        //         "housenumber": "99999",
+        //         "numbersuffix": "  ",
+        //         "direction": null,
+        //         "streetname": "FORSYTHE",
+        //         "streettype": "ST",
+        //         "township": "02",
+        //         "acreage": 0.02999999,
+        //         "accountnumber": "002926700",
+        //         "deeddate": "19710726",
+        //         "stamps": 0,
+        //         "instrument": "DEE",
+        //         "reason": "H",
+        //         "county": "BUN",
+        //         "city": "CAS",
+        //         "firedistrict": "   ",
+        //         "schooldistrict": "SAS",
+        //         "careof": "                              ",
+        //         "address": "PO BOX 1327                   ",
+        //         "cityname": "HICKORY          ",
+        //         "state": "NC",
+        //         "zipcode": "28603",
+        //         "class": "301",
+        //         "improved": "N",
+        //         "exempt": "   ",
+        //         "priced": "Y",
+        //         "totalmarketvalue": 2300,
+        //         "appraisedvalue": 2300,
+        //         "taxvalue": 2300,
+        //         "landuse": " ",
+        //         "neighborhoodcode": "DBLA   ",
+        //         "landvalue": 2300,
+        //         "buildingvalue": 0,
+        //         "improvementvalue": 0,
+        //         "appraisalarea": "A",
+        //         "state_route": "    ",
+        //         "state_route_suffix": " ",
+        //         "propcard": "http://www.buncombetax.org/GIS.aspx?type=card&pin=964924228300000",
+        //         "oldpinnum": "964913242116000",
+        //         "citystatezip": "HICKORY, NC 28603",
+        //         "deedurl": "http://registerofdeeds.buncombecounty.org/external/LandRecords/protected/SrchBookPage.aspx?bAutoSearch=true&bk=1042&pg=0569&idx=CRP",
+        //         "platurl": "http://registerofdeeds.buncombecounty.org/external/LandRecords/protected/SrchBookPage.aspx?bAutoSearch=true&bk=0042&pg=0579&idx=ALL"
+        //     }
+
+        var template = Handlebars.compile($('#parcel-details-template').html())
+        var popup = L.popup();
+
+        // var getProperties = function(geoJson) {
+        //     if (node.leftChild) {
+        //         return getLeaf(node.leftChild); // <- recursive call
+        //     }
+        //     else if (node.rightChild) {
+        //         return getLeaf(node.rightChild); // <- recursive call
+        //     }
+        //     else { // node must be a leaf node
+        //         return node;
+        //     }
+        // }
+
+        // var first_leaf = getLeaf(root);
+
+        var parcelLayer = null; 
+
+        var fetchParcel = function(latlng, cb) {
+//            var wm_coords = map.options.crs.project(latlng)
+
+            $.when(
+                $.getJSON(getFeatureUrl(latlng.lat, latlng.lng))
+            ).then(
+                $.proxy(
+                    function(parcelJson) {
+//                        if(parcelPoly) { map.removeLayer(parcelPoly); }
+//                        parcelPoly = L.geoJson(parcelJson).addTo(map);
+                        parcelLayer.clearLayers();
+                        if(parcelJson.features.length > 0) {
+                            parcelLayer.addData(parcelJson);
+                            cb(parcelJson.features[0]);
+                        }
+                    }, this),
+                function(err) {
+                    console.error('Error retrieving parcel information: ', err.statusText, err);
+                }
+            );
+        };
+        
+        var parcelDetails = function(e) {
+            fetchParcel(e.latlng, function(parcel) {
+                var content = template(parcel.properties)
+                popup.setLatLng(e.latlng).setContent(content).openOn(map);
+            });
+        }
+
+        return {
+            init : function() {
+                map.on('click', parcelDetails);
+                parcelLayer = L.geoJson().addTo(map);
+            }
+        }
+
+    })();
+
     var UI = (function() {
 
         var $sidebar = {};
@@ -460,7 +552,8 @@ PP.App = (function() {
             // Inputs
             $sidebar.on('change', '.css-checkbox', toggleFactorCheckbox);
             $scenarioSelect.on('change', updateScenario);
-            $opacitySlider.slider({ value: PP.Constants.defaultOpacity*100.0 }).on('slide', updateOpacity);
+            $opacitySlider.slider('setValue', PP.Constants.defaultOpacity * 100)
+                          .on('slide', updateOpacity);
             $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
             $toolColorRamps.popover({ placement: 'bottom', container: '.content', html: true, content: $colorRampHTML });
             toolFindAddress.popover({ placement: 'bottom', container: '.content', html: true, content: $findAddressHTML });
@@ -489,6 +582,7 @@ PP.App = (function() {
                     model.initialize(factorsJson[0].layers,categoriesJson[0].categories);
                     UI.init();
                     initMap();
+                    parcelDetails.init();
                     weightedOverlay.init();
                     model.notifyChange();
                 }, this),
