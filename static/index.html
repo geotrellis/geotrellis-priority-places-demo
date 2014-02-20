@@ -183,6 +183,156 @@
         {{/each}}
     </script>
 
+    <script type="text/x-handlebars-template" id="parcel-details-template">
+      <div class="parcel-details-container">
+        <div class="parcel-details-header">
+          <h5>{{housenumber}} {{streetname}} {{streettype}}</h5>
+        </div>
+        <div class="parcel-details-body">
+          <table class="table table-hover">
+            <tr>
+              <td><a href="http://gis.ashevillenc.gov/mapasheville/developmentmapper/default.htm?CMD=searchbyPIN&VALUE={{pinnum}}" target="_blank">Develoment Mapper</a></td> <td></td>
+            </tr>
+            <tr>
+              <td><a href="http://gis.ashevillenc.gov/mapasheville/crimemapper/default.htm?CMD=searchbyPIN&VALUE={{pinnum}}" target="_blank">Crime Mapper</a></td> <td></td>
+            </tr>
+            <tr>
+              <td>Pin Num</td> <td>{{pinnum}}</td>
+            </tr>
+            <tr>
+              <td>Owner</td> <td>{{owner}}</td>
+            </tr>
+            <tr>
+              <td>Deed Book</td> <td>{{deedbook}}</td>
+            </tr>
+            <tr>
+              <td>Deed Page</td> <td>{{deedpage}}</td>
+            </tr>
+            <tr>
+              <td>Plat Book</td> <td>{{platbook}}</td>
+            </tr>
+            <tr>
+              <td>Plat Page</td> <td>{{platpage}}</td>
+            </tr>
+            <tr>
+              <td>Sub Name</td> <td>{{subname}}</td>
+            </tr>
+            <tr>
+              <td>Sub Lot</td> <td>{{sublot}}</td>
+            </tr>
+            <tr>
+              <td>Sub Block</td> <td>{{subblock}}</td>
+            </tr>
+            <tr>
+              <td>Sub Section</td> <td>{{subsect}}</td>
+            </tr>
+            <tr>
+              <td>Street</td> <td>{{streetname}}</td>
+            </tr>
+            <tr>
+              <td>House Number</td> <td>{{housenumber}}</td>
+            </tr>
+            <tr>
+              <td>Suffix</td> <td>{{numbersuffix}}</td>
+            </tr>
+            <tr>
+              <td>Type</td> <td>{{streettype}}</td>
+            </tr>
+            <tr>
+              <td>Township</td> <td>{{township}}</td>
+            </tr>
+            <tr>
+              <td>Acreage</td> <td>{{acreage}}</td>
+            </tr>
+            <tr>
+              <td>Account Number</td> <td>{{accountnumber}}</td>
+            </tr>
+            <tr>
+              <td>Deed Date</td> <td>{{deeddate}}</td>
+            </tr>
+            <tr>
+              <td>Stamps</td> <td>{{stamps}}</td>
+            </tr>
+            <tr>
+              <td>Reason</td> <td>{{reason}}</td>
+            </tr>
+            <tr>
+              <td>County</td> <td>{{county}}</td>
+            </tr>
+            <tr>
+              <td>City</td> <td>{{city}}</td>
+            </tr>
+            <tr>
+              <td>Fire District</td> <td>{{firedistrict}}</td>
+            </tr>
+            <tr>
+              <td>School District</td> <td>{{schooldistrict}}</td>
+            </tr>
+            <tr>
+              <td>Condo Unit</td> <td>{{condounit}}</td>
+            </tr>
+            <tr>
+              <td>Care Of</td> <td>{{careof}}</td>
+            </tr>
+            <tr>
+              <td>Address</td> <td>{{address}}</td>
+            </tr>
+            <tr>
+              <td>City Name</td> <td>{{cityname}}</td>
+            </tr>
+            <tr>
+              <td>State</td> <td>{{state}}</td>
+            </tr>
+            <tr>
+              <td>Zip Code</td> <td>{{zipcode}}</td>
+            </tr>
+            <tr>
+              <td>Class</td> <td>{{class}}</td>
+            </tr>
+            <tr>
+              <td>Improved</td> <td>{{improved}}</td>
+            </tr>
+            <tr>
+              <td>Exempt</td> <td>{{exempt}}</td>
+            </tr>
+            <tr>
+              <td>Priced</td> <td>{{priced}}</td>
+            </tr>
+            <tr>
+              <td>Total Market Value</td> <td>{{totalmarketvalue}}</td>
+            </tr>
+            <tr>
+              <td>Tax Value</td> <td>{{taxvalue}}</td>
+            </tr>
+            <tr>
+              <td>Land Use</td> <td>{{landuse}}</td>
+            </tr>
+            <tr>
+              <td>Neighborhood Code</td> <td>{{neighborhoodcode}}</td>
+            </tr>
+            <tr>
+              <td>Land Value</td> <td>{{landvalue}}</td>
+            </tr>
+            <tr>
+              <td>Building Value</td> <td>{{buildingvalue}}</td>
+            </tr>
+            <tr>
+              <td>Improvement Value</td> <td>{{improvementvalue}}</td>
+            </tr>
+            <tr>
+              <td><a href="{{propcard}}" target="_blank">Property Card</a></td> <td></td>
+            </tr>
+            <tr>
+              <td><a href="{{deedurl}}" target="_blank">Deed URL</a></td> <td></td>
+            </tr>
+            <tr>
+              <td><a href="{{platurl}}" target="_blank">Plat URL</a></td> <td></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </script>
+
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="js/vendor/leaflet-src.js"></script>
     <script src="js/vendor/leaflet.draw.js"></script>
