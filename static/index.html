@@ -71,48 +71,50 @@
         </div>
         <div id="tool-legend-popover" class="popover fade bottom">
             <div class="arrow"></div>
-            <div class="popover-content">
-                <h4>Toggle map layers</h4>
-                <ul>
-                    <li id="{{name}}" class="">
+            <div class="popover-content" id="legend-container">
+                <h4>Base Map Legend</h4>
+                <!-- <ul id="legend-layers-list"> -->
+                    <!-- <li id="{{name}}" class=""> -->
                         
-                    </li>
-                    <li id="{{name}}" class="">
-                        <div class="collapse-arrow">
-                            <span class="glyphicon glyphicon-collapse-down"></span>
-                        </div>
-                        <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
-                        <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span>
-                        <ul>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                        </ul>
-                    </li>
-                    <li id="{{name}}" class="">
-                        <div class="collapse-arrow">
-                            <span class="glyphicon glyphicon-collapse-down"></span>
-                        </div>
-                        <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
-                        <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span>
-                        <ul>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                            <li><span class="legend-icon"></span> {{name}}</li>
-                        </ul>
-                    </li>
-                </ul>
+                    <!-- </li> -->
+                    <!-- <li id="{{name}}" class=""> -->
+                    <!--     <div class="collapse-arrow"> -->
+                    <!--         <span class="glyphicon glyphicon-collapse-down"></span> -->
+                    <!--     </div> -->
+                    <!--     <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked /> -->
+                    <!--     <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span> -->
+                    <!--     <ul> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--     </ul> -->
+                    <!-- </li> -->
+
+                    <!-- <li id="{{name}}" class=""> -->
+                    <!--     <div class="collapse-arrow"> -->
+                    <!--         <span class="glyphicon glyphicon-collapse-down"></span> -->
+                    <!--     </div> -->
+                    <!--     <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked /> -->
+                    <!--     <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span> -->
+                    <!--     <ul> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
+                    <!--     </ul> -->
+                    <!-- </li> -->
+
+                <!-- </ul> -->
             </div>
         </div>
     </div>
@@ -160,7 +162,7 @@
     </script>
 
     <script type="text/x-handlebars-template" id="legend-template">
-	    {{#each legend}}
+      {{#each legend}}
         <li id="{{name}}" class="collapsed">
             <div class="collapse-arrow">
                 <span class="glyphicon glyphicon-collapse-down"></span>
@@ -181,6 +183,25 @@
         {{else}}
         <li>No categories found.</li>
         {{/each}}
+    </script>
+
+    <script type="text/x-handlebars-template" id="legend-section-template">
+      <ul>
+        {{#each layers}}
+        <li id="{{id-legend}}" class="">
+          <div class="collapse-arrow">
+            <span class="glyphicon glyphicon-collapse-down"></span>
+          </div>
+          <input id="{{id}}-checkbox" class="css-checkbox" type="checkbox" />
+          <label for="{{id}}-checkbox" class="css-label"></label><span>{{name}}</span>
+          <ul>
+            {{#each details}}
+            <li><span class="legend-icon {{color}}"></span>{{name}}</li>
+            {{/each}}
+          </ul>
+        </li>
+        {{/each}}
+      </ul>
     </script>
 
     <script type="text/x-handlebars-template" id="parcel-details-template">
