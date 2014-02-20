@@ -140,7 +140,6 @@ PP.App = (function() {
             map.setView(map.getBounds(),map.getZoom());
         });
 
-        var parcelUrl = "http://tomcatgis.ashevillenc.gov/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers=coagis:bc_property&styles=&bbox=845633.391,625229.271,1055373.13,771961.267&width=512&height=358&srs=EPSG:2264&format=application/openlayers"
         var parcelLayer = 
             new L.TileLayer.WMS("http://tomcatgis.ashevillenc.gov/geoserver/wms", {
                 layers: "coagis:bc_property",
@@ -150,45 +149,7 @@ PP.App = (function() {
             })
 
         parcelLayer.addTo(map);
-        map.lc.addOverlay(parcelLayer);
-
-        // var geoServerLayers =
-        //     {
-        //         "coagis:ncdot_rail" : {
-        //             "Main Line" : "#7F7F7F 3 px line horizonal through center, #7F7F7F line slightly offset from right 3 px, vertical and 3/4 the length of the first line",
-        //             "Spur" : "#A7A7A7 3 px line horizontal through center",
-        //             },
-        //         "coagis:coa_airport_view" : { }
-        //         "coagis:coa_districts_zoning" : {
-        //             "CBD - Central Business District" : "#B6B6B6",
-        //             "NCD - Neighborhood Corridor District" : "#A06969",
-        //             "URD - Urban Residential District" : "#4242FA",
-        //             "UP - Urban Place" : "#3270B9",
-        //             "UV - Urban Village" : "#9C32B9",
-        //             "RB - Regional Business" : "#B93232",
-        //             "HB - Highway Business" : "#FF3232",
-        //             "CBII - Community Business II" : "#D684AD",
-        //             "CBI - Community Business" : "#DEB0C9",
-        //             "NB - Neighborhood Business" : "#FFCAEC",
-        //             "IND - Industrial" : "#BDB6FE",
-        //             "CI - Commercial Industrial" : "#D2CEFE",
-        //             "LI - Light Industrial" : "#EDDEFE",
-        //             "INST - Institutional" : "#32BAEA",
-        //             "OB - Office Business" : "#32FFFF",
-        //             "O2 - Office 2" : "#ABE2F4",
-        //             "OFFICE" : "#CAF2F2",
-        //             "RIVER" : "#5FB932",
-        //             "RESORT" : "#ACEA32",
-        //             "HCU - Historic Conditional Use" : "#DBFFCA",
-        //             "RM16 - High Density Multi-Family" : "#EAAC32",
-        //             "RM8 - Medium Density Multi-Family" : "#FFBA32",
-        //             "RM6 - Low Density Multi-Family" : "#FBEE73",
-        //             "RS8 - High Density Single-Family" : "#FFFF32",
-        //             "RS4 - Medium Density Single-Family" : "#F1F3B2",
-        //             "RS2 - Low Density Single-Family" : "#FFFFCA"
-        //         }
-        //     }
-
+        map.lc.addOverlay(parcelLayer, "Parcels");
     };
 
     var weightedOverlay = (function() {
@@ -336,6 +297,92 @@ PP.App = (function() {
             init : function() {
                 map.on('click', parcelDetails);
                 parcelLayer = L.geoJson().addTo(map);
+            }
+        }
+
+    })();
+
+    var legend = (function() {
+        var geoServerLayers =
+            {
+                layers : [
+                    { "name"    : "Railways",
+                      "id"      : "railways",
+                      "layer"   : "coagis:ncdot_rail",
+                      "details" : [
+                    // These are actually not solid colors: 
+                    // "Main Line" : "#7F7F7F 3 px line horizonal through center, 
+                    //                #7F7F7F line slightly offset from right 3 px, 
+                    //                vertical and 3/4 the length of the first line",
+                    // "Spur" : "#A7A7A7 3 px line horizontal through center",
+                          { "name" : "Mail Line", "color" : "#000000" },
+                          { "name" : "Spur", "color" : "#000000" }
+                      ]
+                    },
+                    { "name"    : "Asheville Regional Airport (AVL)",
+                      "id"      : "airport",
+                      "layer"   : "coagis:coa_airport_view",
+                      "details" : []
+                    },
+                    { "name"    : "Zoning Districts",
+                      "id"      : "districts",
+                      "layer"   : "coagis:coa_districts_zoning",
+                      "details" : [
+                          { "name" : "CBD - Central Business District", color : "#B6B6B6" },
+                          { "name" : "NCD - Neighborhood Corridor District", color : "#A06969" },
+                          { "name" : "URD - Urban Residential District", color : "#4242FA" },
+                          { "name" : "UP - Urban Place", color : "#3270B9" },
+                          { "name" : "UV - Urban Village", color : "#9C32B9" },
+                          { "name" : "RB - Regional Business", color : "#B93232" },
+                          { "name" : "HB - Highway Business", color : "#FF3232" },
+                          { "name" : "CBII - Community Business II", color : "#D684AD" },
+                          { "name" : "CBI - Community Business", color : "#DEB0C9" },
+                          { "name" : "NB - Neighborhood Business", color : "#FFCAEC" },
+                          { "name" : "IND - Industrial", color : "#BDB6FE" },
+                          { "name" : "CI - Commercial Industrial", color : "#D2CEFE" },
+                          { "name" : "LI - Light Industrial", color : "#EDDEFE" },
+                          { "name" : "INST - Institutional", color : "#32BAEA" },
+                          { "name" : "OB - Office Business", color : "#32FFFF" },
+                          { "name" : "O2 - Office 2", color : "#ABE2F4" },
+                          { "name" : "OFFICE", color : "#CAF2F2" },
+                          { "name" : "RIVER", color : "#5FB932" },
+                          { "name" : "RESORT", color : "#ACEA32" },
+                          { "name" : "HCU - Historic Conditional Use", color : "#DBFFCA" },
+                          { "name" : "RM16 - High Density Multi-Family", color : "#EAAC32" },
+                          { "name" : "RM8 - Medium Density Multi-Family", color : "#FFBA32" },
+                          { "name" : "RM6 - Low Density Multi-Family", color : "#FBEE73" },
+                          { "name" : "RS8 - High Density Single-Family", color : "#FFFF32" },
+                          { "name" : "RS4 - Medium Density Single-Family", color : "#F1F3B2" },
+                          { "name" : "RS2 - Low Density Single-Family", color : "#FFFFCA" }
+                      ]
+                    }
+                ]
+            };
+
+        return {
+            init : function() {
+                var template = Handlebars.compile($('#legend-section-template').html())
+                $('#legend-container').append(template(geoServerLayers));
+
+                // Add the layers to the map and layer control
+                _.each(geoServerLayers.layers, function(l) {
+                    var mapLayer =     
+                        new L.TileLayer.WMS("http://tomcatgis.ashevillenc.gov/geoserver/wms", {
+                            layers: l.layer,
+                            srs: "EPSG:2264",
+                            transparent: "true",
+                            format: "image/png"
+                        })
+                    map.lc.addOverlay(mapLayer, l.name);
+
+                    $("#" + l.id + "-checkbox").change(function() {
+                        if(this.checked) {
+                            mapLayer.addTo(map);
+                        } else {
+                            map.removeLayer(mapLayer);
+                        }
+                    });
+                })
             }
         }
 
@@ -507,6 +554,7 @@ PP.App = (function() {
                     UI.init();
                     initMap();
                     parcelDetails.init();
+                    legend.init();
                     weightedOverlay.init();
                     model.notifyChange();
                 }, this),
