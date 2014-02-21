@@ -38,7 +38,7 @@
                 <input type="text" class="opacity-slider" value="" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="100" data-slider-tooltip="hide">
             </div>
             <div class="tool tool-lg left tool-ramp">
-                <img class="ramp-img" src="http://demo.geotrellis.com/chatta/img/ramps/yellow-to-red-heatmap.png">
+                <img id="active-ramp" class="ramp-img" src="img/ramps/blue-to-red.png">
                 <span class="ramp-low">Low</span>
                 <span class="ramp-high">High</span>
             </div>
@@ -204,6 +204,19 @@
         {{/each}}
       </ul>
     </script>
+
+    <script type="text/x-handlebars-template" id="colorramp-template">
+      <div class="color-ramp-selector">
+        {{#each colors}}
+          {{#if active}}
+            <img src="{{image}}" id="{{key}}" class="active">
+          {{else}}
+            <img src="{{image}}" id="{{key}}">
+          {{/if}}
+        {{/each}}
+      </div>
+    </script>
+
 
     <script type="text/x-handlebars-template" id="parcel-details-template">
       <div class="parcel-details-container">
