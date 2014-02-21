@@ -364,11 +364,12 @@ header {
   text-align: left; }
 
 #tool-legend-popover {
-  display: block;
   top: 90px;
   left: 40px;
   bottom: 20px;
   width: 276px; }
+  #tool-legend-popover.in {
+    display: block; }
   @media only screen and (max-width: 767px) {
     #tool-legend-popover {
       display: none; } }
