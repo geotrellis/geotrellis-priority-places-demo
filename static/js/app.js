@@ -1,9 +1,48 @@
 var PP = PP || {};
 
 PP.Constants = {
-    boundingBox : "-9222891.832889367,4212750.376909204,-9153945.633376136,4263045.941520849",
-    defaultOpacity : 0.9
-}
+    BOUNDING_BOX : "-9222891.832889367,4212750.376909204,-9153945.633376136,4263045.941520849",
+    DEFAULT_OPACITY : 0.9,
+    GEOCODE_LOWERLEFT : { lat: 35.0, lng: -83.0 },
+    GEOCODE_UPPERRIGHT: { lat: 36.0, lng: -82.0 }
+};
+
+
+PP.Geocoder = (function(){
+    var geocoder = null;
+    return {
+        onLoadGoogleApiCallback : function() {
+            geocoder = new google.maps.Geocoder();
+            document.body.removeChild(document.getElementById('load_google_api'));
+        },
+
+        init : function() {
+            var url = 
+                "https://maps.googleapis.com/maps/api/js?" + 
+                "v=3&callback=PP.Geocoder.onLoadGoogleApiCallback&sensor=false";
+            var script = document.createElement('script');
+            script.id = 'load_google_api';
+            script.type = "text/javascript";
+            script.src = url;
+            document.body.appendChild(script);
+        },
+
+        geocode : function(address,callback) {
+            var lowerLeft = new google.maps.LatLng(PP.Constants.GEOCODE_LOWERLEFT.lat, 
+                                                   PP.Constants.GEOCODE_LOWERLEFT.lng);
+            var upperRight = new google.maps.LatLng(PP.Constants.GEOCODE_UPPERRIGHT.lat, 
+                                                    PP.Constants.GEOCODE_UPPERRIGHT.lng);
+            var bounds = new google.maps.LatLngBounds(lowerLeft, upperRight);
+
+            var parameters = {
+                address: address,
+                bounds: bounds
+            };
+
+            var results = geocoder.geocode(parameters, callback);
+        }
+    };
+})();
 
 PP.Util = (function() {
     return {
@@ -172,7 +211,7 @@ PP.App = (function() {
         var breaks = null;
 
         var WOLayer = null;
-        var opacity = PP.Constants.defaultOpacity;
+        var opacity = PP.Constants.DEFAULT_OPACITY;
         var numBreaks = 10;
 
         var getLayerStrings = function() {
@@ -207,7 +246,7 @@ PP.App = (function() {
                 $.ajax({
                     url: 'gt/breaks',
                     data: { 
-                        'bbox' : PP.Constants.boundingBox,
+                        'bbox' : PP.Constants.BOUNDING_BOX,
                         'cols' : 400,
                         'rows' : 400,
                         'layers' : layerStrings.layers, 
@@ -298,17 +337,21 @@ PP.App = (function() {
             );
         };
         
-        var parcelDetails = function(e) {
-            fetchParcel(e.latlng, function(parcel) {
+        var parcelDetails = function(latlng) {
+            fetchParcel(latlng, function(parcel) {
                 var content = template(parcel.properties)
-                popup.setLatLng(e.latlng).setContent(content).openOn(map);
+                map.panTo(latlng);
+                popup.setLatLng(latlng).setContent(content).openOn(map);
             });
         }
 
         return {
             init : function() {
-                map.on('click', parcelDetails);
+                map.on('click', function(e) { parcelDetails(e.latlng) });
                 parcelLayer = L.geoJson().addTo(map);
+            },
+            popup: function(latlng) {
+                parcelDetails(latlng);
             }
         }
 
@@ -440,7 +483,7 @@ PP.App = (function() {
                             };
 
                             $toolColorRamps.popover(options)
-                                .on({'show.bs.popover': PP.Util.toggleToolActive, 
+                                .on({'show.bs.popover': PP.Util.toggleToolActive,
                                      'hide.bs.popover': PP.Util.toggleToolActive});
 
                             $('.content').on('click', '.color-ramp-selector img', updateColorRamp);
@@ -450,6 +493,55 @@ PP.App = (function() {
                 );
             }
         };
+    })();
+
+    var findAddress = (function() {
+
+        var template = Handlebars.compile($('#find-address-template').html());
+
+        var setAddress = function(data) {
+            data = {results: data};
+
+            if (data.results.length != 0) {
+                var lat = data.results[0].geometry.location.lat();
+                var lng = data.results[0].geometry.location.lng();
+                parcelDetails.popup({ lat: lat, lng: lng });
+            } else {
+                alert("Address not found!");
+            }
+        };
+        
+        var onShowPopup = function(e) {
+            var $input = $('#find-address-search')
+
+            $('#find-address-go').on('click', function(e) { 
+                PP.Geocoder.geocode($input.val(),setAddress);
+            });
+
+            $input.keypress(function (e) {
+                if (e.which == 13) {
+                    PP.Geocoder.geocode($input.val(),setAddress);
+                }
+            });
+        };
+
+        return {
+            init : function() {
+                var $toolFindAddress  = $('.tool-address-search');
+
+                var findAddrOpts = { 
+                    placement: 'bottom', 
+                    container: '.content', 
+                    html: true, 
+                    content: template()
+                };
+
+                $toolFindAddress.popover(findAddrOpts)
+                                .on({'show.bs.popover': PP.Util.toggleToolActive, 
+                                     'hide.bs.popover': PP.Util.toggleToolActive,
+                                     'shown.bs.popover': onShowPopup });
+            }
+        }
     })();
 
     var UI = (function() {
@@ -539,22 +631,10 @@ PP.App = (function() {
         };
 
         var bindEvents = function () {
-            var $toolFindAddress    = $('.tool-address-search');
             var $content           = $('.content');
             var $toggleSidebar     = $('#toggle-sidebar');
             var $scenarioSelect    = $('#scenario-select');
             var $opacitySlider     = $('.opacity-slider');
-
-            var $findAddressHTML = '' +
-                '<div class="find-address-container">' +
-                '   <h4>Find Address</h4>' +
-                '   <div class="input-group">' +
-                '       <input type="text" class="form-control" id="find-address-search" placeholder="Search by address">' + 
-                '       <span class="input-group-btn">' +
-                '           <button class="btn btn-primary" type="button">Go!</button>' +
-                '       </span>' +
-                '   </div>' +
-                '</div>';
 
             // Panels
             $sidebar.on('click', '.manage-factors-btn', toggleFactorsPanel);
@@ -563,19 +643,9 @@ PP.App = (function() {
             // Inputs
             $sidebar.on('change', '.css-checkbox', toggleFactorCheckbox);
             $scenarioSelect.on('change', updateScenario);
-            $opacitySlider.slider('setValue', PP.Constants.defaultOpacity * 100)
+            $opacitySlider.slider('setValue', PP.Constants.DEFAULT_OPACITY * 100)
                           .on('slide', updateOpacity);
             $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
-
-            var findAddrOpts = { 
-                placement: 'bottom', 
-                container: '.content', 
-                html: true, 
-                content: $findAddressHTML 
-            };
-            $toolFindAddress.popover(findAddrOpts)
-                            .on({'show.bs.popover': PP.Util.toggleToolActive, 
-                                 'hide.bs.popover': PP.Util.toggleToolActive});
 
             $toolLegend.on('click', toggleLegend);
         };
@@ -604,6 +674,7 @@ PP.App = (function() {
                     legend.init();
                     weightedOverlay.init();
                     colorRamps.init();
+                    findAddress.init();
                     model.notifyChange();
                 }, this),
             function(err) {
@@ -619,5 +690,6 @@ PP.App = (function() {
 })();
 
 jQuery(function ($) {
+    PP.Geocoder.init();
     PP.App.init();
 });
