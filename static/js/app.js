@@ -150,6 +150,10 @@ PP.App = (function() {
 
         parcelLayer.addTo(map);
         map.lc.addOverlay(parcelLayer, "Parcels");
+
+        // Overview Map
+        var overviewLayer = getLayer(Layers.mapBox.azavea,Layers.mapBox.attrib);
+        var miniMap = new L.Control.MiniMap(overviewLayer).addTo(map);
     };
 
     var weightedOverlay = (function() {
