@@ -1,11 +1,14 @@
 // Partials: Legend
 
 #tool-legend-popover {
-    display: block;
     top: 90px;
     left: 40px;
     bottom: 20px;
     width: 276px;
+
+    &.in {
+        display: block;
+    }
 
     @media #{$screen-tablet} {
 		display: none;
