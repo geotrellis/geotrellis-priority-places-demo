@@ -5,6 +5,14 @@ PP.Constants = {
     defaultOpacity : 0.9
 }
 
+PP.Util = (function() {
+    return {
+        toggleToolActive : function(e) {
+            $(this).toggleClass('active');
+        }
+    };
+})();
+
 PP.App = (function() {
     'use strict';
     var model = (function() {
@@ -392,12 +400,63 @@ PP.App = (function() {
 
     })();
 
+    var colorRamps = (function() {
+        var updateColorRamp = function() {
+            var $toolColorRamps = $('.tool-ramp');
+            var src = $(this).attr('src');
+            var key = $(this).attr('id');
+
+            $(this).siblings('img').removeClass('active');
+            $(this).addClass('active');
+            $toolColorRamps.find('img').attr('src', src);
+            model.setColorRamp(key);
+        };
+
+        var colorRampTemplate = Handlebars.compile($('#colorramp-template').html());
+
+        return { 
+            init : function() {
+                $.when(
+                    $.getJSON('gt/colors')
+                ).then(
+                    $.proxy(
+                        function(colorsJson) {
+                            var activeColor = model.getColorRamp();
+                            _.each(colorsJson.colors, function(color) {
+                                if(color.key == activeColor) {
+                                    color.active = true;
+                                } else {
+                                    color.active = false;
+                                };
+                            });
+                            
+                            var $toolColorRamps = $('.tool-ramp');
+
+                            var options = { 
+                                placement: 'bottom', 
+                                container: '.content', 
+                                html: true, 
+                                content: colorRampTemplate(colorsJson)
+                            };
+
+                            $toolColorRamps.popover(options)
+                                .on({'show.bs.popover': PP.Util.toggleToolActive, 
+                                     'hide.bs.popover': PP.Util.toggleToolActive});
+
+                            $('.content').on('click', '.color-ramp-selector img', updateColorRamp);
+
+                            
+                        })
+                );
+            }
+        };
+    })();
+
     var UI = (function() {
 
         var $sidebar = {};
         var $allFactorsPanel = {};
         var $manageFactorsBtn = {};
-        var $toolColorRamps = {};
         var $toolLegend = {};
 
         var cacheElements = function () {
@@ -407,7 +466,6 @@ PP.App = (function() {
 
             // Buttons
             $manageFactorsBtn  = $('.manage-factors-btn');
-            $toolColorRamps    = $('.tool-ramp');
             $toolLegend        = $('.tool-legend');
         };
 
@@ -456,10 +514,6 @@ PP.App = (function() {
             $(this).parent().toggleClass('collapsed');
         };
 
-        var toggleToolActive = function(e) {
-            $(this).toggleClass('active');
-        };
-
         var toggleLegend = function(e) {
             $(this).toggleClass('active');
             $('#tool-legend-popover').toggleClass('in');
@@ -484,23 +538,12 @@ PP.App = (function() {
             weightedOverlay.setOpacity(e.value / 100.0);
         };
 
-        var updateColorRamp = function() {
-            var src = $(this).attr('src');
-
-            $(this).siblings('img').removeClass('active');
-            $(this).addClass('active');
-            $toolColorRamps.find('img').attr('src', src);
-        };
-
         var bindEvents = function () {
-            var $colorRampHTML = '' +
-                '<div class="color-ramp-selector">' +
-                '    <img src="http://demo.geotrellis.com/chatta/img/ramps/yellow-to-red-heatmap.png" class="active">' +
-                '    <img src="http://demo.geotrellis.com/chatta/img/ramps/bold-land-use-qualitative.png">' +
-                '    <img src="http://demo.geotrellis.com/chatta/img/ramps/muted-terrain-qualitative.png">' +
-                '    <img src="http://demo.geotrellis.com/chatta/img/ramps/light-to-dark-green.png">' +
-                '    <img src="http://demo.geotrellis.com/chatta/img/ramps/purple-to-dark-purple-to-white-heatmap.png">' +
-                '</div>';
+            var $toolFindAddress    = $('.tool-address-search');
+            var $content           = $('.content');
+            var $toggleSidebar     = $('#toggle-sidebar');
+            var $scenarioSelect    = $('#scenario-select');
+            var $opacitySlider     = $('.opacity-slider');
 
             var $findAddressHTML = '' +
                 '<div class="find-address-container">' +
@@ -513,12 +556,6 @@ PP.App = (function() {
                 '   </div>' +
                 '</div>';
 
-            var $toolFindAddress    = $('.tool-address-search');
-            var $content           = $('.content');
-            var $toggleSidebar     = $('#toggle-sidebar');
-            var $scenarioSelect    = $('#scenario-select');
-            var $opacitySlider     = $('.opacity-slider');
-
             // Panels
             $sidebar.on('click', '.manage-factors-btn', toggleFactorsPanel);
             $toggleSidebar.on('click', toggleSidebar);
@@ -529,12 +566,18 @@ PP.App = (function() {
             $opacitySlider.slider('setValue', PP.Constants.defaultOpacity * 100)
                           .on('slide', updateOpacity);
             $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
-            $toolColorRamps.popover({ placement: 'bottom', container: '.content', html: true, content: $colorRampHTML }).on({'show.bs.popover': toggleToolActive, 'hide.bs.popover': toggleToolActive});
-            $toolFindAddress.popover({ placement: 'bottom', container: '.content', html: true, content: $findAddressHTML }).on({'show.bs.popover': toggleToolActive, 'hide.bs.popover': toggleToolActive});
-            $toolLegend.on('click', toggleLegend);
 
-            // Bootstrap UI
-            $content.on('click', '.color-ramp-selector img', updateColorRamp);
+            var findAddrOpts = { 
+                placement: 'bottom', 
+                container: '.content', 
+                html: true, 
+                content: $findAddressHTML 
+            };
+            $toolFindAddress.popover(findAddrOpts)
+                            .on({'show.bs.popover': PP.Util.toggleToolActive, 
+                                 'hide.bs.popover': PP.Util.toggleToolActive});
+
+            $toolLegend.on('click', toggleLegend);
         };
         
         return {
@@ -560,6 +603,7 @@ PP.App = (function() {
                     parcelDetails.init();
                     legend.init();
                     weightedOverlay.init();
+                    colorRamps.init();
                     model.notifyChange();
                 }, this),
             function(err) {

@@ -75,8 +75,6 @@ trait PriorityPlacesService extends HttpService {
             (lat,lng) =>
               complete {
                 val pipeline = sendReceive ~> unmarshal[String]
-                val url = parcelUrl(lat,lng)
-                println(url)
                 pipeline(Get(parcelUrl(lat,lng)))
               }
           }
