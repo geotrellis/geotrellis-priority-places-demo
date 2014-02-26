@@ -14,7 +14,6 @@ libraryDependencies ++= Seq(
   "com.azavea.geotrellis" %% "geotrellis" % "0.9.0-RC3",
   "com.azavea.geotrellis" %% "geotrellis-services" % "0.9.0-RC3",
   "io.spray" % "spray-routing" % "1.2.0",
-  "io.spray" % "spray-can" % "1.2.0",
   "io.spray" % "spray-client" % "1.2.0",
   "org.geotools" % "gt-main" % "8.0-M4"
 )
