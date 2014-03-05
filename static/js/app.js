@@ -9,6 +9,34 @@ PP.Constants = {
 
 
 PP.Geocoder = (function(){
+    var config = {
+        'notFoundMessage' : 'Sorry, that address could not be found.',
+        'messageHideDelay': 3000,
+	'agsServerGeocode': 'gis.ashevillenc.gov', //ArcGIS  server name for geocoding
+	'agsServerInstanceNameGeocode': 'COA_ArcGIS_Server', //ArcGIS  server instance for geocoding
+	'geocdingLayerName': 'Buncombe_Address_WGS84', //geocoding service to use.        
+	'mySRID': 4326 //your projection id
+    };
+
+    var getLatLong = function (someData, callback){
+	xStr=someData.x;
+	yStr=someData.y;
+        
+	var urlStr = 'http://'+config.agsServerGeocode+'/'+config.agsServerInstanceNameGeocode+'/rest/services/Geometry/GeometryServer/project';
+	var aPt=JSON.stringify({geometryType:"esriGeometryPoint",geometries : [{"x":xStr,"y":yStr}]});
+        
+	var sData={f:"json",inSR:config.mySRID,outSR:4326,geometries:aPt};
+        
+	$.ajax({
+	    url: urlStr,
+	    dataType: "jsonp",
+	    data: sData,
+	    crossDomain: true,
+	    success:callback,//$.proxy(callback,this),
+	    error:function(x,t,m){console.log('fail');}//updateResultsFail(t,'Error with transforming to WGS84!')
+	});
+    };
+
     var geocoder = null;
     return {
         onLoadGoogleApiCallback : function() {
@@ -27,11 +55,40 @@ PP.Geocoder = (function(){
             document.body.appendChild(script);
         },
 
-        geocode : function(address,callback) {
+        geocode : function (address, callback) {
+            $.when(
+                $.getJSON("gt/geocode?address=" + address)
+            ).then(
+                callback,
+                function(err) {
+                    console.error('Error geocoding address "' + address + '": ', err.statusText, err);
+                }
+            );
+
+	    // addressStr = qry;
+	    // var urlStr = 'http://'+config.agsServerGeocode+'/'+config.agsServerInstanceNameGeocode+'/rest/services/'+config.geocdingLayerName+'/GeocodeServer/findAddressCandidates';
+	    // var sData={f:"json",Street:addressStr};
+            
+	    // $.ajax({
+	    //     url: urlStr,
+	    //     dataType: "jsonp",
+	    //     data: sData,
+	    //     success: function(data) {
+	    //         if (data.candidates) {
+	    //             it = data.candidates[0];
+	    //             getLatLong({ label: it.address, value: it.address, x:it.location.x,y:it.location.y }, callback );
+	    //         }
+	    //     }
+	    // });
+        },
+
+        geocode2 : function(address,callback) {
             var lowerLeft = new google.maps.LatLng(PP.Constants.GEOCODE_LOWERLEFT.lat, 
                                                    PP.Constants.GEOCODE_LOWERLEFT.lng);
+
             var upperRight = new google.maps.LatLng(PP.Constants.GEOCODE_UPPERRIGHT.lat, 
                                                     PP.Constants.GEOCODE_UPPERRIGHT.lng);
+
             var bounds = new google.maps.LatLngBounds(lowerLeft, upperRight);
 
             var parameters = {
@@ -201,6 +258,9 @@ PP.App = (function() {
         // Overview Map
         var overviewLayer = getLayer(Layers.mapBox.azavea,Layers.mapBox.attrib);
         var miniMap = new L.Control.MiniMap(overviewLayer).addTo(map);
+
+        // Geocoder
+        var geocoderLayer = new L.Control.QuickGeocode().addTo(map);
     };
 
     var weightedOverlay = (function() {
@@ -499,13 +559,10 @@ PP.App = (function() {
 
         var template = Handlebars.compile($('#find-address-template').html());
 
-        var setAddress = function(data) {
-            data = {results: data};
-
-            if (data.results.length != 0) {
-                var lat = data.results[0].geometry.location.lat();
-                var lng = data.results[0].geometry.location.lng();
-                parcelDetails.popup({ lat: lat, lng: lng });
+        var setAddress = function(results) {
+            if (results.candidates.length != 0) {
+                var location = results.candidates[0].location;
+                parcelDetails.popup({ lat: location.y, lng: location.x });
             } else {
                 alert("Address not found!");
             }

@@ -25,6 +25,8 @@ import scala.concurrent._
 import spray.http._
 import spray.client.pipelining._
 
+import java.net.URLEncoder
+
 class PriorityPlacesServiceActor extends Actor with PriorityPlacesService {
   def actorRefFactory = context
   def receive = runRoute(serviceRoute)
@@ -76,6 +78,17 @@ trait PriorityPlacesService extends HttpService {
               complete {
                 val pipeline = sendReceive ~> unmarshal[String]
                 pipeline(Get(parcelUrl(lat,lng)))
+              }
+          }
+        } ~
+        path("geocode") {
+          parameters('address) {
+            (address) =>
+              complete {
+                val pipeline = sendReceive ~> unmarshal[String]
+                val encoded = URLEncoder.encode(address)
+                val url = s"http://gis.ashevillenc.gov/COA_ArcGIS_Server/rest/services/Buncombe_Address_WGS84/GeocodeServer/findAddressCandidates?f=json&Street=$encoded"
+                pipeline(Get(url))
               }
           }
         } ~
