@@ -18,8 +18,6 @@ libraryDependencies ++= Seq(
   "org.geotools" % "gt-main" % "8.0-M4"
 )
 
-
-
 assemblySettings
 
 mergeStrategy in assembly <<= (mergeStrategy in assembly) {
