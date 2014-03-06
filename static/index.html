@@ -42,11 +42,11 @@
                 <span class="ramp-low">Low</span>
                 <span class="ramp-high">High</span>
             </div>
-            <div class="tool right hidden-sm">
+            <div class="tool right hidden">
                 <span class="glyphicon glyphicon-cloud-download"></span>
                 <div class="tool-title">Export</div>
             </div>
-            <div class="tool right hidden-sm">
+            <div class="tool right hidden">
                 <span class="glyphicon glyphicon-print"></span>
                 <div class="tool-title">Print</div>
             </div>
@@ -74,48 +74,6 @@
             <div class="arrow"></div>
             <div class="popover-content" id="legend-container">
                 <h4>Base Map Legend</h4>
-                <!-- <ul id="legend-layers-list"> -->
-                    <!-- <li id="{{name}}" class=""> -->
-                        
-                    <!-- </li> -->
-                    <!-- <li id="{{name}}" class=""> -->
-                    <!--     <div class="collapse-arrow"> -->
-                    <!--         <span class="glyphicon glyphicon-collapse-down"></span> -->
-                    <!--     </div> -->
-                    <!--     <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked /> -->
-                    <!--     <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span> -->
-                    <!--     <ul> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--     </ul> -->
-                    <!-- </li> -->
-
-                    <!-- <li id="{{name}}" class=""> -->
-                    <!--     <div class="collapse-arrow"> -->
-                    <!--         <span class="glyphicon glyphicon-collapse-down"></span> -->
-                    <!--     </div> -->
-                    <!--     <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked /> -->
-                    <!--     <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span> -->
-                    <!--     <ul> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--     </ul> -->
-                    <!-- </li> -->
-
-                <!-- </ul> -->
             </div>
         </div>
     </div>
@@ -166,7 +124,7 @@
       {{#each legend}}
         <li id="{{name}}" class="collapsed">
             <div class="collapse-arrow">
-                <span class="glyphicon glyphicon-collapse-down"></span>
+                <span class="glyphicon glyphicon-chevron-down"></span>
             </div>
             <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
             <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span>
@@ -190,16 +148,20 @@
       <ul>
         {{#each layers}}
         <li id="{{id-legend}}" class="">
-          <div class="collapse-arrow">
-            <span class="glyphicon glyphicon-collapse-down"></span>
+          <div class="collapse-arrow active">
+            {{#if details}}
+            <span class="glyphicon glyphicon-chevron-down"></span>
+            {{/if}}
           </div>
           <input id="{{id}}-checkbox" class="css-checkbox" type="checkbox" />
           <label for="{{id}}-checkbox" class="css-label"></label><span>{{name}}</span>
+          {{#if details}}
           <ul>
             {{#each details}}
-            <li><span class="legend-icon {{color}}"></span>{{name}}</li>
+            <li><span class="legend-icon" style="background-color: {{color}}"></span>{{name}}</li>
             {{/each}}
           </ul>
+          {{/if}}
         </li>
         {{/each}}
       </ul>

@@ -260,7 +260,7 @@ PP.App = (function() {
         var miniMap = new L.Control.MiniMap(overviewLayer).addTo(map);
 
         // Geocoder
-        var geocoderLayer = new L.Control.QuickGeocode().addTo(map);
+        // var geocoderLayer = new L.Control.QuickGeocode().addTo(map);
     };
 
     var weightedOverlay = (function() {
@@ -659,13 +659,18 @@ PP.App = (function() {
         };
 
         var toggleAllFactorsList = function() {
-            $(this).find('.glyphicon').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
+            $(this).find('.glyphicon').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
             $(this).parent().toggleClass('collapsed');
         };
 
         var toggleLegend = function(e) {
             $(this).toggleClass('active');
             $('#tool-legend-popover').toggleClass('in');
+        };
+
+        var toggleLegendSection = function() {
+            $(this).toggleClass('active').find('.glyphicon').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+            $(this).siblings('ul').toggleClass('collapsed');
         };
 
         var updateLayerWeight = function(e) {
@@ -692,6 +697,7 @@ PP.App = (function() {
             var $toggleSidebar     = $('#toggle-sidebar');
             var $scenarioSelect    = $('#scenario-select');
             var $opacitySlider     = $('.opacity-slider');
+            var $legendPopover     = $('#tool-legend-popover');
 
             // Panels
             $sidebar.on('click', '.manage-factors-btn', toggleFactorsPanel);
@@ -705,6 +711,7 @@ PP.App = (function() {
             $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
 
             $toolLegend.on('click', toggleLegend);
+            $legendPopover.on('click', '.collapse-arrow', toggleLegendSection);
         };
         
         return {
