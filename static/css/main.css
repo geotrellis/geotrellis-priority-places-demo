@@ -95,7 +95,7 @@ header {
         left: 0;
         top: 20px; } }
     .content .content-wrapper > div {
-      border-radius: 6px; }
+      border-radius: 8px; }
     .content .content-wrapper #map {
       background: #AAA;
       height: 100%;
@@ -191,6 +191,7 @@ header {
   margin-right: 0 !important; }
   #toolbar .tool-ramp .ramp-img {
     width: 100%;
+    height: 20px;
     margin-bottom: 5px; }
   #toolbar .tool-ramp .ramp-high {
     font-size: 0.75em;
@@ -228,15 +229,15 @@ header {
 .leaflet-popup a.leaflet-popup-close-button {
   padding: 8px 20px 0 0; }
 .leaflet-popup .leaflet-popup-content-wrapper {
-  border-radius: 6px; }
+  border-radius: 0; }
   .leaflet-popup .leaflet-popup-content-wrapper .leaflet-popup-content {
     min-width: 250px;
-    margin: 15px 15px; }
+    margin: 15px 15px 0; }
   .leaflet-popup .leaflet-popup-content-wrapper .parcel-details-header {
     margin: -16px -16px 0;
     background: #5188cb;
     height: 34px;
-    border-radius: 6px 6px 0 0; }
+    border-radius: 0; }
     .leaflet-popup .leaflet-popup-content-wrapper .parcel-details-header h5 {
       margin: 0;
       padding: 10px;

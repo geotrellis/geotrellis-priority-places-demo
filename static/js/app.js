@@ -644,6 +644,10 @@ PP.App = (function() {
             var $container = $allFactorsPanel.append(allFactorsTemplate(model));
         };
 
+        var removeFactor = function(e) {
+            $(e.target).closest('.factor').remove();
+        };
+
         var toggleSidebar = function() {
             $sidebar.toggleClass('active');
             $(this).toggleClass('active');
@@ -675,11 +679,7 @@ PP.App = (function() {
 
         var updateLayerWeight = function(e) {
             // Sets the count with the slider's value -5 thru 5
-            $(this).parent().next('.count').text(e.value);
-        };
-
-        var removeFactor = function() {
-            $(this).parent().parent().remove();
+            $(e.target).parent().next('.count').text(e.value);
         };
 
         var updateScenario = function() {
