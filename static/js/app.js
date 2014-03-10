@@ -180,7 +180,7 @@ PP.App = (function() {
                 notifyChange();
             },
             resetActiveLayer: function(layer) {
-                activeLayers = inactiveLayers;
+                $.extend(true, activeLayers, inactiveLayers);
                 notifyChange();
             },
 
