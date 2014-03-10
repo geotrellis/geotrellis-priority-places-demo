@@ -1,36 +1,3 @@
-input[type="checkbox"].css-checkbox {
-  position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0; }
-  input[type="checkbox"].css-checkbox:checked + label.css-label {
-    background-position: 0 -20px; }
-  input[type="checkbox"].css-checkbox + label.css-label {
-    padding-left: 25px;
-    height: 20px;
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-position: 0 0;
-    vertical-align: top;
-    cursor: pointer; }
-    input[type="checkbox"].css-checkbox + label.css-label + span {
-      min-height: 20px;
-      display: inline-block;
-      width: 230px;
-      font-size: 12px;
-      font-weight: 700;
-      line-height: 16px;
-      margin-bottom: 3px; }
-      #tool-legend-popover input[type="checkbox"].css-checkbox + label.css-label + span {
-        width: 195px; }
-
-.css-label {
-  background-image: url(http://csscheckbox.com/checkboxes/web-two-style.png); }
-
 html,
 body {
   font-family: "Open Sans";
@@ -187,6 +154,13 @@ header {
   text-align: left;
   margin-bottom: 5px;
   margin-top: 0; }
+#toolbar .tool-opacity .slider .slider-handle {
+  background: white;
+  opacity: 1;
+  border: 1px solid #CCC; }
+  #toolbar .tool-opacity .slider .slider-handle:hover {
+    box-shadow: 0 1px 8px black;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5); }
 #toolbar .tool-ramp {
   margin-right: 0 !important; }
   #toolbar .tool-ramp .ramp-img {
@@ -251,12 +225,37 @@ header {
     .leaflet-popup .leaflet-popup-content-wrapper .parcel-details-body table {
       margin: 0; }
 
+#sidebar input[type='radio'],
+#sidebar input[type='checkbox'] {
+  opacity: 0;
+  float: left;
+  width: 0; }
+  #sidebar input[type='radio'] + label,
+  #sidebar input[type='checkbox'] + label {
+    margin: 0;
+    clear: none;
+    padding: 0 0 0 28px;
+    height: 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #232323;
+    cursor: pointer;
+    vertical-align: top;
+    background: url(../images/off.png) left center no-repeat; }
+  #sidebar input[type='radio'].disabled + label,
+  #sidebar input[type='checkbox'].disabled + label {
+    opacity: 0.4;
+    cursor: default; }
+#sidebar input[type='radio']:checked + label {
+  background-image: url(../images/radio.png); }
+#sidebar input[type='checkbox']:checked + label {
+  background-image: url(../images/check.png); }
 #sidebar .scenarios {
-  padding: 10px;
-  border-bottom: 1px solid #f1f2f2;
+  padding: 15px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.05);
   position: relative;
   z-index: 999;
+  height: 70px;
   background-color: #52718c;
   background: url(../img/btngroup-bg.png) repeat-x top;
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#21405a), to(#52718c));
@@ -268,9 +267,27 @@ header {
   @media only screen and (max-width: 767px) {
     #sidebar .scenarios {
       border-radius: 6px 0 0 0; } }
+  #sidebar .scenarios:after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 14px solid #21405a;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    position: absolute;
+    bottom: -13px;
+    left: 39px; }
   #sidebar .scenarios > span {
     display: inline-block;
-    color: white; }
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    margin-top: -3px;
+    margin-left: 3px; }
+    #sidebar .scenarios > span > small {
+      display: block;
+      font-size: 12px;
+      font-weight: 300; }
   #sidebar .scenarios > select {
     display: inline-block;
     width: 235px;
@@ -280,7 +297,7 @@ header {
   overflow: auto;
   position: absolute;
   bottom: 60px;
-  top: 55px;
+  top: 70px;
   left: 0;
   right: 0; }
   #sidebar .factors .factor {
@@ -288,13 +305,26 @@ header {
     padding: 15px;
     border-radius: 6px;
     background-color: #f1f2f2;
-    opacity: 0.5;
     position: relative;
     width: 285px; }
+    #sidebar .factors .factor:first-child {
+      margin-top: 18px; }
+    #sidebar .factors .factor:last-child {
+      margin-bottom: 18px; }
     #sidebar .factors .factor:hover {
-      background: #dae6f4; }
+      background: #f1f2f2; }
     #sidebar .factors .factor.active {
-      opacity: 1; }
+      background: #5188cb;
+      color: white; }
+      #sidebar .factors .factor.active:hover {
+        background-color: #366eb3; }
+    #sidebar .factors .factor > span {
+      display: inline-block;
+      width: 220px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      line-height: 14px; }
     #sidebar .factors .factor .slider {
       width: 190px;
       margin-left: 25px; }
@@ -304,10 +334,18 @@ header {
         line-height: 14px;
         font-size: 18px;
         margin-left: 15px; }
+      #sidebar .factors .factor .slider .slider-handle {
+        background: white;
+        opacity: 1;
+        border: 1px solid #CCC; }
+        #sidebar .factors .factor .slider .slider-handle:hover {
+          box-shadow: 0 1px 8px black;
+          box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5); }
     #sidebar .factors .factor .factor-options {
       position: absolute;
       left: -20px;
-      top: 0; }
+      top: 0;
+      width: 15px; }
       #sidebar .factors .factor .factor-options > a {
         float: left;
         clear: both;
@@ -320,11 +358,12 @@ header {
   overflow-x: hidden;
   position: absolute;
   bottom: 60px;
-  top: 55px;
+  top: 70px;
   width: 100%;
   right: 0;
-  background-color: white;
-  transition: width 0.5s; }
+  background-color: #dae6f4;
+  transition: width 0.5s;
+  z-index: 9999; }
   #sidebar .all-factors.hide-panel {
     width: 0%; }
   #sidebar .all-factors ul {
@@ -368,8 +407,8 @@ header {
   top: 90px;
   left: 40px;
   bottom: 20px;
-  width: 300px;
-  max-width: 300px; }
+  width: 320px;
+  max-width: 320px; }
   #tool-legend-popover.in {
     display: block; }
   @media only screen and (max-width: 767px) {
@@ -389,6 +428,8 @@ header {
     left: 0;
     right: 0;
     border-top: 1px solid #F1f2f2; }
+    #tool-legend-popover > .popover-content > ul > li {
+      margin-bottom: 6px; }
     #tool-legend-popover > .popover-content > ul ul {
       height: auto;
       display: block;
@@ -423,3 +464,28 @@ header {
         opacity: 1; }
       #tool-legend-popover > .popover-content > ul .collapse-arrow.active {
         opacity: 1; }
+  #tool-legend-popover input[type='radio'],
+  #tool-legend-popover input[type='checkbox'] {
+    opacity: 0;
+    float: left;
+    width: 0; }
+    #tool-legend-popover input[type='radio'] + label,
+    #tool-legend-popover input[type='checkbox'] + label {
+      margin: 0;
+      clear: none;
+      padding: 0 0 0 28px;
+      height: 20px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #232323;
+      cursor: pointer;
+      vertical-align: top;
+      background: url(../images/off.png) left center no-repeat; }
+    #tool-legend-popover input[type='radio'].disabled + label,
+    #tool-legend-popover input[type='checkbox'].disabled + label {
+      opacity: 0.4;
+      cursor: default; }
+  #tool-legend-popover input[type='radio']:checked + label {
+    background-image: url(../images/radio.png); }
+  #tool-legend-popover input[type='checkbox']:checked + label {
+    background-image: url(../images/check.png); }

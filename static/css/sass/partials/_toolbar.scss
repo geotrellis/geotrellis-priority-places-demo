@@ -64,6 +64,18 @@
 			margin-bottom: 5px;
 			margin-top: 0;
 		}
+        .slider {
+            .slider-handle {
+                background: white;
+                opacity: 1;
+                border: 1px solid #CCC;
+
+                &:hover {
+                    box-shadow: 0 1px 8px rgb(0,0,0);
+                    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5)
+                }
+            }
+        }
 	}
 
 	.tool-ramp {

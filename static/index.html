@@ -55,12 +55,8 @@
             <div id="map"></div>
             <div id="sidebar">
                 <div class="scenarios">
-                    <span>Scenarios:</span>
-                    <select class="form-control">
-                        <option>All Factors Template</option>
-                        <option>Residential Potential Template</option>
-                        <option>Custom Scenario</option>
-                    </select>
+                    <input id="all-radio" name="css-sidebar-radio" class="css-radio" type="radio" checked />
+                    <label for="all-radio" class="css-label"></label><span>Combined Factors <small>View the composite of all factors below.</small></span>
                 </div>
                 <div class="factors"></div>
                 <div class="all-factors hide-panel"></div>				
@@ -79,9 +75,9 @@
     </div>
 
     <script type="text/x-handlebars-template" id="factor-template">
-        <div id="layer-{{id}}" class="factor active">
-            <input id="{{id}}-checkbox" class="css-checkbox" type="checkbox" checked />
-            <label for="{{id}}-checkbox" class="css-label"></label><span>{{name}}</span>
+        <div id="layer-{{id}}" class="factor">
+            <input id="{{id}}-radio" name="css-sidebar-radio" class="css-radio" type="radio" />
+            <label for="{{id}}-radio" class="css-label"></label><span>{{name}}</span>
 
             <input type="text" class="slider" value="" data-slider-min="-5" data-slider-max="5" data-slider-step="1" data-slider-value="0.01" data-slider-tooltip="hide">
             <div class="count">0</div>

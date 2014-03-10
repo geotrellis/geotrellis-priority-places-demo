@@ -1,10 +1,14 @@
+$scenario-height : 70px;
+
 #sidebar {
+    @include checkboxes;
+
 	.scenarios {
-		padding: 10px;
-		border-bottom: 1px solid $light-gray;
+		padding: 15px;
 		box-shadow: 0 4px 4px rgba(0,0,0,.05);
 		position: relative;
 		z-index: 999;
+        height: $scenario-height;
 		background-color: #52718c;
 		background: url(../img/btngroup-bg.png) repeat-x top;
 		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#21405a), to(#52718c));
@@ -18,10 +22,32 @@
 		    border-radius: 6px 0 0 0;
         }
 
+        &:after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-top: 14px solid #21405a;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            position: absolute;
+            bottom: -13px;
+            left: 39px;
+        }
+
 		> span {
 			display: inline-block;
 			color: white;
-		}
+            font-weight: 700;
+            font-size: 18px;
+            margin-top: -3px;
+            margin-left: 3px;
+            
+            > small {
+                display: block;
+                font-size: 12px;
+                font-weight: 300;
+            }
+        }
 		> select {
 			display: inline-block;
 			width: 235px;
@@ -34,7 +60,7 @@
 		overflow: auto;
 		position: absolute;
 		bottom: 60px;
-		top: 55px;
+		top: $scenario-height;
 		left: 0;
 		right: 0;
 
@@ -43,16 +69,34 @@
 			padding: 15px;
 			border-radius: 6px;
 			background-color: $light-gray;
-			opacity: 0.5;
 			position: relative;
 			width: 285px;
 
+            &:first-child {
+                margin-top: 18px;
+            }            &:last-child {
+                margin-bottom: 18px;
+            }
 			&:hover {
-				background: lighten($bg-color, 35%);
+				background: $light-gray;
 			}
 			&.active {
-				opacity: 1;
+                background: $bg-color;
+                color: white;
+
+                &:hover {
+                    background-color: darken($bg-color, 10%);
+    			}
 			}
+
+            > span {
+                display: inline-block;
+                width: 220px;
+                font-size: 12px;
+                font-weight: 700;
+                margin-bottom: 6px;
+                line-height: 14px;
+            }
 
 			.slider {
 				width: 190px;
@@ -65,12 +109,22 @@
 					font-size: 18px;
 					margin-left: 15px;
 				}
-			}
 
+                .slider-handle {
+                    background: white;
+                    opacity: 1;
+                    border: 1px solid #CCC;
+
+                    &:hover {                        box-shadow: 0 1px 8px rgb(0,0,0);
+                        box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5)
+                    }
+                }
+			}
 			.factor-options {
 				position: absolute;
 				left: -20px;
 				top: 0;
+                width: 15px;
 
 				> a {
 					float: left;
@@ -90,11 +144,12 @@
 		overflow-x: hidden;
 		position: absolute;
 		bottom: 60px;
-		top: 55px;
+		top: $scenario-height;
 		width: 100%;
 		right: 0;
-		background-color: white;
+		background-color: lighten(#5188cb, 35%);
 		transition: width 0.5s;
+        z-index: 9999;
 
 		&.hide-panel {
 			width: 0%;

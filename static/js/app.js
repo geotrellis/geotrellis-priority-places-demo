@@ -117,6 +117,7 @@ PP.App = (function() {
         var layers = [];
         var categories = [];
         var activeLayers = [];
+        var inactiveLayers = [];
         var weights = {};
         var colorRamp = "blue-to-red";
 
@@ -153,6 +154,7 @@ PP.App = (function() {
                 
                 // Setup default active layers.
                 activeLayers = _.map(layers, function(l) { return l.id; });
+                inactiveLayers = _.map(layers, function(l) { return l.id; });
             },
 
             getLayers: function() { return layers; },
@@ -160,6 +162,7 @@ PP.App = (function() {
             addActiveLayer: function(layer,weight) {
                 if(!_.contains(activeLayers,layer.id)) {
                     activeLayers.push(layer.id);
+                    inactiveLayers.push(layer.id);
                     notifyChange();
                 };
             },
@@ -167,8 +170,18 @@ PP.App = (function() {
                 if(_.contains(activeLayers,layer.id)) {
                     var i = activeLayers.indexOf(layer.id);
                     activeLayers.splice(i,1);
+                    inactiveLayers.splice(i,1);
                     notifyChange();
                 };
+            },
+            toggleActiveLayer: function(layer,target) {
+                activeLayers.length = 0;
+                activeLayers.push(layer.id);
+                notifyChange();
+            },
+            resetActiveLayer: function(layer) {
+                activeLayers = inactiveLayers;
+                notifyChange();
             },
 
             updateLayerWeight: function(layer,weight) {
@@ -628,6 +641,14 @@ PP.App = (function() {
                 var $parentContainer = $factorsList.append(factorTemplate(layer));
                 var $container = $parentContainer.find('#layer-'+layer.id);
                 $container.find('.factor-info').tooltip({ placement:'left', container:'#sidebar' });
+                $container.find('.css-radio').on('change', function(e) {
+                    model.toggleActiveLayer(layer,e.target);
+                    toggleFactorRadio(e);
+                });
+                $sidebar.find('#all-radio').on('change', function(e) {
+                    model.resetActiveLayer(layer);
+                    toggleFactorRadio(e);
+                });
                 $container.find('.slider').slider().on('slideStop', function(e) {
                     model.updateLayerWeight(layer,e.value);
                     updateLayerWeight(e);
@@ -658,7 +679,8 @@ PP.App = (function() {
             $manageFactorsBtn.toggleClass('active');
         };
 
-        var toggleFactorCheckbox = function() {
+        var toggleFactorRadio = function() {
+            $('.factor').removeClass('active');
             $(this).parent().toggleClass('active');
         };
 
@@ -704,7 +726,6 @@ PP.App = (function() {
             $toggleSidebar.on('click', toggleSidebar);
 
             // Inputs
-            $sidebar.on('change', '.css-checkbox', toggleFactorCheckbox);
             $scenarioSelect.on('change', updateScenario);
             $opacitySlider.slider('setValue', PP.Constants.DEFAULT_OPACITY * 100)
                           .on('slide', updateOpacity);

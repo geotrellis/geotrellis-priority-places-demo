@@ -4,8 +4,8 @@
     top: 90px;
     left: 40px;
     bottom: 20px;
-    width: 300px;
-    max-width: 300px;
+    width: 320px;
+    max-width: 320px;    
 
     &.in {
         display: block;
@@ -32,6 +32,10 @@
             left: 0;
             right: 0;
             border-top: 1px solid #F1f2f2;
+
+            > li {
+                margin-bottom: 6px;
+            }
     
             ul {
     			height: auto;
@@ -81,4 +85,6 @@
     		}
         }
 	}
+
+    @include checkboxes;
 }
