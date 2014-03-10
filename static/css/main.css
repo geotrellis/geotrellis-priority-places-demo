@@ -492,6 +492,9 @@ header {
     border-top: 1px solid #F1f2f2; }
     #tool-legend-popover > .popover-content > ul > li {
       margin-bottom: 6px; }
+      #tool-legend-popover > .popover-content > ul > li:first-child .legend-icon {
+        background: none !important;
+        border: black 2px solid; }
     #tool-legend-popover > .popover-content > ul ul {
       height: auto;
       display: block;

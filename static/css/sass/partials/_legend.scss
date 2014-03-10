@@ -35,6 +35,13 @@
 
             > li {
                 margin-bottom: 6px;
+
+                &:first-child {
+                    .legend-icon {
+                        background: none !important;
+                        border: black 2px solid;
+                    }
+                }
             }
     
             ul {
