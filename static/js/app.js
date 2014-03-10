@@ -699,6 +699,11 @@ PP.App = (function() {
             $(this).siblings('ul').toggleClass('collapsed');
         };
 
+        var toggleActiveReportType = function() {
+            $('.list-group-item').removeClass('active');
+            $(this).toggleClass('active');
+        };
+
         var updateLayerWeight = function(e) {
             // Sets the count with the slider's value -5 thru 5
             $(e.target).parent().next('.count').text(e.value);
@@ -720,6 +725,7 @@ PP.App = (function() {
             var $scenarioSelect    = $('#scenario-select');
             var $opacitySlider     = $('.opacity-slider');
             var $legendPopover     = $('#tool-legend-popover');
+            var $reportType        = $('.list-group-item');
 
             // Panels
             $sidebar.on('click', '.manage-factors-btn', toggleFactorsPanel);
@@ -727,9 +733,9 @@ PP.App = (function() {
 
             // Inputs
             $scenarioSelect.on('change', updateScenario);
-            $opacitySlider.slider('setValue', PP.Constants.DEFAULT_OPACITY * 100)
-                          .on('slide', updateOpacity);
+            $opacitySlider.slider('setValue', PP.Constants.DEFAULT_OPACITY * 100).on('slide', updateOpacity);
             $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
+            $reportType.on('click', toggleActiveReportType);
 
             $toolLegend.on('click', toggleLegend);
             $legendPopover.on('click', '.collapse-arrow', toggleLegendSection);
