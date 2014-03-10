@@ -679,9 +679,9 @@ PP.App = (function() {
             $manageFactorsBtn.toggleClass('active');
         };
 
-        var toggleFactorRadio = function() {
+        var toggleFactorRadio = function(e) {
             $('.factor').removeClass('active');
-            $(this).parent().toggleClass('active');
+            $(e.target).parent().toggleClass('active');
         };
 
         var toggleAllFactorsList = function() {
