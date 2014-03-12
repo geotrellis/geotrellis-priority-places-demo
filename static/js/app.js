@@ -704,6 +704,20 @@ PP.App = (function() {
             $(this).toggleClass('active');
         };
 
+        var toggleReportArea = function() {
+            var id = $(this).attr('id');
+            if (id == 'report-study-area-radius') {
+                $('#report-study-area-traveltime-options').addClass('hidden');
+                $('#report-study-area-radius-options').toggleClass('hidden');
+            } else if (id == 'report-study-area-travel') {
+                $('#report-study-area-radius-options').addClass('hidden');
+                $('#report-study-area-traveltime-options').toggleClass('hidden');
+            } else {
+                $('#report-study-area-radius-options').addClass('hidden');
+                $('#report-study-area-traveltime-options').addClass('hidden');
+            }
+        };
+
         var updateLayerWeight = function(e) {
             // Sets the count with the slider's value -5 thru 5
             $(e.target).parent().next('.count').text(e.value);
@@ -726,6 +740,7 @@ PP.App = (function() {
             var $opacitySlider     = $('.opacity-slider');
             var $legendPopover     = $('#tool-legend-popover');
             var $reportType        = $('.list-group-item');
+            var $reportArea        = $('#report-study-area');
 
             // Panels
             $sidebar.on('click', '.manage-factors-btn', toggleFactorsPanel);
@@ -736,6 +751,7 @@ PP.App = (function() {
             $opacitySlider.slider('setValue', PP.Constants.DEFAULT_OPACITY * 100).on('slide', updateOpacity);
             $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
             $reportType.on('click', toggleActiveReportType);
+            $reportArea.on('click', 'label', toggleReportArea);
 
             $toolLegend.on('click', toggleLegend);
             $legendPopover.on('click', '.collapse-arrow', toggleLegendSection);

@@ -91,27 +91,27 @@
                             <label class="report-label"><span class="label-number">2.</span>Select a Report Output Format</label>
                             <div class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-primary active">
-                                    <input type="radio" name="report-output-format" id="report-output-format-pdf" checked> PDF
+                                    <input type="radio" name="report-output-format" checked> PDF
                                 </label>
                                 <label class="btn btn-primary">
-                                    <input type="radio" name="report-output-format" id="report-output-format-excel"> Excel
+                                    <input type="radio" name="report-output-format"> Excel
                                 </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="report-label"><span class="label-number">3.</span>Choose your Study Area</label>
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-primary active">
-                                    <input type="radio" name="report-study-area" id="report-study-area-census" checked> Census Tract
+                            <div class="btn-group" id="report-study-area" data-toggle="buttons">
+                                <label class="btn btn-primary active" id="report-study-area-census">
+                                    <input type="radio" name="report-study-area" checked> Census Tract
                                 </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="report-study-area" id="report-study-area-blockgroup"> Block Group
+                                <label class="btn btn-primary" id="report-study-area-blockgroup">
+                                    <input type="radio" name="report-study-area"> Block Group
                                 </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="report-study-area" id="report-study-area-radius"> Radius
+                                <label class="btn btn-primary" id="report-study-area-radius">
+                                    <input type="radio" name="report-study-area"> Radius
                                 </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="report-study-area" id="report-study-area-travel"> Travel Time
+                                <label class="btn btn-primary" id="report-study-area-travel">
+                                    <input type="radio" name="report-study-area"> Travel Time
                                 </label>
                             </div>
                             <div id="report-study-area-radius-options" class="well hidden">
