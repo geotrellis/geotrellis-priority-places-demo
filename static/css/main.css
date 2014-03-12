@@ -340,7 +340,7 @@ header {
   padding: 15px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.05);
   position: relative;
-  z-index: 999;
+  z-index: 1000;
   height: 70px;
   background-color: #52718c;
   background: url(../img/btngroup-bg.png) repeat-x top;
@@ -385,7 +385,9 @@ header {
   bottom: 60px;
   top: 70px;
   left: 0;
-  right: 0; }
+  right: 0;
+  z-index: 1000;
+  background: white; }
   #sidebar .factors .factor {
     margin: 10px 10px 10px 30px;
     padding: 15px;
@@ -445,28 +447,41 @@ header {
   overflow: auto;
   overflow-x: hidden;
   position: absolute;
-  bottom: 60px;
-  top: 0;
+  bottom: 20px;
+  top: 20px;
   width: 100%;
-  right: 0;
-  background-color: #dae6f4;
-  transition: width 0.5s;
+  right: 100%;
+  background-color: white;
+  transition: right 0.5s;
   z-index: 999;
-  border-radius: 6px 6px 0 0; }
+  border-radius: 6px 0 0 6px;
+  box-shadow: -5px 10px 5px rgba(0, 0, 0, 0.1) inset; }
   #sidebar .all-factors.hide-panel {
-    width: 0%; }
+    right: 0; }
   #sidebar .all-factors .scenarios {
     padding: 15px;
     border-bottom: 1px solid #b3cbe8;
-    background: white; }
+    background-color: #52718c;
+    background: url(../img/btngroup-bg.png) repeat-x top;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#21405a), to(#52718c));
+    background: -webkit-linear-gradient(top, #52718c, #21405a);
+    background: -moz-linear-gradient(top, #52718c, #21405a);
+    background: -ms-linear-gradient(top, #52718c, #21405a);
+    background: -o-linear-gradient(top, #52718c, #21405a);
+    height: 85px; }
     #sidebar .all-factors .scenarios span {
       font-weight: 700;
-      font-size: 14px;
-      color: #666; }
+      font-size: 12px;
+      margin-bottom: 5px;
+      color: white; }
   #sidebar .all-factors ul {
     padding: 15px;
     list-style: none;
-    width: 310px; }
+    left: 0;
+    position: absolute;
+    top: 85px;
+    bottom: 0;
+    right: 0; }
     #sidebar .all-factors ul ul {
       height: auto;
       transition: height 0.5s;
@@ -495,7 +510,9 @@ header {
   padding: 13px;
   border-top: 1px solid #f1f2f2;
   box-shadow: 0 -4px 4px rgba(0, 0, 0, 0.05);
-  z-index: 1000; }
+  z-index: 1000;
+  background: white;
+  border-radius: 0 0 6px 6px; }
 
 .tooltip-inner {
   padding: 8px 12px;
