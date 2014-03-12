@@ -1,5 +1,34 @@
 @mixin checkboxes {
-	input[type='radio'],
+	input[type='radio'] {
+        opacity: 0;
+        float: left;
+        width: 0;
+
+        & + label {
+            margin: 0;
+            clear: none;
+            padding: 0 0 0 28px;
+            height: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #232323;
+            cursor: pointer;
+            vertical-align: top;
+            background: url(../images/radio-off.png) left center no-repeat;
+        }
+        
+        &.disabled + label {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        & + label:hover {
+            background-image: url(../images/radio-hover.png);
+        }
+        &:checked + label {
+            background-image: url(../images/radio.png);
+        }
+    }
     input[type='checkbox'] {
         opacity: 0;
         float: left;
@@ -15,17 +44,15 @@
             color: #232323;
             cursor: pointer;
             vertical-align: top;
-            background: url(../images/off.png) left center no-repeat;
+            background: url(../images/check-off.png) left center no-repeat;
         }
         &.disabled + label {
             opacity: 0.4;
             cursor: default;
         }
+
+        &:checked + label {
+            background-image: url(../images/check.png);
+        }
 	}
-    input[type='radio']:checked + label {
-        background-image: url(../images/radio.png);
-    }
-    input[type='checkbox']:checked + label {
-        background-image: url(../images/check.png);
-    }
 }
