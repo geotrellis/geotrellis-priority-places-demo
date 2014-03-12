@@ -55,12 +55,21 @@
         <div class="content-wrapper">
             <div id="map"></div>
             <div id="sidebar">
-                <div class="scenarios">
+                <div class="composite">
                     <input id="all-radio" name="css-sidebar-radio" class="css-radio" type="radio" checked />
-                    <label for="all-radio" class="css-label"></label><span>Combined Factors <small>View the composite of all factors below.</small></span>
+                    <label for="all-radio" class="css-label"></label><span>All Combined Factors <small>View the composite of all factors below.</small></span>
                 </div>
                 <div class="factors"></div>
-                <div class="all-factors hide-panel"></div>				
+                <div class="all-factors hide-panel">
+                    <div class="scenarios">
+                        <span>Scenarios:</span>
+                        <select class="form-control">
+                            <option>All Factors Template</option>
+                            <option>Residential Potential Template</option>
+                            <option>Custom Scenario</option>
+                        </select>
+                    </div>
+                </div>				
                 <div class="manage">
                     <div class="manage-factors-btn btn btn-primary">Manage Decision Factors</div>
                     <div class="reset-factors-btn btn btn-default">Reset Factors</div>
@@ -91,27 +100,27 @@
                             <label class="report-label"><span class="label-number">2.</span>Select a Report Output Format</label>
                             <div class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-primary active">
-                                    <input type="radio" name="report-output-format" id="report-output-format-pdf" checked> PDF
+                                    <input type="radio" name="report-output-format" checked> PDF
                                 </label>
                                 <label class="btn btn-primary">
-                                    <input type="radio" name="report-output-format" id="report-output-format-excel"> Excel
+                                    <input type="radio" name="report-output-format"> Excel
                                 </label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="report-label"><span class="label-number">3.</span>Choose your Study Area</label>
-                            <div class="btn-group" data-toggle="buttons">
-                                <label class="btn btn-primary active">
-                                    <input type="radio" name="report-study-area" id="report-study-area-census" checked> Census Tract
+                            <div class="btn-group" id="report-study-area" data-toggle="buttons">
+                                <label class="btn btn-primary active" id="report-study-area-census">
+                                    <input type="radio" name="report-study-area" checked> Census Tract
                                 </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="report-study-area" id="report-study-area-blockgroup"> Block Group
+                                <label class="btn btn-primary" id="report-study-area-blockgroup">
+                                    <input type="radio" name="report-study-area"> Block Group
                                 </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="report-study-area" id="report-study-area-radius"> Radius
+                                <label class="btn btn-primary" id="report-study-area-radius">
+                                    <input type="radio" name="report-study-area"> Radius
                                 </label>
-                                <label class="btn btn-primary">
-                                    <input type="radio" name="report-study-area" id="report-study-area-travel"> Travel Time
+                                <label class="btn btn-primary" id="report-study-area-travel">
+                                    <input type="radio" name="report-study-area"> Travel Time
                                 </label>
                             </div>
                             <div id="report-study-area-radius-options" class="well hidden">
@@ -174,11 +183,11 @@
 
     <script type="text/x-handlebars-template" id="factor-template">
         <div id="layer-{{id}}" class="factor">
-            <input id="{{id}}-radio" name="css-sidebar-radio" class="css-radio" type="radio" />
+            <input id="{{id}}-radio" name="css-sidebar-radio" class="css-radio" type="radio" disabled="disabled" />
             <label for="{{id}}-radio" class="css-label"></label><span>{{name}}</span>
 
             <input type="text" class="slider" value="" data-slider-min="-5" data-slider-max="5" data-slider-step="1" data-slider-value="0.01" data-slider-tooltip="hide">
-            <div class="count">0</div>
+            <div class="count zero">0</div>
 
             <div class="factor-options">
                 <a class="factor-remove"><span class="glyphicon glyphicon-remove-sign"></span></a>

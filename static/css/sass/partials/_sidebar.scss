@@ -1,14 +1,14 @@
-$scenario-height : 70px;
+$composite-height : 70px;
 
 #sidebar {
     @include checkboxes;
 
-	.scenarios {
+	.composite {
 		padding: 15px;
 		box-shadow: 0 4px 4px rgba(0,0,0,.05);
 		position: relative;
-		z-index: 999;
-        height: $scenario-height;
+		z-index: 1000;
+        height: $composite-height;
 		background-color: #52718c;
 		background: url(../img/btngroup-bg.png) repeat-x top;
 		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#21405a), to(#52718c));
@@ -60,9 +60,11 @@ $scenario-height : 70px;
 		overflow: auto;
 		position: absolute;
 		bottom: 60px;
-		top: $scenario-height;
+		top: $composite-height;
 		left: 0;
 		right: 0;
+        z-index: 1000;
+        background: white;
 
 		.factor {
 			margin: 10px 10px 10px 30px;
@@ -108,6 +110,10 @@ $scenario-height : 70px;
 					line-height: 14px;
 					font-size: 18px;
 					margin-left: 15px;
+
+                    &.zero {
+                        opacity: 0.5;
+                    }
 				}
 
                 .slider-handle {
@@ -143,22 +149,48 @@ $scenario-height : 70px;
 		overflow: auto;
 		overflow-x: hidden;
 		position: absolute;
-		bottom: 60px;
-		top: $scenario-height;
+		bottom: 20px;
+		top: 20px;
 		width: 100%;
-		right: 0;
-		background-color: lighten(#5188cb, 35%);
-		transition: width 0.5s;
-        z-index: 9999;
+		right: 100%;
+		background-color: white;
+		transition: right 0.5s;
+        z-index: 999;
+        border-radius: 6px 0 0 6px;
+        box-shadow: -5px 10px 5px rgba(0,0,0,.1) inset;
 
 		&.hide-panel {
-			width: 0%;
+			right: 0;
 		}
+
+        .scenarios {
+            padding: 15px;
+            border-bottom: 1px solid lighten($bg-color, 25%);
+            background-color: #52718c;
+    		background: url(../img/btngroup-bg.png) repeat-x top;
+    		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#21405a), to(#52718c));
+    		background: -webkit-linear-gradient(top, #52718c, #21405a);
+    		background: -moz-linear-gradient(top, #52718c, #21405a);
+    		background: -ms-linear-gradient(top, #52718c, #21405a);
+    		background: -o-linear-gradient(top, #52718c, #21405a);
+            height: 85px;
+
+            span {
+                font-weight: 700;
+                font-size: 12px;
+                margin-bottom: 5px;
+                color: white;
+            }
+        }
 
 		ul {
 			padding: 15px;
-			list-style: none;
-			width: 310px;
+            list-style: none;
+            left: 0;
+            position: absolute;
+            top: 85px;
+            bottom: 0;
+            right: 0;
 
 			ul {
 				height: auto;
@@ -200,6 +232,9 @@ $scenario-height : 70px;
 		padding: 13px;
 		border-top: 1px solid #f1f2f2;
 		box-shadow: 0 -4px 4px rgba(0,0,0,.05);
+        z-index: 1000;
+        background: white;
+        border-radius: 0 0 6px 6px;
 	}
 }
 
