@@ -55,12 +55,21 @@
         <div class="content-wrapper">
             <div id="map"></div>
             <div id="sidebar">
-                <div class="scenarios">
+                <div class="composite">
                     <input id="all-radio" name="css-sidebar-radio" class="css-radio" type="radio" checked />
                     <label for="all-radio" class="css-label"></label><span>All Combined Factors <small>View the composite of all factors below.</small></span>
                 </div>
                 <div class="factors"></div>
-                <div class="all-factors hide-panel"></div>				
+                <div class="all-factors hide-panel">
+                    <div class="scenarios">
+                        <span>Scenarios:</span>
+                        <select class="form-control">
+                            <option>All Factors Template</option>
+                            <option>Residential Potential Template</option>
+                            <option>Custom Scenario</option>
+                        </select>
+                    </div>
+                </div>				
                 <div class="manage">
                     <div class="manage-factors-btn btn btn-primary">Manage Decision Factors</div>
                     <div class="reset-factors-btn btn btn-default">Reset Factors</div>
@@ -174,11 +183,11 @@
 
     <script type="text/x-handlebars-template" id="factor-template">
         <div id="layer-{{id}}" class="factor">
-            <input id="{{id}}-radio" name="css-sidebar-radio" class="css-radio" type="radio" />
+            <input id="{{id}}-radio" name="css-sidebar-radio" class="css-radio" type="radio" disabled="disabled" />
             <label for="{{id}}-radio" class="css-label"></label><span>{{name}}</span>
 
             <input type="text" class="slider" value="" data-slider-min="-5" data-slider-max="5" data-slider-step="1" data-slider-value="0.01" data-slider-tooltip="hide">
-            <div class="count">0</div>
+            <div class="count zero">0</div>
 
             <div class="factor-options">
                 <a class="factor-remove"><span class="glyphicon glyphicon-remove-sign"></span></a>

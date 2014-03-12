@@ -649,7 +649,7 @@ PP.App = (function() {
                     model.resetActiveLayer(layer);
                     toggleFactorRadio(e);
                 });
-                $container.find('.slider').slider().on('slideStop', function(e) {
+                $container.find('.slider').slider().on('slide', function(e) {
                     model.updateLayerWeight(layer,e.value);
                     updateLayerWeight(e);
                 });
@@ -720,7 +720,13 @@ PP.App = (function() {
 
         var updateLayerWeight = function(e) {
             // Sets the count with the slider's value -5 thru 5
-            $(e.target).parent().next('.count').text(e.value);
+            if (e.value === 0) {
+                $(e.target).parent().prevAll('.css-radio').prop('disabled', true);
+                $(e.target).parent().next('.count').addClass('zero').text(e.value);
+            } else {
+                $(e.target).parent().prevAll('.css-radio').prop('disabled', false);
+                $(e.target).parent().next('.count').removeClass('zero').text(e.value);
+            }
         };
 
         var updateScenario = function() {

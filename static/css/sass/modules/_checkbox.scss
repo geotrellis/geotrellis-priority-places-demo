@@ -17,9 +17,13 @@
             background: url(../images/radio-off.png) left center no-repeat;
         }
         
-        &.disabled + label {
+        &:disabled + label {
             opacity: 0.4;
             cursor: default;
+
+            &:hover {
+                background-image: url(../images/radio-off.png);
+            }
         }
 
         & + label:hover {
@@ -28,7 +32,16 @@
         &:checked + label {
             background-image: url(../images/radio.png);
         }
+        &:disabled:checked + label {
+            opacity: 0.4;
+            cursor: default;
+
+            &:hover {
+                background-image: url(../images/radio.png);
+            }
+        }
     }
+
     input[type='checkbox'] {
         opacity: 0;
         float: left;
@@ -46,7 +59,7 @@
             vertical-align: top;
             background: url(../images/check-off.png) left center no-repeat;
         }
-        &.disabled + label {
+        &:disabled + label {
             opacity: 0.4;
             cursor: default;
         }
