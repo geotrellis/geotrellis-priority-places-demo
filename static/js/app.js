@@ -117,6 +117,7 @@ PP.App = (function() {
         var layers = [];
         var categories = [];
         var activeLayers = [];
+        var inactiveLayers = [];
         var weights = {};
         var colorRamp = "blue-to-red";
 
@@ -153,6 +154,7 @@ PP.App = (function() {
                 
                 // Setup default active layers.
                 activeLayers = _.map(layers, function(l) { return l.id; });
+                inactiveLayers = _.map(layers, function(l) { return l.id; });
             },
 
             getLayers: function() { return layers; },
@@ -160,6 +162,7 @@ PP.App = (function() {
             addActiveLayer: function(layer,weight) {
                 if(!_.contains(activeLayers,layer.id)) {
                     activeLayers.push(layer.id);
+                    inactiveLayers.push(layer.id);
                     notifyChange();
                 };
             },
@@ -167,8 +170,18 @@ PP.App = (function() {
                 if(_.contains(activeLayers,layer.id)) {
                     var i = activeLayers.indexOf(layer.id);
                     activeLayers.splice(i,1);
+                    inactiveLayers.splice(i,1);
                     notifyChange();
                 };
+            },
+            toggleActiveLayer: function(layer,target) {
+                activeLayers.length = 0;
+                activeLayers.push(layer.id);
+                notifyChange();
+            },
+            resetActiveLayer: function(layer) {
+                $.extend(true, activeLayers, inactiveLayers);
+                notifyChange();
             },
 
             updateLayerWeight: function(layer,weight) {
@@ -260,7 +273,7 @@ PP.App = (function() {
         var miniMap = new L.Control.MiniMap(overviewLayer).addTo(map);
 
         // Geocoder
-        var geocoderLayer = new L.Control.QuickGeocode().addTo(map);
+        // var geocoderLayer = new L.Control.QuickGeocode().addTo(map);
     };
 
     var weightedOverlay = (function() {
@@ -628,6 +641,14 @@ PP.App = (function() {
                 var $parentContainer = $factorsList.append(factorTemplate(layer));
                 var $container = $parentContainer.find('#layer-'+layer.id);
                 $container.find('.factor-info').tooltip({ placement:'left', container:'#sidebar' });
+                $container.find('.css-radio').on('change', function(e) {
+                    model.toggleActiveLayer(layer,e.target);
+                    toggleFactorRadio(e);
+                });
+                $sidebar.find('#all-radio').on('change', function(e) {
+                    model.resetActiveLayer(layer);
+                    toggleFactorRadio(e);
+                });
                 $container.find('.slider').slider().on('slideStop', function(e) {
                     model.updateLayerWeight(layer,e.value);
                     updateLayerWeight(e);
@@ -644,6 +665,10 @@ PP.App = (function() {
             var $container = $allFactorsPanel.append(allFactorsTemplate(model));
         };
 
+        var removeFactor = function(e) {
+            $(e.target).closest('.factor').remove();
+        };
+
         var toggleSidebar = function() {
             $sidebar.toggleClass('active');
             $(this).toggleClass('active');
@@ -654,12 +679,13 @@ PP.App = (function() {
             $manageFactorsBtn.toggleClass('active');
         };
 
-        var toggleFactorCheckbox = function() {
-            $(this).parent().toggleClass('active');
+        var toggleFactorRadio = function(e) {
+            $('.factor').removeClass('active');
+            $(e.target).parent().toggleClass('active');
         };
 
         var toggleAllFactorsList = function() {
-            $(this).find('.glyphicon').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
+            $(this).find('.glyphicon').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
             $(this).parent().toggleClass('collapsed');
         };
 
@@ -668,13 +694,19 @@ PP.App = (function() {
             $('#tool-legend-popover').toggleClass('in');
         };
 
-        var updateLayerWeight = function(e) {
-            // Sets the count with the slider's value -5 thru 5
-            $(this).parent().next('.count').text(e.value);
+        var toggleLegendSection = function() {
+            $(this).toggleClass('active').find('.glyphicon').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+            $(this).siblings('ul').toggleClass('collapsed');
         };
 
-        var removeFactor = function() {
-            $(this).parent().parent().remove();
+        var toggleActiveReportType = function() {
+            $('.list-group-item').removeClass('active');
+            $(this).toggleClass('active');
+        };
+
+        var updateLayerWeight = function(e) {
+            // Sets the count with the slider's value -5 thru 5
+            $(e.target).parent().next('.count').text(e.value);
         };
 
         var updateScenario = function() {
@@ -692,19 +724,21 @@ PP.App = (function() {
             var $toggleSidebar     = $('#toggle-sidebar');
             var $scenarioSelect    = $('#scenario-select');
             var $opacitySlider     = $('.opacity-slider');
+            var $legendPopover     = $('#tool-legend-popover');
+            var $reportType        = $('.list-group-item');
 
             // Panels
             $sidebar.on('click', '.manage-factors-btn', toggleFactorsPanel);
             $toggleSidebar.on('click', toggleSidebar);
 
             // Inputs
-            $sidebar.on('change', '.css-checkbox', toggleFactorCheckbox);
             $scenarioSelect.on('change', updateScenario);
-            $opacitySlider.slider('setValue', PP.Constants.DEFAULT_OPACITY * 100)
-                          .on('slide', updateOpacity);
+            $opacitySlider.slider('setValue', PP.Constants.DEFAULT_OPACITY * 100).on('slide', updateOpacity);
             $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
+            $reportType.on('click', toggleActiveReportType);
 
             $toolLegend.on('click', toggleLegend);
+            $legendPopover.on('click', '.collapse-arrow', toggleLegendSection);
         };
         
         return {

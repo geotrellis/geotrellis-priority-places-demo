@@ -13,6 +13,24 @@ header {
 		height: 50px;
 		text-indent: -9999px;
 	}
+    h2 {
+        margin-left: 25px;
+        float: left;
+        margin-bottom: 4px;
+        margin-top: 7px;
+        font-size: 24px;
+        font-weight: 300;
+        color: white;
+
+        small {
+            display: block;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 2px;
+            margin-left: 1px;
+            color: lighten($bg-color, 30%);
+        }
+    }
 }
 
 #toggle-sidebar {

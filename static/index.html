@@ -15,6 +15,7 @@
 <body>
     <header>
         <h1>Asheville North Carolina</h1>
+        <h2>Priority Places <small>MapAsheville</small></h2>
         <div id="toggle-sidebar" class="visible-xs btn btn-primary">
             <span class="glyphicon glyphicon-filter"></span>
         </div>
@@ -25,7 +26,7 @@
                 <span class="glyphicon glyphicon-list"></span>
                 <div class="tool-title">Legend</div>
             </div>
-            <div class="tool left">
+            <div class="tool left tool-region">
                 <span class="glyphicon glyphicon-globe"></span>
                 <div class="tool-title">View Region</div>
             </div>
@@ -42,11 +43,11 @@
                 <span class="ramp-low">Low</span>
                 <span class="ramp-high">High</span>
             </div>
-            <div class="tool right hidden-sm">
+            <div class="tool right hidden">
                 <span class="glyphicon glyphicon-cloud-download"></span>
                 <div class="tool-title">Export</div>
             </div>
-            <div class="tool right hidden-sm">
+            <div class="tool right hidden">
                 <span class="glyphicon glyphicon-print"></span>
                 <div class="tool-title">Print</div>
             </div>
@@ -55,12 +56,8 @@
             <div id="map"></div>
             <div id="sidebar">
                 <div class="scenarios">
-                    <span>Scenarios:</span>
-                    <select class="form-control">
-                        <option>All Factors Template</option>
-                        <option>Residential Potential Template</option>
-                        <option>Custom Scenario</option>
-                    </select>
+                    <input id="all-radio" name="css-sidebar-radio" class="css-radio" type="radio" checked />
+                    <label for="all-radio" class="css-label"></label><span>Combined Factors <small>View the composite of all factors below.</small></span>
                 </div>
                 <div class="factors"></div>
                 <div class="all-factors hide-panel"></div>				
@@ -74,56 +71,111 @@
             <div class="arrow"></div>
             <div class="popover-content" id="legend-container">
                 <h4>Base Map Legend</h4>
-                <!-- <ul id="legend-layers-list"> -->
-                    <!-- <li id="{{name}}" class=""> -->
-                        
-                    <!-- </li> -->
-                    <!-- <li id="{{name}}" class=""> -->
-                    <!--     <div class="collapse-arrow"> -->
-                    <!--         <span class="glyphicon glyphicon-collapse-down"></span> -->
-                    <!--     </div> -->
-                    <!--     <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked /> -->
-                    <!--     <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span> -->
-                    <!--     <ul> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--     </ul> -->
-                    <!-- </li> -->
-
-                    <!-- <li id="{{name}}" class=""> -->
-                    <!--     <div class="collapse-arrow"> -->
-                    <!--         <span class="glyphicon glyphicon-collapse-down"></span> -->
-                    <!--     </div> -->
-                    <!--     <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked /> -->
-                    <!--     <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span> -->
-                    <!--     <ul> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--         <li><span class="legend-icon"></span> {{name}}</li> -->
-                    <!--     </ul> -->
-                    <!-- </li> -->
-
-                <!-- </ul> -->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="report-modal" tabindex="-1" role="dialog" aria-labelledby="report-modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Create a Report</h4>
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label class="report-label" for="report-title"><span class="label-number">1.</span>Set a Report Title</label>
+                            <input type="text" class="form-control" id="report-title" placeholder="Priority Places Asheville - Sample Report">
+                        </div>
+                        <div class="form-group">
+                            <label class="report-label"><span class="label-number">2.</span>Select a Report Output Format</label>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary active">
+                                    <input type="radio" name="report-output-format" id="report-output-format-pdf" checked> PDF
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="report-output-format" id="report-output-format-excel"> Excel
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="report-label"><span class="label-number">3.</span>Choose your Study Area</label>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label class="btn btn-primary active">
+                                    <input type="radio" name="report-study-area" id="report-study-area-census" checked> Census Tract
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="report-study-area" id="report-study-area-blockgroup"> Block Group
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="report-study-area" id="report-study-area-radius"> Radius
+                                </label>
+                                <label class="btn btn-primary">
+                                    <input type="radio" name="report-study-area" id="report-study-area-travel"> Travel Time
+                                </label>
+                            </div>
+                            <div id="report-study-area-radius-options" class="well hidden">
+                                <p><strong>Rings/Radii:</strong> Information for up to three overlapping rings that use your selected location as the center point. Each ring includes data of any inner ring.</p>
+                                <label class="checkbox-inline">
+                                    <input type="number" class="form-control input-sm report-study-area-radius-options-input" id="report-study-area-radius-1" value="1">
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="report-study-area-radius-2-toggle"> <input type="number" class="form-control input-sm report-study-area-radius-options-input" id="report-study-area-radius-2" value="3">
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="report-study-area-radius-3-toggle"> <input type="number" class="form-control input-sm report-study-area-radius-options-input" id="report-study-area-radius-3" value="5">
+                                </label>
+                            </div>
+                            <div id="report-study-area-traveltime-options" class="well hidden">
+                                <p><strong>Travel Time:</strong> Information for up to three overlapping drive time distances in minutes that use your selected location as the center point.</p>
+                                <label class="checkbox-inline">
+                                    <input type="number" class="form-control input-sm report-study-area-traveltime-options-input" id="report-study-area-traveltime-1" value="3">
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="report-study-area-traveltime-2-toggle"> <input type="number" class="form-control input-sm report-study-area-traveltime-options-input" id="report-study-area-traveltime-2" value="5">
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="report-study-area-traveltime-3-toggle"> <input type="number" class="form-control input-sm report-study-area-traveltime-options-input" id="report-study-area-traveltime-3" value="7">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="report-label"><span class="label-number">4.</span>Select a Report Type</label>
+                            <div class="report-type-list">
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item">
+                                        <h4 class="list-group-item-heading">Demographic and Income Profile</h4>
+                                        <p class="list-group-item-text">Summarizes Census 2000, current-year estimates, and five-year forecasts of household data to reveal trends in demographics and income.</p>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <h4 class="list-group-item-heading">Census 2000 Summary Profile</h4>
+                                        <p class="list-group-item-text">...</p>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <h4 class="list-group-item-heading">Retail Goods and Service Expenditure</h4>
+                                        <p class="list-group-item-text">...</p>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <h4 class="list-group-item-heading">Housing Profile</h4>
+                                        <p class="list-group-item-text">...</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" disabled="disabled">Generate Report</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script type="text/x-handlebars-template" id="factor-template">
-        <div id="layer-{{id}}" class="factor active">
-            <input id="{{id}}-checkbox" class="css-checkbox" type="checkbox" checked />
-            <label for="{{id}}-checkbox" class="css-label"></label><span>{{name}}</span>
+        <div id="layer-{{id}}" class="factor">
+            <input id="{{id}}-radio" name="css-sidebar-radio" class="css-radio" type="radio" />
+            <label for="{{id}}-radio" class="css-label"></label><span>{{name}}</span>
 
             <input type="text" class="slider" value="" data-slider-min="-5" data-slider-max="5" data-slider-step="1" data-slider-value="0.01" data-slider-tooltip="hide">
             <div class="count">0</div>
@@ -166,7 +218,7 @@
       {{#each legend}}
         <li id="{{name}}" class="collapsed">
             <div class="collapse-arrow">
-                <span class="glyphicon glyphicon-collapse-down"></span>
+                <span class="glyphicon glyphicon-chevron-down"></span>
             </div>
             <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
             <label for="{{name}}-checkbox" class="css-label"></label><span>{{name}}</span>
@@ -190,16 +242,20 @@
       <ul>
         {{#each layers}}
         <li id="{{id-legend}}" class="">
-          <div class="collapse-arrow">
-            <span class="glyphicon glyphicon-collapse-down"></span>
+          <div class="collapse-arrow active">
+            {{#if details}}
+            <span class="glyphicon glyphicon-chevron-down"></span>
+            {{/if}}
           </div>
           <input id="{{id}}-checkbox" class="css-checkbox" type="checkbox" />
           <label for="{{id}}-checkbox" class="css-label"></label><span>{{name}}</span>
+          {{#if details}}
           <ul>
             {{#each details}}
-            <li><span class="legend-icon {{color}}"></span>{{name}}</li>
+            <li><span class="legend-icon" style="background-color: {{color}}"></span>{{name}}</li>
             {{/each}}
           </ul>
+          {{/if}}
         </li>
         {{/each}}
       </ul>
@@ -237,10 +293,13 @@
         <div class="parcel-details-body">
           <table class="table table-hover">
             <tr>
-              <td><a href="http://gis.ashevillenc.gov/mapasheville/developmentmapper/default.htm?CMD=searchbyPIN&VALUE={{pinnum}}" target="_blank">Develoment Mapper</a></td> <td></td>
+              <td colspan="2"><a class="btn btn-success btn-xs btn-block" data-toggle="modal" data-target="#report-modal">Create a Report</a></td>
             </tr>
             <tr>
-              <td><a href="http://gis.ashevillenc.gov/mapasheville/crimemapper/default.htm?CMD=searchbyPIN&VALUE={{pinnum}}" target="_blank">Crime Mapper</a></td> <td></td>
+              <td colspan="2"><a href="http://gis.ashevillenc.gov/mapasheville/developmentmapper/default.htm?CMD=searchbyPIN&VALUE={{pinnum}}" target="_blank">Develoment Mapper</a></td>
+            </tr>
+            <tr>
+              <td colspan="2"><a href="http://gis.ashevillenc.gov/mapasheville/crimemapper/default.htm?CMD=searchbyPIN&VALUE={{pinnum}}" target="_blank">Crime Mapper</a></td>
             </tr>
             <tr>
               <td>Pin Num</td> <td>{{pinnum}}</td>
@@ -366,13 +425,13 @@
               <td>Improvement Value</td> <td>{{improvementvalue}}</td>
             </tr>
             <tr>
-              <td><a href="{{propcard}}" target="_blank">Property Card</a></td> <td></td>
+              <td colspan="2"><a href="{{propcard}}" target="_blank">Property Card</a></td>
             </tr>
             <tr>
-              <td><a href="{{deedurl}}" target="_blank">Deed URL</a></td> <td></td>
+              <td colspan="2"><a href="{{deedurl}}" target="_blank">Deed URL</a></td>
             </tr>
             <tr>
-              <td><a href="{{platurl}}" target="_blank">Plat URL</a></td> <td></td>
+              <td colspan="2"><a href="{{platurl}}" target="_blank">Plat URL</a></td>
             </tr>
           </table>
         </div>

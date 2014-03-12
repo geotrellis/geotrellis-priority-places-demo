@@ -68,7 +68,7 @@ header {
 		}
 
 		> div {
-			border-radius: 6px;
+			border-radius: 8px;
 		}
 	
 		#map {
@@ -106,4 +106,72 @@ header {
 			}
 		}
 	}
+}
+
+.modal {
+    overflow: auto;
+
+    label.report-label {
+        clear: both;
+        font-weight: 400;
+        width: 100%;
+
+        > span.label-number {
+            margin-right: 6px;
+            font-weight: 700;
+            font-size: 18px;
+            color: $bg-color;
+        }
+    }
+    
+    .well {
+        margin-top: 10px;
+        padding: 14px;    
+        
+        p {
+            font-size: 12px;
+        }        
+    }
+    #report-study-area-traveltime-options, 
+    #report-study-area-radius-options {
+        input[type="checkbox"] {
+            margin-top: 8px;
+        }
+
+        .report-study-area-traveltime-options-input, 
+        .report-study-area-radius-options-input {
+            width: 60px;
+            float: left;
+        }
+    }
+
+    .report-type-list {
+        max-height: 200px;
+        overflow-y: auto;
+        border-radius: 6px;
+        border: 1px solid #DDD;
+
+        .list-group {
+            border: none;
+            margin: 0;
+
+            .list-group-item {
+                border-radius: 0;
+                border: none;
+                border-top: 1px solid #DDD;
+                padding: 12px 15px;
+
+                &:first-child {
+                    border: none;
+                }
+
+                h4 {
+                    font-size: 16px;
+                }
+                p {
+                    font-size: 11px;
+                }
+            }
+        }
+    }
 }

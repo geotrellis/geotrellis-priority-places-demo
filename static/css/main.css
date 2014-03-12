@@ -1,36 +1,3 @@
-input[type="checkbox"].css-checkbox {
-  position: absolute;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0; }
-  input[type="checkbox"].css-checkbox:checked + label.css-label {
-    background-position: 0 -20px; }
-  input[type="checkbox"].css-checkbox + label.css-label {
-    padding-left: 25px;
-    height: 20px;
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-position: 0 0;
-    vertical-align: top;
-    cursor: pointer; }
-    input[type="checkbox"].css-checkbox + label.css-label + span {
-      min-height: 20px;
-      display: inline-block;
-      width: 230px;
-      font-size: 12px;
-      font-weight: 700;
-      line-height: 16px;
-      margin-bottom: 3px; }
-      #tool-legend-popover input[type="checkbox"].css-checkbox + label.css-label + span {
-        width: 195px; }
-
-.css-label {
-  background-image: url(http://csscheckbox.com/checkboxes/web-two-style.png); }
-
 html,
 body {
   font-family: "Open Sans";
@@ -95,7 +62,7 @@ header {
         left: 0;
         top: 20px; } }
     .content .content-wrapper > div {
-      border-radius: 6px; }
+      border-radius: 8px; }
     .content .content-wrapper #map {
       background: #AAA;
       height: 100%;
@@ -123,6 +90,51 @@ header {
             right: 0;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); } }
 
+.modal {
+  overflow: auto; }
+  .modal label.report-label {
+    clear: both;
+    font-weight: 400;
+    width: 100%; }
+    .modal label.report-label > span.label-number {
+      margin-right: 6px;
+      font-weight: 700;
+      font-size: 18px;
+      color: #5188cb; }
+  .modal .well {
+    margin-top: 10px;
+    padding: 14px; }
+    .modal .well p {
+      font-size: 12px; }
+  .modal #report-study-area-traveltime-options input[type="checkbox"],
+  .modal #report-study-area-radius-options input[type="checkbox"] {
+    margin-top: 8px; }
+  .modal #report-study-area-traveltime-options .report-study-area-traveltime-options-input,
+  .modal #report-study-area-traveltime-options .report-study-area-radius-options-input,
+  .modal #report-study-area-radius-options .report-study-area-traveltime-options-input,
+  .modal #report-study-area-radius-options .report-study-area-radius-options-input {
+    width: 60px;
+    float: left; }
+  .modal .report-type-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border-radius: 6px;
+    border: 1px solid #DDD; }
+    .modal .report-type-list .list-group {
+      border: none;
+      margin: 0; }
+      .modal .report-type-list .list-group .list-group-item {
+        border-radius: 0;
+        border: none;
+        border-top: 1px solid #DDD;
+        padding: 12px 15px; }
+        .modal .report-type-list .list-group .list-group-item:first-child {
+          border: none; }
+        .modal .report-type-list .list-group .list-group-item h4 {
+          font-size: 16px; }
+        .modal .report-type-list .list-group .list-group-item p {
+          font-size: 11px; }
+
 header {
   background: #5188cb; }
   header h1 {
@@ -136,6 +148,21 @@ header {
     width: 203px;
     height: 50px;
     text-indent: -9999px; }
+  header h2 {
+    margin-left: 25px;
+    float: left;
+    margin-bottom: 4px;
+    margin-top: 7px;
+    font-size: 24px;
+    font-weight: 300;
+    color: white; }
+    header h2 small {
+      display: block;
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 2px;
+      margin-left: 1px;
+      color: #c7d9ee; }
 
 #toggle-sidebar {
   float: right;
@@ -187,10 +214,18 @@ header {
   text-align: left;
   margin-bottom: 5px;
   margin-top: 0; }
+#toolbar .tool-opacity .slider .slider-handle {
+  background: white;
+  opacity: 1;
+  border: 1px solid #CCC; }
+  #toolbar .tool-opacity .slider .slider-handle:hover {
+    box-shadow: 0 1px 8px black;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5); }
 #toolbar .tool-ramp {
   margin-right: 0 !important; }
   #toolbar .tool-ramp .ramp-img {
     width: 100%;
+    height: 20px;
     margin-bottom: 5px; }
   #toolbar .tool-ramp .ramp-high {
     font-size: 0.75em;
@@ -228,15 +263,15 @@ header {
 .leaflet-popup a.leaflet-popup-close-button {
   padding: 8px 20px 0 0; }
 .leaflet-popup .leaflet-popup-content-wrapper {
-  border-radius: 6px; }
+  border-radius: 0; }
   .leaflet-popup .leaflet-popup-content-wrapper .leaflet-popup-content {
     min-width: 250px;
-    margin: 15px 15px; }
+    margin: 15px 15px 0; }
   .leaflet-popup .leaflet-popup-content-wrapper .parcel-details-header {
     margin: -16px -16px 0;
     background: #5188cb;
     height: 34px;
-    border-radius: 6px 6px 0 0; }
+    border-radius: 0; }
     .leaflet-popup .leaflet-popup-content-wrapper .parcel-details-header h5 {
       margin: 0;
       padding: 10px;
@@ -249,13 +284,40 @@ header {
     margin: 0 -16px; }
     .leaflet-popup .leaflet-popup-content-wrapper .parcel-details-body table {
       margin: 0; }
+    .leaflet-popup .leaflet-popup-content-wrapper .parcel-details-body .btn {
+      color: white; }
 
+#sidebar input[type='radio'],
+#sidebar input[type='checkbox'] {
+  opacity: 0;
+  float: left;
+  width: 0; }
+  #sidebar input[type='radio'] + label,
+  #sidebar input[type='checkbox'] + label {
+    margin: 0;
+    clear: none;
+    padding: 0 0 0 28px;
+    height: 20px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #232323;
+    cursor: pointer;
+    vertical-align: top;
+    background: url(../images/off.png) left center no-repeat; }
+  #sidebar input[type='radio'].disabled + label,
+  #sidebar input[type='checkbox'].disabled + label {
+    opacity: 0.4;
+    cursor: default; }
+#sidebar input[type='radio']:checked + label {
+  background-image: url(../images/radio.png); }
+#sidebar input[type='checkbox']:checked + label {
+  background-image: url(../images/check.png); }
 #sidebar .scenarios {
-  padding: 10px;
-  border-bottom: 1px solid #f1f2f2;
+  padding: 15px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.05);
   position: relative;
   z-index: 999;
+  height: 70px;
   background-color: #52718c;
   background: url(../img/btngroup-bg.png) repeat-x top;
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#21405a), to(#52718c));
@@ -267,9 +329,27 @@ header {
   @media only screen and (max-width: 767px) {
     #sidebar .scenarios {
       border-radius: 6px 0 0 0; } }
+  #sidebar .scenarios:after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 14px solid #21405a;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    position: absolute;
+    bottom: -13px;
+    left: 39px; }
   #sidebar .scenarios > span {
     display: inline-block;
-    color: white; }
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    margin-top: -3px;
+    margin-left: 3px; }
+    #sidebar .scenarios > span > small {
+      display: block;
+      font-size: 12px;
+      font-weight: 300; }
   #sidebar .scenarios > select {
     display: inline-block;
     width: 235px;
@@ -279,7 +359,7 @@ header {
   overflow: auto;
   position: absolute;
   bottom: 60px;
-  top: 55px;
+  top: 70px;
   left: 0;
   right: 0; }
   #sidebar .factors .factor {
@@ -287,13 +367,26 @@ header {
     padding: 15px;
     border-radius: 6px;
     background-color: #f1f2f2;
-    opacity: 0.5;
     position: relative;
     width: 285px; }
+    #sidebar .factors .factor:first-child {
+      margin-top: 18px; }
+    #sidebar .factors .factor:last-child {
+      margin-bottom: 18px; }
     #sidebar .factors .factor:hover {
-      background: #dae6f4; }
+      background: #f1f2f2; }
     #sidebar .factors .factor.active {
-      opacity: 1; }
+      background: #5188cb;
+      color: white; }
+      #sidebar .factors .factor.active:hover {
+        background-color: #366eb3; }
+    #sidebar .factors .factor > span {
+      display: inline-block;
+      width: 220px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      line-height: 14px; }
     #sidebar .factors .factor .slider {
       width: 190px;
       margin-left: 25px; }
@@ -303,10 +396,18 @@ header {
         line-height: 14px;
         font-size: 18px;
         margin-left: 15px; }
+      #sidebar .factors .factor .slider .slider-handle {
+        background: white;
+        opacity: 1;
+        border: 1px solid #CCC; }
+        #sidebar .factors .factor .slider .slider-handle:hover {
+          box-shadow: 0 1px 8px black;
+          box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5); }
     #sidebar .factors .factor .factor-options {
       position: absolute;
       left: -20px;
-      top: 0; }
+      top: 0;
+      width: 15px; }
       #sidebar .factors .factor .factor-options > a {
         float: left;
         clear: both;
@@ -319,11 +420,12 @@ header {
   overflow-x: hidden;
   position: absolute;
   bottom: 60px;
-  top: 55px;
+  top: 70px;
   width: 100%;
   right: 0;
-  background-color: white;
-  transition: width 0.5s; }
+  background-color: #dae6f4;
+  transition: width 0.5s;
+  z-index: 9999; }
   #sidebar .all-factors.hide-panel {
     width: 0%; }
   #sidebar .all-factors ul {
@@ -367,7 +469,8 @@ header {
   top: 90px;
   left: 40px;
   bottom: 20px;
-  width: 276px; }
+  width: 320px;
+  max-width: 320px; }
   #tool-legend-popover.in {
     display: block; }
   @media only screen and (max-width: 767px) {
@@ -383,14 +486,22 @@ header {
     top: 40px;
     margin-top: 15px;
     list-style: none;
-    padding: 0;
-    width: 259px; }
+    padding: 15px 15px;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #F1f2f2; }
+    #tool-legend-popover > .popover-content > ul > li {
+      margin-bottom: 6px; }
+      #tool-legend-popover > .popover-content > ul > li:first-child .legend-icon {
+        background: none !important;
+        border: black 2px solid; }
     #tool-legend-popover > .popover-content > ul ul {
       height: auto;
-      transition: height 0.5s;
+      display: block;
       padding: 0;
       margin: 5px 0 15px 23px;
-      width: auto; }
+      width: auto;
+      list-style: none; }
       #tool-legend-popover > .popover-content > ul ul > li {
         font-size: 12px;
         margin-bottom: 3px; }
@@ -399,20 +510,47 @@ header {
         height: 12px;
         display: inline-block;
         background: #f1f2f2;
-        margin-right: 3px;
+        margin-right: 8px;
         top: 2px;
         position: relative; }
-    #tool-legend-popover > .popover-content > ul .collapsed > ul {
-      height: 0px;
-      overflow: hidden;
-      margin: 0; }
-    #tool-legend-popover > .popover-content > ul .collapsed .collapse-arrow {
-      opacity: 0.5; }
+    #tool-legend-popover > .popover-content > ul .collapsed {
+      display: none; }
+      #tool-legend-popover > .popover-content > ul .collapsed .collapse-arrow {
+        opacity: 0.5; }
     #tool-legend-popover > .popover-content > ul .collapse-arrow {
       float: left;
-      margin-right: 5px;
-      margin-top: -2px;
-      font-size: 18px; }
+      margin-right: 10px;
+      margin-top: 1px;
+      font-size: 14px;
+      opacity: 0.5;
+      width: 12px; }
       #tool-legend-popover > .popover-content > ul .collapse-arrow:hover {
         cursor: pointer;
         opacity: 1; }
+      #tool-legend-popover > .popover-content > ul .collapse-arrow.active {
+        opacity: 1; }
+  #tool-legend-popover input[type='radio'],
+  #tool-legend-popover input[type='checkbox'] {
+    opacity: 0;
+    float: left;
+    width: 0; }
+    #tool-legend-popover input[type='radio'] + label,
+    #tool-legend-popover input[type='checkbox'] + label {
+      margin: 0;
+      clear: none;
+      padding: 0 0 0 28px;
+      height: 20px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #232323;
+      cursor: pointer;
+      vertical-align: top;
+      background: url(../images/off.png) left center no-repeat; }
+    #tool-legend-popover input[type='radio'].disabled + label,
+    #tool-legend-popover input[type='checkbox'].disabled + label {
+      opacity: 0.4;
+      cursor: default; }
+  #tool-legend-popover input[type='radio']:checked + label {
+    background-image: url(../images/radio.png); }
+  #tool-legend-popover input[type='checkbox']:checked + label {
+    background-image: url(../images/check.png); }
