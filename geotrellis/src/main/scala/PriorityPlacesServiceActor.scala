@@ -72,6 +72,17 @@ trait PriorityPlacesService extends HttpService {
             }
           }
         } ~
+        path("generateToken") {
+          complete {
+            val pipeline = sendReceive ~> unmarshal[String]
+            pipeline(Get(Esri.generateTokenUrl))
+          }
+        } ~
+        path("esriReportCatalog") {
+          complete {
+            Esri.getAvailableReports
+          }
+        } ~
         path("getParcel") {
           parameters('lat.as[Double], 'lng.as[Double]) {
             (lat,lng) =>

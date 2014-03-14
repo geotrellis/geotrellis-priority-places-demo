@@ -1,12 +1,24 @@
 var PP = PP || {};
 
-PP.Constants = {
-    BOUNDING_BOX : "-9222891.832889367,4212750.376909204,-9153945.633376136,4263045.941520849",
-    DEFAULT_OPACITY : 0.9,
-    GEOCODE_LOWERLEFT : { lat: 35.0, lng: -83.0 },
-    GEOCODE_UPPERRIGHT: { lat: 36.0, lng: -82.0 }
-};
+PP.Constants = (function() {
+    var host = window.location.host;
 
+    var local = false;
+    if(host.indexOf("localhost") != -1) {
+        local = true;
+    }
+
+    var logoUrl = 'http://' + host + '/images/CityLogo.JPG';
+    if(local) { logoUrl = "http://i.imgur.com/9xC2hiQ.jpg"; }
+
+    return {
+        BOUNDING_BOX : "-9222891.832889367,4212750.376909204,-9153945.633376136,4263045.941520849",
+        DEFAULT_OPACITY : 0.9,
+        GEOCODE_LOWERLEFT : { lat: 35.0, lng: -83.0 },
+        GEOCODE_UPPERRIGHT: { lat: 36.0, lng: -82.0 },
+        LOGO_URL : logoUrl
+    };
+})();
 
 PP.Geocoder = (function(){
     var config = {
@@ -39,22 +51,6 @@ PP.Geocoder = (function(){
 
     var geocoder = null;
     return {
-        onLoadGoogleApiCallback : function() {
-            geocoder = new google.maps.Geocoder();
-            document.body.removeChild(document.getElementById('load_google_api'));
-        },
-
-        init : function() {
-            var url = 
-                "https://maps.googleapis.com/maps/api/js?" + 
-                "v=3&callback=PP.Geocoder.onLoadGoogleApiCallback&sensor=false";
-            var script = document.createElement('script');
-            script.id = 'load_google_api';
-            script.type = "text/javascript";
-            script.src = url;
-            document.body.appendChild(script);
-        },
-
         geocode : function (address, callback) {
             $.when(
                 $.getJSON("gt/geocode?address=" + address)
@@ -64,39 +60,6 @@ PP.Geocoder = (function(){
                     console.error('Error geocoding address "' + address + '": ', err.statusText, err);
                 }
             );
-
-	    // addressStr = qry;
-	    // var urlStr = 'http://'+config.agsServerGeocode+'/'+config.agsServerInstanceNameGeocode+'/rest/services/'+config.geocdingLayerName+'/GeocodeServer/findAddressCandidates';
-	    // var sData={f:"json",Street:addressStr};
-            
-	    // $.ajax({
-	    //     url: urlStr,
-	    //     dataType: "jsonp",
-	    //     data: sData,
-	    //     success: function(data) {
-	    //         if (data.candidates) {
-	    //             it = data.candidates[0];
-	    //             getLatLong({ label: it.address, value: it.address, x:it.location.x,y:it.location.y }, callback );
-	    //         }
-	    //     }
-	    // });
-        },
-
-        geocode2 : function(address,callback) {
-            var lowerLeft = new google.maps.LatLng(PP.Constants.GEOCODE_LOWERLEFT.lat, 
-                                                   PP.Constants.GEOCODE_LOWERLEFT.lng);
-
-            var upperRight = new google.maps.LatLng(PP.Constants.GEOCODE_UPPERRIGHT.lat, 
-                                                    PP.Constants.GEOCODE_UPPERRIGHT.lng);
-
-            var bounds = new google.maps.LatLngBounds(lowerLeft, upperRight);
-
-            var parameters = {
-                address: address,
-                bounds: bounds
-            };
-
-            var results = geocoder.geocode(parameters, callback);
         }
     };
 })();
@@ -271,9 +234,6 @@ PP.App = (function() {
         // Overview Map
         var overviewLayer = getLayer(Layers.mapBox.azavea,Layers.mapBox.attrib);
         var miniMap = new L.Control.MiniMap(overviewLayer).addTo(map);
-
-        // Geocoder
-        // var geocoderLayer = new L.Control.QuickGeocode().addTo(map);
     };
 
     var weightedOverlay = (function() {
@@ -338,12 +298,6 @@ PP.App = (function() {
                         // Call again in case things have changed.
                         layerStrings = getLayerStrings();
                         if(layerStrings.layers == "") return;
-
-                        // var geoJson = "";
-                        // var polygon = summary.getPolygon();
-                        // if(polygon != null) {
-                        //     geoJson = GJ.fromPolygon(polygon);
-                        // }
 
                         WOLayer = new L.TileLayer.WMS("gt/wo", {
                             breaks: breaks,
@@ -411,6 +365,9 @@ PP.App = (function() {
         };
         
         var parcelDetails = function(latlng) {
+            // Set the lat lng on the report
+            report.setLatLng(latlng);
+
             fetchParcel(latlng, function(parcel) {
                 var content = template(parcel.properties)
                 map.panTo(latlng);
@@ -438,11 +395,6 @@ PP.App = (function() {
                       "id"      : "railways",
                       "layer"   : "coagis:ncdot_rail",
                       "details" : [
-                    // These are actually not solid colors: 
-                    // "Main Line" : "#7F7F7F 3 px line horizonal through center, 
-                    //                #7F7F7F line slightly offset from right 3 px, 
-                    //                vertical and 3/4 the length of the first line",
-                    // "Spur" : "#A7A7A7 3 px line horizontal through center",
                           { "name" : "Mail Line", "color" : "#000000" },
                           { "name" : "Spur", "color" : "#000000" }
                       ]
@@ -614,6 +566,241 @@ PP.App = (function() {
         }
     })();
 
+    var report = (function() {
+        var createModel = function() {
+            var lat = '';
+            var lng = '';
+
+            // Options for 'Radius' studyAreaType
+            // studyAreasOptions={"areaType":"RingBuffer","bufferUnits":"esriMiles","bufferRadii":[1,2,3]}
+
+            // Options for 
+            // studyAreasOptions={"areaType":"DriveTimeBufferBands","bufferUnits":"esriDriveTimeUnitsMinutes","bufferRadii":[3,5,7]}
+
+            return {
+                lat : 0.0,
+                lng : 0.0,
+                report : { },
+                title : '',
+                outputFormat : '',
+                studyAreaType : '',
+                reportType : '',
+                ring1Radius : 0,
+                useRing2 : false,
+                ring2Radius : 0,
+                useRing3 : false,
+                ring3Radius : 0,
+                driveTime1 : 0,
+                useDriveTime2 : false,
+                driveTime2 : 0,
+                useDriveTime3 : false,
+                driveTime3 : 0,
+
+                isValid : function() {
+                    var hasTitle = (title.length > 0);
+
+                    var driveTimesValid = true;
+                    if(studyArea == 'travel-time') {
+                        // TODO: Check if drive times are valid
+                        driveTimesValid = true; 
+                    };
+
+                    var radiiValid = true
+                    if(studyArea == 'radius') {
+                        // TODO: Check if radii are valid
+                        radiiValid = true;
+                    };
+                },
+
+                getQueryParams : function() {
+                    // convert to query params
+
+                    var studyAreas = 'studyAreas=[{"geometry":{"x":' + lng + ',"y":' + lat + '}}]';
+
+                    // Subtitle? "subtitle": "Produced by Foo company"
+                    var reportFields = 
+                        'reportFields={"title": "' + this.title + 
+                        'My Report", "logo": ' + PP.Constants.LOGO_URL + '}"';
+
+                    return studyAreas + '&'
+                           reportFields;
+                }
+            };
+        };
+
+        var model = { };
+
+        var token = '';
+        
+        var getToken = function(callback) {
+            $.when(
+                $.getJSON('gt/generateToken')
+            ).then(
+                function(tokenJson) {
+                    token = tokenJson.access_token;
+                    callback();
+                }
+            );
+        };
+
+        var createReport = function() {
+            var studyAreas = '[{"geometry":{"x":' + lng + ',"y":' + lat + '}}]';
+
+            alert(JSON.stringify({
+                'title' : title,
+                'outputFormat' : outputFormat,
+                'studyAreaType' : studyAreaType,
+                'reportType' : reportType,
+                'token' : token,
+                'lat' : lat,
+                'lng' : lng,
+                'studyAreas' : studyAreas
+            }));
+        };
+
+        var $report_title = {};
+        var $report_output_format = {};
+        var $report_study_area = {};
+        var $createButton = {};
+
+        var setUI = function() {
+            
+        };
+
+        var setReport = function(report) {
+            model.report = report;
+
+            _.each($report_output_format, function(format) {
+                $(format).attr('disabled', _.contains(report.formats, "xlsx"));
+            });
+
+            // {
+            //     "reportID": "census2010_profile",
+            //     "metadata": {
+            //         "title": "2010 Census Profile",
+            //         "categories": [
+            //             "Summary Reports"
+            //         ],
+            //         "name": "2010 Census Profile",
+            //         "type": "esriReportTemplateStandard",
+            //         "boundaryVintage": "2010",
+            //         "boundaryVintageDescription": "Data displayed and aggregated on these reports is based on Census 2010 boundaries.",
+            //         "dataVintage": "2000,2010",
+            //         "dataVintageDescription": "This report contains Census 2000 and 2010 data.",
+            //         "keywords": "Households, Family, Population, Housing Units, Race, White, Black, Asian, Hispanic",
+            //         "creationDate": "1355122800000",
+            //         "lastRevisionDate": "1355468400000",
+            //         "coverage": "US",
+            //         "author": "Esri",
+            //         "countries": "US",
+            //         "dataset": "USA_ESRI_2013"
+            //     },
+            //     "headers": [
+            //         "locationname",
+            //         "address",
+            //         "latitude",
+            //         "areadesc2",
+            //         "longitude",
+            //         "reportstyle",
+            //         "binarylogo",
+            //         "logo",
+            //         "title"
+            //     ],
+            //     "formats": [
+            //         "pdf",
+            //         "xlsx"
+            //     ]
+            // }
+        };
+
+        return {
+            init : function() {
+                $report_title = $('#report-title');
+                $report_output_format = $('input:radio[name="report-output-format"]');
+                $report_study_area = $('input:radio[name="report-study-area"]');
+                
+                // Bind model
+                $report_title.on( "change", function() {
+                    model.title = $( this ).val();
+                });
+
+                $report_output_format.change(function() {
+                    model.outputFormat = $(this).val();
+                });
+
+                $report_study_area.change(function() {
+                    model.studyAreaType = $(this).val();
+                });
+
+                // Validation
+                $('#create-report-button').on('click', createReport);
+
+                // Report catalog
+                $.when(
+                    $.getJSON("gt/esriReportCatalog")
+                ).then(
+                    function(catalog) {
+                        var $report_list = $('#report-list');
+
+                        var $activeListing = {};
+                        for(var i = 0; i < catalog.reports.length; i++) {
+                            (function() {
+                                var reportData = catalog.reports[i];
+                                var metadata = reportData.metadata;
+                                
+                                var descriptions = [];
+                                
+                                if(metadata.dataVintageDescription != "N/A") {
+                                    descriptions.push(metadata.dataVintageDescription);
+                                } 
+
+                                if(metadata.boundaryVintageDescription != "N/A") {
+                                    descriptions.push(metadata.boundaryVintageDescription);
+                                }
+
+                                reportData.description = descriptions.join(' ');
+
+                                var listingTemplate = Handlebars.compile($('#report-listing-template').html());
+                                $report_list.append(listingTemplate(reportData));
+                                var $listing = $('#report-' + reportData.reportID, $report_list);
+
+                                $listing.on("click", function() {
+                                    console.log("CLICKED " + reportData.metadata.name + ", " + reportData.description);
+                                    $activeListing.removeClass("active");
+                                    $(this).addClass("active");
+                                    $activeListing = $(this);
+
+                                    if(model.title == '') {
+                                        $report_title.attr("placeholder", reportData.metadata.name);
+                                    }
+                                    setReport(reportData);
+                                });
+
+                                if(i == 0) {
+                                    $activeListing = $listing;
+                                    $listing.addClass("active");
+                                    if(model.title == '') {
+                                        $report_title.attr("placeholder", reportData.metadata.name);
+                                    }
+                                    setReport(reportData);
+                                }
+                            })();
+                        };
+                    }
+                );
+            },
+            
+            setLatLng : function(latlng) {
+                // Reset the model
+                model = createModel();
+                setUI();
+
+                model.lat = latlng.lat;
+                model.lng = latlng.lng;
+            }
+        };
+    })();
+
     var UI = (function() {
 
         var $sidebar = {};
@@ -734,8 +921,6 @@ PP.App = (function() {
         };
 
         var updateOpacity = function(e) {
-            // TODO: Change opacity for map layers
-            // e.value gives you the value of the slider (0 - 100)
             weightedOverlay.setOpacity(e.value / 100.0);
         };
 
@@ -788,6 +973,7 @@ PP.App = (function() {
                     weightedOverlay.init();
                     colorRamps.init();
                     findAddress.init();
+                    report.init();
                     model.notifyChange();
                 }, this),
             function(err) {
@@ -803,6 +989,5 @@ PP.App = (function() {
 })();
 
 jQuery(function ($) {
-    PP.Geocoder.init();
     PP.App.init();
 });

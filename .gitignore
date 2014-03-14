@@ -15,3 +15,5 @@ TAGS
 .sass-cache
 *.aux.xml
 *.jar
+
+geotrellis/src/main/resources/credentials.conf

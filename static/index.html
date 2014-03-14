@@ -100,10 +100,10 @@
                             <label class="report-label"><span class="label-number">2.</span>Select a Report Output Format</label>
                             <div class="btn-group" data-toggle="buttons">
                                 <label class="btn btn-primary active">
-                                    <input type="radio" name="report-output-format" checked> PDF
+                                    <input type="radio" name="report-output-format" value="pdf" checked> PDF
                                 </label>
                                 <label class="btn btn-primary">
-                                    <input type="radio" name="report-output-format"> Excel
+                                  <input type="radio" name="report-output-format" value="xlsx"> Excel
                                 </label>
                             </div>
                         </div>
@@ -111,20 +111,20 @@
                             <label class="report-label"><span class="label-number">3.</span>Choose your Study Area</label>
                             <div class="btn-group" id="report-study-area" data-toggle="buttons">
                                 <label class="btn btn-primary active" id="report-study-area-census">
-                                    <input type="radio" name="report-study-area" checked> Census Tract
+                                    <input type="radio" name="report-study-area" value="census-tract" checked> Census Tract
                                 </label>
                                 <label class="btn btn-primary" id="report-study-area-blockgroup">
-                                    <input type="radio" name="report-study-area"> Block Group
+                                    <input type="radio" name="report-study-area" value="block-group"> Block Group
                                 </label>
                                 <label class="btn btn-primary" id="report-study-area-radius">
-                                    <input type="radio" name="report-study-area"> Radius
+                                    <input type="radio" name="report-study-area" value="radius"> Radius
                                 </label>
                                 <label class="btn btn-primary" id="report-study-area-travel">
-                                    <input type="radio" name="report-study-area"> Travel Time
+                                    <input type="radio" name="report-study-area" value="travel-time"> Travel Time
                                 </label>
                             </div>
                             <div id="report-study-area-radius-options" class="well hidden">
-                                <p><strong>Rings/Radii:</strong> Information for up to three overlapping rings that use your selected location as the center point. Each ring includes data of any inner ring.</p>
+                                <p><strong>Rings/Radii:</strong> Radius in miles for up to three overlapping rings that use your selected location as the center point. Each ring includes data of any inner ring. </p>
                                 <label class="checkbox-inline">
                                     <input type="number" class="form-control input-sm report-study-area-radius-options-input" id="report-study-area-radius-1" value="1">
                                 </label>
@@ -151,23 +151,7 @@
                         <div class="form-group">
                             <label class="report-label"><span class="label-number">4.</span>Select a Report Type</label>
                             <div class="report-type-list">
-                                <div class="list-group">
-                                    <a href="#" class="list-group-item">
-                                        <h4 class="list-group-item-heading">Demographic and Income Profile</h4>
-                                        <p class="list-group-item-text">Summarizes Census 2000, current-year estimates, and five-year forecasts of household data to reveal trends in demographics and income.</p>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <h4 class="list-group-item-heading">Census 2000 Summary Profile</h4>
-                                        <p class="list-group-item-text">...</p>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <h4 class="list-group-item-heading">Retail Goods and Service Expenditure</h4>
-                                        <p class="list-group-item-text">...</p>
-                                    </a>
-                                    <a href="#" class="list-group-item">
-                                        <h4 class="list-group-item-heading">Housing Profile</h4>
-                                        <p class="list-group-item-text">...</p>
-                                    </a>
+                                <div class="list-group" id="report-list">
                                 </div>
                             </div>
                         </div>
@@ -294,6 +278,14 @@
       </div>
     </script>
 
+    <script type="text/x-handlebars-template" id="report-listing-template">
+      <a href="#" class="list-group-item" id="report-{{reportID}}">
+        <h4 class="list-group-item-heading">{{metadata.name}}</h4>
+        <p class="list-group-item-text">{{description}}</p>
+      </a>
+
+    </script>
+
     <script type="text/x-handlebars-template" id="parcel-details-template">
       <div class="parcel-details-container">
         <div class="parcel-details-header">
@@ -302,7 +294,7 @@
         <div class="parcel-details-body">
           <table class="table table-hover">
             <tr>
-              <td colspan="2"><a class="btn btn-success btn-xs btn-block" data-toggle="modal" data-target="#report-modal">Create a Report</a></td>
+              <td colspan="2"><a id="create-report-button" class="btn btn-success btn-xs btn-block" data-toggle="modal" data-target="#report-modal">Create a Report</a></td>
             </tr>
             <tr>
               <td colspan="2"><a href="http://gis.ashevillenc.gov/mapasheville/developmentmapper/default.htm?CMD=searchbyPIN&VALUE={{pinnum}}" target="_blank">Develoment Mapper</a></td>
