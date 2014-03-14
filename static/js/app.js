@@ -1,22 +1,12 @@
 var PP = PP || {};
 
 PP.Constants = (function() {
-    var host = window.location.host;
-
-    var local = false;
-    if(host.indexOf("localhost") != -1) {
-        local = true;
-    }
-
-    var logoUrl = 'http://' + host + '/images/CityLogo.JPG';
-    if(local) { logoUrl = "http://i.imgur.com/9xC2hiQ.jpg"; }
-
     return {
         BOUNDING_BOX : "-9222891.832889367,4212750.376909204,-9153945.633376136,4263045.941520849",
         DEFAULT_OPACITY : 0.9,
         GEOCODE_LOWERLEFT : { lat: 35.0, lng: -83.0 },
         GEOCODE_UPPERRIGHT: { lat: 36.0, lng: -82.0 },
-        LOGO_URL : logoUrl
+        LOGO_URL : "https://raw.github.com/cityofasheville/asset/master/CityLogo80.jpg"
     };
 })();
 
@@ -365,10 +355,11 @@ PP.App = (function() {
         };
         
         var parcelDetails = function(latlng) {
-            // Set the lat lng on the report
-            report.setLatLng(latlng);
-
             fetchParcel(latlng, function(parcel) {
+                var address = [parcel.housenumber, parcel.streetname, parcel.streettype].join(' ');
+
+                report.setLocation(latlng, address);
+
                 var content = template(parcel.properties)
                 map.panTo(latlng);
                 popup.setLatLng(latlng).setContent(content).openOn(map);
@@ -567,70 +558,110 @@ PP.App = (function() {
     })();
 
     var report = (function() {
-        var createModel = function() {
-            var lat = '';
-            var lng = '';
+        var model = (function() {
 
-            // Options for 'Radius' studyAreaType
-            // studyAreasOptions={"areaType":"RingBuffer","bufferUnits":"esriMiles","bufferRadii":[1,2,3]}
-
-            // Options for 
-            // studyAreasOptions={"areaType":"DriveTimeBufferBands","bufferUnits":"esriDriveTimeUnitsMinutes","bufferRadii":[3,5,7]}
+            var listeners = [];
 
             return {
                 lat : 0.0,
                 lng : 0.0,
+                address : "",
                 report : { },
                 title : '',
-                outputFormat : '',
-                studyAreaType : '',
-                reportType : '',
-                ring1Radius : 0,
-                useRing2 : false,
-                ring2Radius : 0,
-                useRing3 : false,
-                ring3Radius : 0,
-                driveTime1 : 0,
-                useDriveTime2 : false,
-                driveTime2 : 0,
-                useDriveTime3 : false,
-                driveTime3 : 0,
+                outputFormat : 'pdf',
+                studyAreaType : 'census-tract',
+                ring1Radius : 1,
+                useRing2 : true,
+                ring2Radius : 3,
+                useRing3 : true,
+                ring3Radius : 5,
+                driveTime1 : 3,
+                useDriveTime2 : true,
+                driveTime2 : 5,
+                useDriveTime3 : true,
+                driveTime3 : 7,
+
+                notifyChange : function() { 
+                    _.each(listeners, function(f) { f(); });
+                },
+
+                onChange : function(f) {
+                    listeners.push(f);
+                },
+
+                reset : function() {
+                    // Don't reset most members, user probably wants to carry selections over.
+                    this.lat = 0.0;
+                    this.lng = 0.0;
+                    this.address = "";
+                    this.title = '';
+                },
 
                 isValid : function() {
-                    var hasTitle = (title.length > 0);
+                    var hasTitle = (model.title.length > 0);
 
                     var driveTimesValid = true;
-                    if(studyArea == 'travel-time') {
+                    if(model.studyArea == 'travel-time') {
                         // TODO: Check if drive times are valid
                         driveTimesValid = true; 
                     };
 
                     var radiiValid = true
-                    if(studyArea == 'radius') {
+                    if(model.studyArea == 'radius') {
                         // TODO: Check if radii are valid
                         radiiValid = true;
                     };
+
+                    return hasTitle &&
+                           driveTimesValid &&
+                           radiiValid;
                 },
 
                 getQueryParams : function() {
-                    // convert to query params
+                    var studyAreaOptions = {};
+                    
+                    if(this.studyAreaType == 'radius') {
+                        studyAreaOptions.areaType = "RingBuffer";
+                        studyAreaOptions.bufferUnits = "esriMiles";
+                        var radii = [ this.ring1Radius ];
+                        if(this.useRing2) { radii.push(this.ring2Radius); };
+                        if(this.useRing3) { radii.push(this.ring3Radius); };
+                        studyAreaOptions.bufferRadii = radii;
 
-                    var studyAreas = 'studyAreas=[{"geometry":{"x":' + lng + ',"y":' + lat + '}}]';
+                    } else if (this.studyAreaType == 'travel-time') {
+                        studyAreaOptions.areaType = "DriveTimeBufferBands";
+                        studyAreaOptions.bufferUnits = "esriDriveTimeUnitsMinutes";
+                        var radii = [ this.driveTime1 ];
+                        if(this.useDriveTime2) { radii.push(this.driveTime2); };
+                        if(this.useDriveTime3) { radii.push(this.driveTime3); };
+                        studyAreaOptions.bufferRadii = radii;
+                        
+                    }
+                    
 
-                    // Subtitle? "subtitle": "Produced by Foo company"
-                    var reportFields = 
-                        'reportFields={"title": "' + this.title + 
-                        'My Report", "logo": ' + PP.Constants.LOGO_URL + '}"';
-
-                    return studyAreas + '&'
-                           reportFields;
+                    var params = 
+                        [   
+                            'studyAreas=[{"geometry":{"x":' + this.lng + ',"y":' + this.lat + '}}]',
+                            'report=' + this.report.reportID,
+                            'f=bin',
+                            'format=' + this.outputFormat,
+                            'reportFields={"title": "' + this.title +
+                                '", "subtitle": "' + this.report.metadata.name +  
+                                '", "logo": "' + PP.Constants.LOGO_URL + 
+                                '", "latitude" : "' + this.lat +
+                                '", "longitude" : "' + this.lng +
+                                '"}',
+                            'studyAreasOptions=' + JSON.stringify(studyAreaOptions),
+                            'useData={"sourceCountry":"US"}'
+                        ];
+                            
+                    return params.join('&');
                 }
             };
-        };
-
-        var model = { };
+        })();
 
         var token = '';
+        var expiresOn = '';
         
         var getToken = function(callback) {
             $.when(
@@ -638,79 +669,83 @@ PP.App = (function() {
             ).then(
                 function(tokenJson) {
                     token = tokenJson.access_token;
+                    expiresOn = (new Date().getTime() / 1000) + (tokenJson.expires_in - 60); // Err on the side of safety by a minute.
                     callback();
                 }
             );
         };
 
         var createReport = function() {
-            var studyAreas = '[{"geometry":{"x":' + lng + ',"y":' + lat + '}}]';
+            var sendRequest = function() {
+                var params = model.getQueryParams() + '&token=' + token;
+                var url = 'http://geoenrich.arcgis.com/arcgis/rest/services/World/geoenrichmentserver/GeoEnrichment/CreateReport?' + params;
+                window.location.href = url;
+            };
 
-            alert(JSON.stringify({
-                'title' : title,
-                'outputFormat' : outputFormat,
-                'studyAreaType' : studyAreaType,
-                'reportType' : reportType,
-                'token' : token,
-                'lat' : lat,
-                'lng' : lng,
-                'studyAreas' : studyAreas
-            }));
+            if(!token) {
+                getToken(sendRequest);
+            } else {
+                if(expiresOn < (new Date().getTime() / 1000)) {
+                    getToken(sendRequest);
+                } else {
+                    sendRequest();
+                }
+            }
         };
 
         var $report_title = {};
         var $report_output_format = {};
         var $report_study_area = {};
-        var $createButton = {};
+        var $create_report_button = {};
+        var $radius_1 = {}
+        var $radius_2 = {}
+        var $radius_3 = {}
+        var $traveltime_1 = {}
+        var $traveltime_2 = {}
+        var $traveltime_3 = {}
 
-        var setUI = function() {
-            
+
+        var pushModelToUI = function() {
+            $report_title.val(model.title);
+            $radius_1.val(model.ring1Radius);
+            $radius_2.val(model.ring2Radius);
+            $radius_3.val(model.ring3Radius);
+            $traveltime_1.val(model.driveTime1);
+            $traveltime_2.val(model.driveTime2);
+            $traveltime_3.val(model.driveTime3);
+            $('#report-study-area-radius-2-toggle').attr('checked', model.useRing2);
+            $('#report-study-area-radius-3-toggle').attr('checked', model.useRing3);
+            $('#report-study-area-traveltime-2-toggle').attr('checked', model.useDriveTime2);
+            $('#report-study-area-traveltime-3-toggle').attr('checked', model.useDriveTime3);
         };
 
         var setReport = function(report) {
             model.report = report;
+            
+            var existingFormat = null;
+            var needsSelectionChanged = false;
 
             _.each($report_output_format, function(format) {
-                $(format).attr('disabled', _.contains(report.formats, "xlsx"));
+                var radio = $(format)
+                if(! _.contains(report.formats, $(format).val())) {
+                    if(radio.is(':checked')) { needsSelectionChanged = true; };
+                    radio.attr('disabled', true);
+                    radio.parent().addClass('disabled');
+                } else {
+                    radio.parent().removeClass('disabled');
+                    if(!existingFormat) { existingFormat = $(format) }
+                };
             });
+            
+            if(needsSelectionChanged) {
+                if(existingFormat) { 
+                    existingFormat.parent().addClass('active'); 
+                    existingFormat.attr('checked', true);
+                    model.outputFormat = existingFormat.val();
+                };
+            };
 
-            // {
-            //     "reportID": "census2010_profile",
-            //     "metadata": {
-            //         "title": "2010 Census Profile",
-            //         "categories": [
-            //             "Summary Reports"
-            //         ],
-            //         "name": "2010 Census Profile",
-            //         "type": "esriReportTemplateStandard",
-            //         "boundaryVintage": "2010",
-            //         "boundaryVintageDescription": "Data displayed and aggregated on these reports is based on Census 2010 boundaries.",
-            //         "dataVintage": "2000,2010",
-            //         "dataVintageDescription": "This report contains Census 2000 and 2010 data.",
-            //         "keywords": "Households, Family, Population, Housing Units, Race, White, Black, Asian, Hispanic",
-            //         "creationDate": "1355122800000",
-            //         "lastRevisionDate": "1355468400000",
-            //         "coverage": "US",
-            //         "author": "Esri",
-            //         "countries": "US",
-            //         "dataset": "USA_ESRI_2013"
-            //     },
-            //     "headers": [
-            //         "locationname",
-            //         "address",
-            //         "latitude",
-            //         "areadesc2",
-            //         "longitude",
-            //         "reportstyle",
-            //         "binarylogo",
-            //         "logo",
-            //         "title"
-            //     ],
-            //     "formats": [
-            //         "pdf",
-            //         "xlsx"
-            //     ]
-            // }
+            model.notifyChange();
         };
 
         return {
@@ -718,31 +753,156 @@ PP.App = (function() {
                 $report_title = $('#report-title');
                 $report_output_format = $('input:radio[name="report-output-format"]');
                 $report_study_area = $('input:radio[name="report-study-area"]');
+                $create_report_button = $('#create-report-button');
+                $radius_1 = $('#report-study-area-radius-1')
+                $radius_2 = $('#report-study-area-radius-2')
+                $radius_3 = $('#report-study-area-radius-3')
+                $traveltime_1 = $('#report-study-area-traveltime-1')
+                $traveltime_2 = $('#report-study-area-traveltime-2')
+                $traveltime_3 = $('#report-study-area-traveltime-3')
+
                 
                 // Bind model
-                $report_title.on( "change", function() {
+                $report_title.on( "input", function() {
                     model.title = $( this ).val();
+                    model.notifyChange();
                 });
 
                 $report_output_format.change(function() {
                     model.outputFormat = $(this).val();
+                    model.notifyChange();
                 });
 
                 $report_study_area.change(function() {
                     model.studyAreaType = $(this).val();
+                    model.notifyChange();
                 });
 
-                // Validation
-                $('#create-report-button').on('click', createReport);
+                $radius_1.on("input", function() {
+                    model.ring1Radius = $(this).val();
+                    model.notifyChange();
+                });
 
-                // Report catalog
+                $radius_2.on("input", function() {
+                    model.ring2Radius = $(this).val();
+                    model.notifyChange();
+                });
+
+                $radius_3.on("input", function() {
+                    model.ring3Radius = $(this).val();
+                    model.notifyChange();
+                });
+
+                $('#report-study-area-radius-2-toggle').change(function() {
+                    if($(this).is(':checked')) {
+                        $radius_2.attr('disabled', false);
+                        $radius_2.parent().removeClass('disabled');
+
+                        model.useRing2 = true;
+                        model.notifyChange();
+                    } else {
+                        $radius_2.attr('disabled', true);
+                        $radius_2.parent().addClass('disabled');
+
+                        model.useRing2 = false;
+                        model.notifyChange();
+                    }
+                });
+
+                $('#report-study-area-radius-3-toggle').change(function() {
+                    if($(this).is(':checked')) {
+                        $radius_3.attr('disabled', false);
+                        $radius_3.parent().removeClass('disabled');
+
+                        model.useRing3 = true;
+                        model.notifyChange();
+                    } else {
+                        $radius_3.attr('disabled', true);
+                        $radius_3.parent().addClass('disabled');
+
+                        model.useRing3 = false;
+                        model.notifyChange();
+                    }
+                });
+
+                $traveltime_1.on("input", function() {
+                    model.driveTime1 = $(this).val();
+                    model.notifyChange();
+                });
+
+                $traveltime_2.on("input", function() {
+                    model.driveTime2 = $(this).val();
+                    model.notifyChange();
+                });
+
+                $traveltime_3.on("input", function() {
+                    model.driveTime3 = $(this).val();
+                    model.notifyChange();
+                });
+
+                $('#report-study-area-traveltime-2-toggle').change(function() {
+                    if($(this).is(':checked')) {
+                        $traveltime_2.attr('disabled', false);
+                        $traveltime_2.parent().removeClass('disabled');
+
+                        model.useDriveTime2 = true;
+                        model.notifyChange();
+                    } else {
+                        $traveltime_2.attr('disabled', true);
+                        $traveltime_2.parent().addClass('disabled');
+
+                        model.useDriveTime2 = false;
+                        model.notifyChange();
+                    }
+                });
+
+                $('#report-study-area-traveltime-3-toggle').change(function() {
+                    if($(this).is(':checked')) {
+                        $traveltime_3.attr('disabled', false);
+                        $traveltime_3.parent().removeClass('disabled');
+
+                        model.useDriveTime3 = true;
+                        model.notifyChange();
+                    } else {
+                        $traveltime_3.attr('disabled', true);
+                        $traveltime_3.parent().addClass('disabled');
+
+                        model.useDriveTime3 = false;
+                        model.notifyChange();
+                    }
+                });
+
+                model.onChange(function() {
+                    if(model.isValid()) {
+                        $create_report_button.attr('disabled', false);
+                    } else {
+                        $create_report_button.attr('disabled', true);
+                    }
+                });
+                
+                $create_report_button.on('click', createReport);
+
+                // Populate list of reports.
                 $.when(
                     $.getJSON("gt/esriReportCatalog")
                 ).then(
                     function(catalog) {
                         var $report_list = $('#report-list');
 
-                        var $activeListing = {};
+                        var $activeListing = null;
+
+                        var toggleActiveListing = function($newActive, reportData) {
+                            if($activeListing) { $activeListing.removeClass('active'); };
+                            $newActive.addClass("active");
+                            $activeListing = $newActive;
+
+                            if(model.title == '') {
+                                $report_title.attr("placeholder", reportData.metadata.name);
+                            }
+
+                            setReport(reportData);
+                        };
+
                         for(var i = 0; i < catalog.reports.length; i++) {
                             (function() {
                                 var reportData = catalog.reports[i];
@@ -765,24 +925,11 @@ PP.App = (function() {
                                 var $listing = $('#report-' + reportData.reportID, $report_list);
 
                                 $listing.on("click", function() {
-                                    console.log("CLICKED " + reportData.metadata.name + ", " + reportData.description);
-                                    $activeListing.removeClass("active");
-                                    $(this).addClass("active");
-                                    $activeListing = $(this);
-
-                                    if(model.title == '') {
-                                        $report_title.attr("placeholder", reportData.metadata.name);
-                                    }
-                                    setReport(reportData);
+                                    toggleActiveListing($(this), reportData);
                                 });
 
                                 if(i == 0) {
-                                    $activeListing = $listing;
-                                    $listing.addClass("active");
-                                    if(model.title == '') {
-                                        $report_title.attr("placeholder", reportData.metadata.name);
-                                    }
-                                    setReport(reportData);
+                                    toggleActiveListing($listing, reportData);
                                 }
                             })();
                         };
@@ -790,13 +937,15 @@ PP.App = (function() {
                 );
             },
             
-            setLatLng : function(latlng) {
-                // Reset the model
-                model = createModel();
-                setUI();
+            setLocation : function(latlng, address) {
+                model.reset();
 
                 model.lat = latlng.lat;
                 model.lng = latlng.lng;
+                model.address = address
+                model.notifyChange();
+
+                pushModelToUI();
             }
         };
     })();
@@ -887,8 +1036,8 @@ PP.App = (function() {
         };
 
         var toggleActiveReportType = function() {
-            $('.list-group-item').removeClass('active');
-            $(this).toggleClass('active');
+            // $('.list-group-item').removeClass('active');
+            // $(this).toggleClass('active');
         };
 
         var toggleReportArea = function() {

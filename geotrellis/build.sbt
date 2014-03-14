@@ -32,3 +32,5 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) {
 }
 
 seq(Revolver.settings: _*)
+
+fork in run := true
