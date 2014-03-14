@@ -1,12 +1,14 @@
 var PP = PP || {};
 
-PP.Constants = {
-    BOUNDING_BOX : "-9222891.832889367,4212750.376909204,-9153945.633376136,4263045.941520849",
-    DEFAULT_OPACITY : 0.9,
-    GEOCODE_LOWERLEFT : { lat: 35.0, lng: -83.0 },
-    GEOCODE_UPPERRIGHT: { lat: 36.0, lng: -82.0 }
-};
-
+PP.Constants = (function() {
+    return {
+        BOUNDING_BOX : "-9222891.832889367,4212750.376909204,-9153945.633376136,4263045.941520849",
+        DEFAULT_OPACITY : 0.9,
+        GEOCODE_LOWERLEFT : { lat: 35.0, lng: -83.0 },
+        GEOCODE_UPPERRIGHT: { lat: 36.0, lng: -82.0 },
+        LOGO_URL : "https://raw.github.com/cityofasheville/asset/master/CityLogo80.jpg"
+    };
+})();
 
 PP.Geocoder = (function(){
     var config = {
@@ -39,22 +41,6 @@ PP.Geocoder = (function(){
 
     var geocoder = null;
     return {
-        onLoadGoogleApiCallback : function() {
-            geocoder = new google.maps.Geocoder();
-            document.body.removeChild(document.getElementById('load_google_api'));
-        },
-
-        init : function() {
-            var url = 
-                "https://maps.googleapis.com/maps/api/js?" + 
-                "v=3&callback=PP.Geocoder.onLoadGoogleApiCallback&sensor=false";
-            var script = document.createElement('script');
-            script.id = 'load_google_api';
-            script.type = "text/javascript";
-            script.src = url;
-            document.body.appendChild(script);
-        },
-
         geocode : function (address, callback) {
             $.when(
                 $.getJSON("gt/geocode?address=" + address)
@@ -64,39 +50,6 @@ PP.Geocoder = (function(){
                     console.error('Error geocoding address "' + address + '": ', err.statusText, err);
                 }
             );
-
-	    // addressStr = qry;
-	    // var urlStr = 'http://'+config.agsServerGeocode+'/'+config.agsServerInstanceNameGeocode+'/rest/services/'+config.geocdingLayerName+'/GeocodeServer/findAddressCandidates';
-	    // var sData={f:"json",Street:addressStr};
-            
-	    // $.ajax({
-	    //     url: urlStr,
-	    //     dataType: "jsonp",
-	    //     data: sData,
-	    //     success: function(data) {
-	    //         if (data.candidates) {
-	    //             it = data.candidates[0];
-	    //             getLatLong({ label: it.address, value: it.address, x:it.location.x,y:it.location.y }, callback );
-	    //         }
-	    //     }
-	    // });
-        },
-
-        geocode2 : function(address,callback) {
-            var lowerLeft = new google.maps.LatLng(PP.Constants.GEOCODE_LOWERLEFT.lat, 
-                                                   PP.Constants.GEOCODE_LOWERLEFT.lng);
-
-            var upperRight = new google.maps.LatLng(PP.Constants.GEOCODE_UPPERRIGHT.lat, 
-                                                    PP.Constants.GEOCODE_UPPERRIGHT.lng);
-
-            var bounds = new google.maps.LatLngBounds(lowerLeft, upperRight);
-
-            var parameters = {
-                address: address,
-                bounds: bounds
-            };
-
-            var results = geocoder.geocode(parameters, callback);
         }
     };
 })();
@@ -271,9 +224,6 @@ PP.App = (function() {
         // Overview Map
         var overviewLayer = getLayer(Layers.mapBox.azavea,Layers.mapBox.attrib);
         var miniMap = new L.Control.MiniMap(overviewLayer).addTo(map);
-
-        // Geocoder
-        // var geocoderLayer = new L.Control.QuickGeocode().addTo(map);
     };
 
     var weightedOverlay = (function() {
@@ -338,12 +288,6 @@ PP.App = (function() {
                         // Call again in case things have changed.
                         layerStrings = getLayerStrings();
                         if(layerStrings.layers == "") return;
-
-                        // var geoJson = "";
-                        // var polygon = summary.getPolygon();
-                        // if(polygon != null) {
-                        //     geoJson = GJ.fromPolygon(polygon);
-                        // }
 
                         WOLayer = new L.TileLayer.WMS("gt/wo", {
                             breaks: breaks,
@@ -412,6 +356,10 @@ PP.App = (function() {
         
         var parcelDetails = function(latlng) {
             fetchParcel(latlng, function(parcel) {
+                var address = [parcel.housenumber, parcel.streetname, parcel.streettype].join(' ');
+
+                report.setLocation(latlng, address);
+
                 var content = template(parcel.properties)
                 map.panTo(latlng);
                 popup.setLatLng(latlng).setContent(content).openOn(map);
@@ -438,11 +386,6 @@ PP.App = (function() {
                       "id"      : "railways",
                       "layer"   : "coagis:ncdot_rail",
                       "details" : [
-                    // These are actually not solid colors: 
-                    // "Main Line" : "#7F7F7F 3 px line horizonal through center, 
-                    //                #7F7F7F line slightly offset from right 3 px, 
-                    //                vertical and 3/4 the length of the first line",
-                    // "Spur" : "#A7A7A7 3 px line horizontal through center",
                           { "name" : "Mail Line", "color" : "#000000" },
                           { "name" : "Spur", "color" : "#000000" }
                       ]
@@ -614,6 +557,399 @@ PP.App = (function() {
         }
     })();
 
+    var report = (function() {
+        var model = (function() {
+
+            var listeners = [];
+
+            return {
+                lat : 0.0,
+                lng : 0.0,
+                address : "",
+                report : { },
+                title : '',
+                outputFormat : 'pdf',
+                studyAreaType : 'census-tract',
+                ring1Radius : 1,
+                useRing2 : true,
+                ring2Radius : 3,
+                useRing3 : true,
+                ring3Radius : 5,
+                driveTime1 : 3,
+                useDriveTime2 : true,
+                driveTime2 : 5,
+                useDriveTime3 : true,
+                driveTime3 : 7,
+
+                notifyChange : function() { 
+                    _.each(listeners, function(f) { f(); });
+                },
+
+                onChange : function(f) {
+                    listeners.push(f);
+                },
+
+                reset : function() {
+                    // Don't reset most members, user probably wants to carry selections over.
+                    this.lat = 0.0;
+                    this.lng = 0.0;
+                    this.address = "";
+                    this.title = '';
+                },
+
+                isValid : function() {
+                    var hasTitle = (model.title.length > 0);
+
+                    var driveTimesValid = true;
+                    if(model.studyArea == 'travel-time') {
+                        // TODO: Check if drive times are valid
+                        driveTimesValid = true; 
+                    };
+
+                    var radiiValid = true
+                    if(model.studyArea == 'radius') {
+                        // TODO: Check if radii are valid
+                        radiiValid = true;
+                    };
+
+                    return hasTitle &&
+                           driveTimesValid &&
+                           radiiValid;
+                },
+
+                getQueryParams : function() {
+                    var studyAreaOptions = {};
+                    
+                    if(this.studyAreaType == 'radius') {
+                        studyAreaOptions.areaType = "RingBuffer";
+                        studyAreaOptions.bufferUnits = "esriMiles";
+                        var radii = [ this.ring1Radius ];
+                        if(this.useRing2) { radii.push(this.ring2Radius); };
+                        if(this.useRing3) { radii.push(this.ring3Radius); };
+                        studyAreaOptions.bufferRadii = radii;
+
+                    } else if (this.studyAreaType == 'travel-time') {
+                        studyAreaOptions.areaType = "DriveTimeBufferBands";
+                        studyAreaOptions.bufferUnits = "esriDriveTimeUnitsMinutes";
+                        var radii = [ this.driveTime1 ];
+                        if(this.useDriveTime2) { radii.push(this.driveTime2); };
+                        if(this.useDriveTime3) { radii.push(this.driveTime3); };
+                        studyAreaOptions.bufferRadii = radii;
+                        
+                    }
+                    
+
+                    var params = 
+                        [   
+                            'studyAreas=[{"geometry":{"x":' + this.lng + ',"y":' + this.lat + '}}]',
+                            'report=' + this.report.reportID,
+                            'f=bin',
+                            'format=' + this.outputFormat,
+                            'reportFields={"title": "' + this.title +
+                                '", "subtitle": "' + this.report.metadata.name +  
+                                '", "logo": "' + PP.Constants.LOGO_URL + 
+                                '", "latitude" : "' + this.lat +
+                                '", "longitude" : "' + this.lng +
+                                '"}',
+                            'studyAreasOptions=' + JSON.stringify(studyAreaOptions),
+                            'useData={"sourceCountry":"US"}'
+                        ];
+                            
+                    return params.join('&');
+                }
+            };
+        })();
+
+        var token = '';
+        var expiresOn = '';
+        
+        var getToken = function(callback) {
+            $.when(
+                $.getJSON('gt/generateToken')
+            ).then(
+                function(tokenJson) {
+                    token = tokenJson.access_token;
+                    expiresOn = (new Date().getTime() / 1000) + (tokenJson.expires_in - 60); // Err on the side of safety by a minute.
+                    callback();
+                }
+            );
+        };
+
+        var createReport = function() {
+            var sendRequest = function() {
+                var params = model.getQueryParams() + '&token=' + token;
+                var url = 'http://geoenrich.arcgis.com/arcgis/rest/services/World/geoenrichmentserver/GeoEnrichment/CreateReport?' + params;
+                window.location.href = url;
+            };
+
+            if(!token) {
+                getToken(sendRequest);
+            } else {
+                if(expiresOn < (new Date().getTime() / 1000)) {
+                    getToken(sendRequest);
+                } else {
+                    sendRequest();
+                }
+            }
+        };
+
+        var $report_title = {};
+        var $report_output_format = {};
+        var $report_study_area = {};
+        var $create_report_button = {};
+        var $radius_1 = {}
+        var $radius_2 = {}
+        var $radius_3 = {}
+        var $traveltime_1 = {}
+        var $traveltime_2 = {}
+        var $traveltime_3 = {}
+
+
+        var pushModelToUI = function() {
+            $report_title.val(model.title);
+            $radius_1.val(model.ring1Radius);
+            $radius_2.val(model.ring2Radius);
+            $radius_3.val(model.ring3Radius);
+            $traveltime_1.val(model.driveTime1);
+            $traveltime_2.val(model.driveTime2);
+            $traveltime_3.val(model.driveTime3);
+            $('#report-study-area-radius-2-toggle').attr('checked', model.useRing2);
+            $('#report-study-area-radius-3-toggle').attr('checked', model.useRing3);
+            $('#report-study-area-traveltime-2-toggle').attr('checked', model.useDriveTime2);
+            $('#report-study-area-traveltime-3-toggle').attr('checked', model.useDriveTime3);
+        };
+
+        var setReport = function(report) {
+            model.report = report;
+            
+            var existingFormat = null;
+            var needsSelectionChanged = false;
+
+            _.each($report_output_format, function(format) {
+                var radio = $(format)
+                if(! _.contains(report.formats, $(format).val())) {
+                    if(radio.is(':checked')) { needsSelectionChanged = true; };
+                    radio.attr('disabled', true);
+                    radio.parent().addClass('disabled');
+                } else {
+                    radio.parent().removeClass('disabled');
+                    if(!existingFormat) { existingFormat = $(format) }
+                };
+            });
+            
+            if(needsSelectionChanged) {
+                if(existingFormat) { 
+                    existingFormat.parent().addClass('active'); 
+                    existingFormat.attr('checked', true);
+                    model.outputFormat = existingFormat.val();
+                };
+            };
+
+            model.notifyChange();
+        };
+
+        return {
+            init : function() {
+                $report_title = $('#report-title');
+                $report_output_format = $('input:radio[name="report-output-format"]');
+                $report_study_area = $('input:radio[name="report-study-area"]');
+                $create_report_button = $('#create-report-button');
+                $radius_1 = $('#report-study-area-radius-1')
+                $radius_2 = $('#report-study-area-radius-2')
+                $radius_3 = $('#report-study-area-radius-3')
+                $traveltime_1 = $('#report-study-area-traveltime-1')
+                $traveltime_2 = $('#report-study-area-traveltime-2')
+                $traveltime_3 = $('#report-study-area-traveltime-3')
+
+                
+                // Bind model
+                $report_title.on( "input", function() {
+                    model.title = $( this ).val();
+                    model.notifyChange();
+                });
+
+                $report_output_format.change(function() {
+                    model.outputFormat = $(this).val();
+                    model.notifyChange();
+                });
+
+                $report_study_area.change(function() {
+                    model.studyAreaType = $(this).val();
+                    model.notifyChange();
+                });
+
+                $radius_1.on("input", function() {
+                    model.ring1Radius = $(this).val();
+                    model.notifyChange();
+                });
+
+                $radius_2.on("input", function() {
+                    model.ring2Radius = $(this).val();
+                    model.notifyChange();
+                });
+
+                $radius_3.on("input", function() {
+                    model.ring3Radius = $(this).val();
+                    model.notifyChange();
+                });
+
+                $('#report-study-area-radius-2-toggle').change(function() {
+                    if($(this).is(':checked')) {
+                        $radius_2.attr('disabled', false);
+                        $radius_2.parent().removeClass('disabled');
+
+                        model.useRing2 = true;
+                        model.notifyChange();
+                    } else {
+                        $radius_2.attr('disabled', true);
+                        $radius_2.parent().addClass('disabled');
+
+                        model.useRing2 = false;
+                        model.notifyChange();
+                    }
+                });
+
+                $('#report-study-area-radius-3-toggle').change(function() {
+                    if($(this).is(':checked')) {
+                        $radius_3.attr('disabled', false);
+                        $radius_3.parent().removeClass('disabled');
+
+                        model.useRing3 = true;
+                        model.notifyChange();
+                    } else {
+                        $radius_3.attr('disabled', true);
+                        $radius_3.parent().addClass('disabled');
+
+                        model.useRing3 = false;
+                        model.notifyChange();
+                    }
+                });
+
+                $traveltime_1.on("input", function() {
+                    model.driveTime1 = $(this).val();
+                    model.notifyChange();
+                });
+
+                $traveltime_2.on("input", function() {
+                    model.driveTime2 = $(this).val();
+                    model.notifyChange();
+                });
+
+                $traveltime_3.on("input", function() {
+                    model.driveTime3 = $(this).val();
+                    model.notifyChange();
+                });
+
+                $('#report-study-area-traveltime-2-toggle').change(function() {
+                    if($(this).is(':checked')) {
+                        $traveltime_2.attr('disabled', false);
+                        $traveltime_2.parent().removeClass('disabled');
+
+                        model.useDriveTime2 = true;
+                        model.notifyChange();
+                    } else {
+                        $traveltime_2.attr('disabled', true);
+                        $traveltime_2.parent().addClass('disabled');
+
+                        model.useDriveTime2 = false;
+                        model.notifyChange();
+                    }
+                });
+
+                $('#report-study-area-traveltime-3-toggle').change(function() {
+                    if($(this).is(':checked')) {
+                        $traveltime_3.attr('disabled', false);
+                        $traveltime_3.parent().removeClass('disabled');
+
+                        model.useDriveTime3 = true;
+                        model.notifyChange();
+                    } else {
+                        $traveltime_3.attr('disabled', true);
+                        $traveltime_3.parent().addClass('disabled');
+
+                        model.useDriveTime3 = false;
+                        model.notifyChange();
+                    }
+                });
+
+                model.onChange(function() {
+                    if(model.isValid()) {
+                        $create_report_button.attr('disabled', false);
+                    } else {
+                        $create_report_button.attr('disabled', true);
+                    }
+                });
+                
+                $create_report_button.on('click', createReport);
+
+                // Populate list of reports.
+                $.when(
+                    $.getJSON("gt/esriReportCatalog")
+                ).then(
+                    function(catalog) {
+                        var $report_list = $('#report-list');
+
+                        var $activeListing = null;
+
+                        var toggleActiveListing = function($newActive, reportData) {
+                            if($activeListing) { $activeListing.removeClass('active'); };
+                            $newActive.addClass("active");
+                            $activeListing = $newActive;
+
+                            if(model.title == '') {
+                                $report_title.attr("placeholder", reportData.metadata.name);
+                            }
+
+                            setReport(reportData);
+                        };
+
+                        for(var i = 0; i < catalog.reports.length; i++) {
+                            (function() {
+                                var reportData = catalog.reports[i];
+                                var metadata = reportData.metadata;
+                                
+                                var descriptions = [];
+                                
+                                if(metadata.dataVintageDescription != "N/A") {
+                                    descriptions.push(metadata.dataVintageDescription);
+                                } 
+
+                                if(metadata.boundaryVintageDescription != "N/A") {
+                                    descriptions.push(metadata.boundaryVintageDescription);
+                                }
+
+                                reportData.description = descriptions.join(' ');
+
+                                var listingTemplate = Handlebars.compile($('#report-listing-template').html());
+                                $report_list.append(listingTemplate(reportData));
+                                var $listing = $('#report-' + reportData.reportID, $report_list);
+
+                                $listing.on("click", function() {
+                                    toggleActiveListing($(this), reportData);
+                                });
+
+                                if(i == 0) {
+                                    toggleActiveListing($listing, reportData);
+                                }
+                            })();
+                        };
+                    }
+                );
+            },
+            
+            setLocation : function(latlng, address) {
+                model.reset();
+
+                model.lat = latlng.lat;
+                model.lng = latlng.lng;
+                model.address = address
+                model.notifyChange();
+
+                pushModelToUI();
+            }
+        };
+    })();
+
     var UI = (function() {
 
         var $sidebar = {};
@@ -700,8 +1036,8 @@ PP.App = (function() {
         };
 
         var toggleActiveReportType = function() {
-            $('.list-group-item').removeClass('active');
-            $(this).toggleClass('active');
+            // $('.list-group-item').removeClass('active');
+            // $(this).toggleClass('active');
         };
 
         var toggleReportArea = function() {
@@ -734,8 +1070,6 @@ PP.App = (function() {
         };
 
         var updateOpacity = function(e) {
-            // TODO: Change opacity for map layers
-            // e.value gives you the value of the slider (0 - 100)
             weightedOverlay.setOpacity(e.value / 100.0);
         };
 
@@ -788,6 +1122,7 @@ PP.App = (function() {
                     weightedOverlay.init();
                     colorRamps.init();
                     findAddress.init();
+                    report.init();
                     model.notifyChange();
                 }, this),
             function(err) {
@@ -803,6 +1138,5 @@ PP.App = (function() {
 })();
 
 jQuery(function ($) {
-    PP.Geocoder.init();
     PP.App.init();
 });

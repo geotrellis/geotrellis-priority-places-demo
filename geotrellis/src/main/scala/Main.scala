@@ -15,8 +15,10 @@ object Main {
   val server = Server("asheville",
                       Catalog.fromPath("data/catalog.json"))
 
+  def actorSystem = server.system
+
   def main(args: Array[String]):Unit = {
-    implicit val system = server.system
+    implicit val system = actorSystem
 
     // create and start our service actor
     val service = system.actorOf(Props[PriorityPlacesServiceActor], "pp-service")
