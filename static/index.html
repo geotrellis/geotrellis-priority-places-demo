@@ -63,10 +63,7 @@
                 <div class="all-factors hide-panel">
                     <div class="scenarios">
                         <span>Scenarios:</span>
-                        <select class="form-control">
-                            <option>All Factors Template</option>
-                            <option>Residential Potential Template</option>
-                            <option>Custom Scenario</option>
+                        <select id="scenarios-select" class="form-control">
                         </select>
                     </div>
                 </div>				
@@ -110,20 +107,20 @@
                         <div class="form-group">
                             <label class="report-label"><span class="label-number">3.</span>Choose your Study Area</label>
                             <div class="btn-group" id="report-study-area" data-toggle="buttons">
-                                <label class="btn btn-primary active" id="report-study-area-census">
-                                    <input type="radio" name="report-study-area" value="census-tract" checked> Census Tract
-                                </label>
-                                <label class="btn btn-primary" id="report-study-area-blockgroup">
-                                    <input type="radio" name="report-study-area" value="block-group"> Block Group
-                                </label>
-                                <label class="btn btn-primary" id="report-study-area-radius">
-                                    <input type="radio" name="report-study-area" value="radius"> Radius
+                                <!-- <label class="btn btn-primary active" id="report-study-area-census"> -->
+                                <!--     <input type="radio" name="report-study-area" value="census-tract" checked> Census Tract -->
+                                <!-- </label> -->
+                                <!-- <label class="btn btn-primary" id="report-study-area-blockgroup"> -->
+                                <!--     <input type="radio" name="report-study-area" value="block-group"> Block Group -->
+                                <!-- </label> -->
+                                <label class="btn btn-primary active" id="report-study-area-radius">
+                                    <input type="radio" name="report-study-area" value="radius" checked> Radius
                                 </label>
                                 <label class="btn btn-primary" id="report-study-area-travel">
                                     <input type="radio" name="report-study-area" value="travel-time"> Travel Time
                                 </label>
                             </div>
-                            <div id="report-study-area-radius-options" class="well hidden">
+                            <div id="report-study-area-radius-options" class="well">
                                 <p><strong>Rings/Radii:</strong> Radius in miles for up to three overlapping rings that use your selected location as the center point. Each ring includes data of any inner ring. </p>
                                 <label class="checkbox-inline">
                                     <input type="number" class="form-control input-sm report-study-area-radius-options-input" id="report-study-area-radius-1" value="1">
@@ -439,7 +436,7 @@
       </div>
     </script>
 
-    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/vendor/jquery.js"></script>
     <script src="js/vendor/leaflet.0.7.2.js"></script>
     <script src="js/vendor/leaflet.draw.js"></script>
     <script src="js/vendor/Control.MiniMap.js"></script>
