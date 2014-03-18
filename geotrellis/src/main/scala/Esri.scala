@@ -57,7 +57,7 @@ object Esri {
         catalogPipeline(Get(url))
       }
 
-      reportsJson = Await.result(pipeline, 2 seconds)
+      reportsJson = Await.result(pipeline, 10 seconds)
       lastUpdated = System.currentTimeMillis
     }
 

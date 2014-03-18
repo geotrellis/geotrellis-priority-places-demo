@@ -1,0 +1,49 @@
+{
+    "layers" : [
+        { "name"    : "Railways",
+          "id"      : "railways",
+          "layer"   : "coagis:ncdot_rail",
+          "details" : [
+              { "name" : "Mail Line", "color" : "#000000" },
+              { "name" : "Spur", "color" : "#000000" }
+          ]
+        },
+        { "name"    : "Asheville Regional Airport (AVL)",
+          "id"      : "airport",
+          "layer"   : "coagis:coa_airport_view",
+          "details" : []
+        },
+        { "name"    : "Zoning Districts",
+          "id"      : "districts",
+          "layer"   : "coagis:coa_districts_zoning",
+          "details" : [
+              { "name" : "CBD - Central Business District", "color" : "#B6B6B6" },
+              { "name" : "NCD - Neighborhood Corridor District", "color" : "#A06969" },
+              { "name" : "URD - Urban Residential District", "color" : "#4242FA" },
+              { "name" : "UP - Urban Place", "color" : "#3270B9" },
+              { "name" : "UV - Urban Village", "color" : "#9C32B9" },
+              { "name" : "RB - Regional Business", "color" : "#B93232" },
+              { "name" : "HB - Highway Business", "color" : "#FF3232" },
+              { "name" : "CBII - Community Business II", "color" : "#D684AD" },
+              { "name" : "CBI - Community Business", "color" : "#DEB0C9" },
+              { "name" : "NB - Neighborhood Business", "color" : "#FFCAEC" },
+              { "name" : "IND - Industrial", "color" : "#BDB6FE" },
+              { "name" : "CI - Commercial Industrial", "color" : "#D2CEFE" },
+              { "name" : "LI - Light Industrial", "color" : "#EDDEFE" },
+              { "name" : "INST - Institutional", "color" : "#32BAEA" },
+              { "name" : "OB - Office Business", "color" : "#32FFFF" },
+              { "name" : "O2 - Office 2", "color" : "#ABE2F4" },
+              { "name" : "OFFICE", "color" : "#CAF2F2" },
+              { "name" : "RIVER", "color" : "#5FB932" },
+              { "name" : "RESORT", "color" : "#ACEA32" },
+              { "name" : "HCU - Historic Conditional Use", "color" : "#DBFFCA" },
+              { "name" : "RM16 - High Density Multi-Family", "color" : "#EAAC32" },
+              { "name" : "RM8 - Medium Density Multi-Family", "color" : "#FFBA32" },
+              { "name" : "RM6 - Low Density Multi-Family", "color" : "#FBEE73" },
+              { "name" : "RS8 - High Density Single-Family", "color" : "#FFFF32" },
+              { "name" : "RS4 - Medium Density Single-Family", "color" : "#F1F3B2" },
+              { "name" : "RS2 - Low Density Single-Family", "color" : "#FFFFCA" }
+          ]
+        }
+    ]
+}

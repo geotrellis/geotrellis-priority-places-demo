@@ -159,7 +159,9 @@ PP.App = (function() {
                 };
             },
 
-            getColorRamp: function() { return colorRamp }
+            getColorRamp: function() { return colorRamp },
+
+            getCategories: function() { return categories }
         };
     })();
 
@@ -379,59 +381,8 @@ PP.App = (function() {
     })();
 
     var legend = (function() {
-        var geoServerLayers =
-            {
-                layers : [
-                    { "name"    : "Railways",
-                      "id"      : "railways",
-                      "layer"   : "coagis:ncdot_rail",
-                      "details" : [
-                          { "name" : "Mail Line", "color" : "#000000" },
-                          { "name" : "Spur", "color" : "#000000" }
-                      ]
-                    },
-                    { "name"    : "Asheville Regional Airport (AVL)",
-                      "id"      : "airport",
-                      "layer"   : "coagis:coa_airport_view",
-                      "details" : []
-                    },
-                    { "name"    : "Zoning Districts",
-                      "id"      : "districts",
-                      "layer"   : "coagis:coa_districts_zoning",
-                      "details" : [
-                          { "name" : "CBD - Central Business District", color : "#B6B6B6" },
-                          { "name" : "NCD - Neighborhood Corridor District", color : "#A06969" },
-                          { "name" : "URD - Urban Residential District", color : "#4242FA" },
-                          { "name" : "UP - Urban Place", color : "#3270B9" },
-                          { "name" : "UV - Urban Village", color : "#9C32B9" },
-                          { "name" : "RB - Regional Business", color : "#B93232" },
-                          { "name" : "HB - Highway Business", color : "#FF3232" },
-                          { "name" : "CBII - Community Business II", color : "#D684AD" },
-                          { "name" : "CBI - Community Business", color : "#DEB0C9" },
-                          { "name" : "NB - Neighborhood Business", color : "#FFCAEC" },
-                          { "name" : "IND - Industrial", color : "#BDB6FE" },
-                          { "name" : "CI - Commercial Industrial", color : "#D2CEFE" },
-                          { "name" : "LI - Light Industrial", color : "#EDDEFE" },
-                          { "name" : "INST - Institutional", color : "#32BAEA" },
-                          { "name" : "OB - Office Business", color : "#32FFFF" },
-                          { "name" : "O2 - Office 2", color : "#ABE2F4" },
-                          { "name" : "OFFICE", color : "#CAF2F2" },
-                          { "name" : "RIVER", color : "#5FB932" },
-                          { "name" : "RESORT", color : "#ACEA32" },
-                          { "name" : "HCU - Historic Conditional Use", color : "#DBFFCA" },
-                          { "name" : "RM16 - High Density Multi-Family", color : "#EAAC32" },
-                          { "name" : "RM8 - Medium Density Multi-Family", color : "#FFBA32" },
-                          { "name" : "RM6 - Low Density Multi-Family", color : "#FBEE73" },
-                          { "name" : "RS8 - High Density Single-Family", color : "#FFFF32" },
-                          { "name" : "RS4 - Medium Density Single-Family", color : "#F1F3B2" },
-                          { "name" : "RS2 - Low Density Single-Family", color : "#FFFFCA" }
-                      ]
-                    }
-                ]
-            };
-
         return {
-            init : function() {
+            init : function(geoServerLayers) {
                 var template = Handlebars.compile($('#legend-section-template').html())
                 $('#legend-container').append(template(geoServerLayers));
 
@@ -503,8 +454,6 @@ PP.App = (function() {
                                      'hide.bs.popover': PP.Util.toggleToolActive});
 
                             $('.content').on('click', '.color-ramp-selector img', updateColorRamp);
-
-                            
                         })
                 );
             }
@@ -558,7 +507,7 @@ PP.App = (function() {
     })();
 
     var report = (function() {
-        var model = (function() {
+        var reportModel = (function() {
 
             var listeners = [];
 
@@ -569,7 +518,7 @@ PP.App = (function() {
                 report : { },
                 title : '',
                 outputFormat : 'pdf',
-                studyAreaType : 'census-tract',
+                studyAreaType : 'radius',
                 ring1Radius : 1,
                 useRing2 : true,
                 ring2Radius : 3,
@@ -598,16 +547,16 @@ PP.App = (function() {
                 },
 
                 isValid : function() {
-                    var hasTitle = (model.title.length > 0);
+                    var hasTitle = (reportModel.title.length > 0);
 
                     var driveTimesValid = true;
-                    if(model.studyArea == 'travel-time') {
+                    if(reportModel.studyArea == 'travel-time') {
                         // TODO: Check if drive times are valid
                         driveTimesValid = true; 
                     };
 
                     var radiiValid = true
-                    if(model.studyArea == 'radius') {
+                    if(reportModel.studyArea == 'radius') {
                         // TODO: Check if radii are valid
                         radiiValid = true;
                     };
@@ -677,7 +626,7 @@ PP.App = (function() {
 
         var createReport = function() {
             var sendRequest = function() {
-                var params = model.getQueryParams() + '&token=' + token;
+                var params = reportModel.getQueryParams() + '&token=' + token;
                 var url = 'http://geoenrich.arcgis.com/arcgis/rest/services/World/geoenrichmentserver/GeoEnrichment/CreateReport?' + params;
                 window.location.href = url;
             };
@@ -705,22 +654,22 @@ PP.App = (function() {
         var $traveltime_3 = {}
 
 
-        var pushModelToUI = function() {
-            $report_title.val(model.title);
-            $radius_1.val(model.ring1Radius);
-            $radius_2.val(model.ring2Radius);
-            $radius_3.val(model.ring3Radius);
-            $traveltime_1.val(model.driveTime1);
-            $traveltime_2.val(model.driveTime2);
-            $traveltime_3.val(model.driveTime3);
-            $('#report-study-area-radius-2-toggle').attr('checked', model.useRing2);
-            $('#report-study-area-radius-3-toggle').attr('checked', model.useRing3);
-            $('#report-study-area-traveltime-2-toggle').attr('checked', model.useDriveTime2);
-            $('#report-study-area-traveltime-3-toggle').attr('checked', model.useDriveTime3);
+        var pushReportModelToUI = function() {
+            $report_title.val(reportModel.title);
+            $radius_1.val(reportModel.ring1Radius);
+            $radius_2.val(reportModel.ring2Radius);
+            $radius_3.val(reportModel.ring3Radius);
+            $traveltime_1.val(reportModel.driveTime1);
+            $traveltime_2.val(reportModel.driveTime2);
+            $traveltime_3.val(reportModel.driveTime3);
+            $('#report-study-area-radius-2-toggle').attr('checked', reportModel.useRing2);
+            $('#report-study-area-radius-3-toggle').attr('checked', reportModel.useRing3);
+            $('#report-study-area-traveltime-2-toggle').attr('checked', reportModel.useDriveTime2);
+            $('#report-study-area-traveltime-3-toggle').attr('checked', reportModel.useDriveTime3);
         };
 
         var setReport = function(report) {
-            model.report = report;
+            reportModel.report = report;
             
             var existingFormat = null;
             var needsSelectionChanged = false;
@@ -741,11 +690,11 @@ PP.App = (function() {
                 if(existingFormat) { 
                     existingFormat.parent().addClass('active'); 
                     existingFormat.attr('checked', true);
-                    model.outputFormat = existingFormat.val();
+                    reportModel.outputFormat = existingFormat.val();
                 };
             };
 
-            model.notifyChange();
+            reportModel.notifyChange();
         };
 
         return {
@@ -761,36 +710,49 @@ PP.App = (function() {
                 $traveltime_2 = $('#report-study-area-traveltime-2')
                 $traveltime_3 = $('#report-study-area-traveltime-3')
 
-                
-                // Bind model
+                $('#report-study-area').on('click', 'label', function() {
+                    var id = $(this).attr('id');
+                    if (id == 'report-study-area-radius') {
+                        $('#report-study-area-traveltime-options').addClass('hidden');
+                        $('#report-study-area-radius-options').toggleClass('hidden');
+                    } else if (id == 'report-study-area-travel') {
+                        $('#report-study-area-radius-options').addClass('hidden');
+                        $('#report-study-area-traveltime-options').toggleClass('hidden');
+                    } else {
+                        $('#report-study-area-radius-options').addClass('hidden');
+                        $('#report-study-area-traveltime-options').addClass('hidden');
+                    }
+                });
+
+                // Bind reportModel
                 $report_title.on( "input", function() {
-                    model.title = $( this ).val();
-                    model.notifyChange();
+                    reportModel.title = $( this ).val();
+                    reportModel.notifyChange();
                 });
 
                 $report_output_format.change(function() {
-                    model.outputFormat = $(this).val();
-                    model.notifyChange();
+                    reportModel.outputFormat = $(this).val();
+                    reportModel.notifyChange();
                 });
 
                 $report_study_area.change(function() {
-                    model.studyAreaType = $(this).val();
-                    model.notifyChange();
+                    reportModel.studyAreaType = $(this).val();
+                    reportModel.notifyChange();
                 });
 
                 $radius_1.on("input", function() {
-                    model.ring1Radius = $(this).val();
-                    model.notifyChange();
+                    reportModel.ring1Radius = $(this).val();
+                    reportModel.notifyChange();
                 });
 
                 $radius_2.on("input", function() {
-                    model.ring2Radius = $(this).val();
-                    model.notifyChange();
+                    reportModel.ring2Radius = $(this).val();
+                    reportModel.notifyChange();
                 });
 
                 $radius_3.on("input", function() {
-                    model.ring3Radius = $(this).val();
-                    model.notifyChange();
+                    reportModel.ring3Radius = $(this).val();
+                    reportModel.notifyChange();
                 });
 
                 $('#report-study-area-radius-2-toggle').change(function() {
@@ -798,14 +760,14 @@ PP.App = (function() {
                         $radius_2.attr('disabled', false);
                         $radius_2.parent().removeClass('disabled');
 
-                        model.useRing2 = true;
-                        model.notifyChange();
+                        reportModel.useRing2 = true;
+                        reportModel.notifyChange();
                     } else {
                         $radius_2.attr('disabled', true);
                         $radius_2.parent().addClass('disabled');
 
-                        model.useRing2 = false;
-                        model.notifyChange();
+                        reportModel.useRing2 = false;
+                        reportModel.notifyChange();
                     }
                 });
 
@@ -814,30 +776,30 @@ PP.App = (function() {
                         $radius_3.attr('disabled', false);
                         $radius_3.parent().removeClass('disabled');
 
-                        model.useRing3 = true;
-                        model.notifyChange();
+                        reportModel.useRing3 = true;
+                        reportModel.notifyChange();
                     } else {
                         $radius_3.attr('disabled', true);
                         $radius_3.parent().addClass('disabled');
 
-                        model.useRing3 = false;
-                        model.notifyChange();
+                        reportModel.useRing3 = false;
+                        reportModel.notifyChange();
                     }
                 });
 
                 $traveltime_1.on("input", function() {
-                    model.driveTime1 = $(this).val();
-                    model.notifyChange();
+                    reportModel.driveTime1 = $(this).val();
+                    reportModel.notifyChange();
                 });
 
                 $traveltime_2.on("input", function() {
-                    model.driveTime2 = $(this).val();
-                    model.notifyChange();
+                    reportModel.driveTime2 = $(this).val();
+                    reportModel.notifyChange();
                 });
 
                 $traveltime_3.on("input", function() {
-                    model.driveTime3 = $(this).val();
-                    model.notifyChange();
+                    reportModel.driveTime3 = $(this).val();
+                    reportModel.notifyChange();
                 });
 
                 $('#report-study-area-traveltime-2-toggle').change(function() {
@@ -845,14 +807,14 @@ PP.App = (function() {
                         $traveltime_2.attr('disabled', false);
                         $traveltime_2.parent().removeClass('disabled');
 
-                        model.useDriveTime2 = true;
-                        model.notifyChange();
+                        reportModel.useDriveTime2 = true;
+                        reportModel.notifyChange();
                     } else {
                         $traveltime_2.attr('disabled', true);
                         $traveltime_2.parent().addClass('disabled');
 
-                        model.useDriveTime2 = false;
-                        model.notifyChange();
+                        reportModel.useDriveTime2 = false;
+                        reportModel.notifyChange();
                     }
                 });
 
@@ -861,19 +823,19 @@ PP.App = (function() {
                         $traveltime_3.attr('disabled', false);
                         $traveltime_3.parent().removeClass('disabled');
 
-                        model.useDriveTime3 = true;
-                        model.notifyChange();
+                        reportModel.useDriveTime3 = true;
+                        reportModel.notifyChange();
                     } else {
                         $traveltime_3.attr('disabled', true);
                         $traveltime_3.parent().addClass('disabled');
 
-                        model.useDriveTime3 = false;
-                        model.notifyChange();
+                        reportModel.useDriveTime3 = false;
+                        reportModel.notifyChange();
                     }
                 });
 
-                model.onChange(function() {
-                    if(model.isValid()) {
+                reportModel.onChange(function() {
+                    if(reportModel.isValid()) {
                         $create_report_button.attr('disabled', false);
                     } else {
                         $create_report_button.attr('disabled', true);
@@ -896,7 +858,7 @@ PP.App = (function() {
                             $newActive.addClass("active");
                             $activeListing = $newActive;
 
-                            if(model.title == '') {
+                            if(reportModel.title == '') {
                                 $report_title.attr("placeholder", reportData.metadata.name);
                             }
 
@@ -938,34 +900,22 @@ PP.App = (function() {
             },
             
             setLocation : function(latlng, address) {
-                model.reset();
+                reportModel.reset();
 
-                model.lat = latlng.lat;
-                model.lng = latlng.lng;
-                model.address = address
-                model.notifyChange();
+                reportModel.lat = latlng.lat;
+                reportModel.lng = latlng.lng;
+                reportModel.address = address
+                reportModel.notifyChange();
 
-                pushModelToUI();
+                pushReportModelToUI();
             }
         };
     })();
 
-    var UI = (function() {
-
+    var factors = (function() {
         var $sidebar = {};
         var $allFactorsPanel = {};
         var $manageFactorsBtn = {};
-        var $toolLegend = {};
-
-        var cacheElements = function () {
-            // Panels
-            $sidebar           = $('#sidebar');
-            $allFactorsPanel   = $('.all-factors');
-
-            // Buttons
-            $manageFactorsBtn  = $('.manage-factors-btn');
-            $toolLegend        = $('.tool-legend');
-        };
 
         var loadFactors = function() {
             var $factorsList       = $('.factors');
@@ -998,8 +948,18 @@ PP.App = (function() {
 
         var loadAllFactors = function() {
             var allFactorsTemplate = Handlebars.compile($('#all-factors-template').html());
-            var $container = $allFactorsPanel.append(allFactorsTemplate(model));
+            var $container = 
+                $allFactorsPanel.append(allFactorsTemplate({ categories : model.getCategories() }));
         };
+
+        var loadScenarios = function(scenarios) {
+            var $scenarios_select = $('#scenarios-select');
+            
+            _.each(scenarios, function(scenario) {
+                var option = $("<option>" + scenario.name + "</option>");
+                $scenarios_select.append(option);
+            });
+        }
 
         var removeFactor = function(e) {
             $(e.target).closest('.factor').remove();
@@ -1025,35 +985,6 @@ PP.App = (function() {
             $(this).parent().toggleClass('collapsed');
         };
 
-        var toggleLegend = function(e) {
-            $(this).toggleClass('active');
-            $('#tool-legend-popover').toggleClass('in');
-        };
-
-        var toggleLegendSection = function() {
-            $(this).toggleClass('active').find('.glyphicon').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
-            $(this).siblings('ul').toggleClass('collapsed');
-        };
-
-        var toggleActiveReportType = function() {
-            // $('.list-group-item').removeClass('active');
-            // $(this).toggleClass('active');
-        };
-
-        var toggleReportArea = function() {
-            var id = $(this).attr('id');
-            if (id == 'report-study-area-radius') {
-                $('#report-study-area-traveltime-options').addClass('hidden');
-                $('#report-study-area-radius-options').toggleClass('hidden');
-            } else if (id == 'report-study-area-travel') {
-                $('#report-study-area-radius-options').addClass('hidden');
-                $('#report-study-area-traveltime-options').toggleClass('hidden');
-            } else {
-                $('#report-study-area-radius-options').addClass('hidden');
-                $('#report-study-area-traveltime-options').addClass('hidden');
-            }
-        };
-
         var updateLayerWeight = function(e) {
             // Sets the count with the slider's value -5 thru 5
             if (e.value === 0) {
@@ -1069,40 +1000,59 @@ PP.App = (function() {
             // TODO: Change scenarios with the dropdown list
         };
 
+        return {
+            init : function(scenarios) {
+                // Panels
+                $sidebar           = $('#sidebar');
+                $allFactorsPanel   = $('.all-factors');
+
+                loadFactors();
+                loadAllFactors();
+                loadScenarios(scenarios);
+
+                var $toggleSidebar     = $('#toggle-sidebar');
+                var $scenarioSelect    = $('#scenario-select');
+
+                // Buttons
+                $manageFactorsBtn  = $('.manage-factors-btn');
+
+                // Panels
+                $sidebar.on('click', '.manage-factors-btn', toggleFactorsPanel);
+                $toggleSidebar.on('click', toggleSidebar);
+
+                // Inputs
+                $scenarioSelect.on('change', updateScenario);
+                $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
+            }
+        };
+    })();
+
+    var toolLegend = (function() {
+        var toggleLegend = function(e) {
+            $(this).toggleClass('active');
+            $('#tool-legend-popover').toggleClass('in');
+        };
+
+        var toggleLegendSection = function() {
+            $(this).toggleClass('active').find('.glyphicon').toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+            $(this).siblings('ul').toggleClass('collapsed');
+        };
+
         var updateOpacity = function(e) {
             weightedOverlay.setOpacity(e.value / 100.0);
         };
 
-        var bindEvents = function () {
-            var $content           = $('.content');
-            var $toggleSidebar     = $('#toggle-sidebar');
-            var $scenarioSelect    = $('#scenario-select');
-            var $opacitySlider     = $('.opacity-slider');
-            var $legendPopover     = $('#tool-legend-popover');
-            var $reportType        = $('.list-group-item');
-            var $reportArea        = $('#report-study-area');
-
-            // Panels
-            $sidebar.on('click', '.manage-factors-btn', toggleFactorsPanel);
-            $toggleSidebar.on('click', toggleSidebar);
-
-            // Inputs
-            $scenarioSelect.on('change', updateScenario);
-            $opacitySlider.slider('setValue', PP.Constants.DEFAULT_OPACITY * 100).on('slide', updateOpacity);
-            $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
-            $reportType.on('click', toggleActiveReportType);
-            $reportArea.on('click', 'label', toggleReportArea);
-
-            $toolLegend.on('click', toggleLegend);
-            $legendPopover.on('click', '.collapse-arrow', toggleLegendSection);
-        };
-        
         return {
             init : function() {
-                cacheElements();
-                loadFactors();
-                loadAllFactors();
-                bindEvents();
+                var $toolLegend = $('.tool-legend');
+
+                var $opacitySlider     = $('.opacity-slider');
+                var $legendPopover     = $('#tool-legend-popover');
+
+                $toolLegend.on('click', toggleLegend);
+                $opacitySlider.slider('setValue', PP.Constants.DEFAULT_OPACITY * 100)
+                    .on('slide', updateOpacity);
+                $legendPopover.on('click', '.collapse-arrow', toggleLegendSection);
             }
         };
     })();
@@ -1110,21 +1060,23 @@ PP.App = (function() {
     var init = function () {
         $.when(
             $.getJSON('json/layers.json'),
-            $.getJSON('json/categories.json')
+            $.getJSON('json/categories.json'),
+            $.getJSON('json/scenarios.json'),
+            $.getJSON('json/geoserverlayers.json')
         ).then(
-            $.proxy(
-                function(factorsJson, categoriesJson) {
-                    model.initialize(factorsJson[0].layers,categoriesJson[0].categories);
-                    UI.init();
-                    initMap();
-                    parcelDetails.init();
-                    legend.init();
-                    weightedOverlay.init();
-                    colorRamps.init();
-                    findAddress.init();
-                    report.init();
-                    model.notifyChange();
-                }, this),
+            function(factorsJson, categoriesJson, scenariosJson, geoserverLayersJson) {
+                model.initialize(factorsJson[0].layers,categoriesJson[0].categories);
+                toolLegend.init();
+                factors.init(scenariosJson[0].scenarios);
+                initMap();
+                parcelDetails.init();
+                legend.init(geoserverLayersJson);
+                weightedOverlay.init();
+                colorRamps.init();
+                findAddress.init();
+                report.init();
+                model.notifyChange();
+            },
             function(err) {
                 console.error('Error retrieving resources: ', err.statusText, err);
             }
