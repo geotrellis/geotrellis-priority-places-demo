@@ -295,13 +295,13 @@ header {
     margin: 0;
     clear: none;
     padding: 0 0 0 28px;
-    height: 20px;
+    min-height: 20px;
     font-size: 1.3rem;
     font-weight: 600;
     color: #232323;
     cursor: pointer;
     vertical-align: top;
-    background: url(../images/radio-off.png) left center no-repeat; }
+    background: url(../images/radio-off.png) left top no-repeat; }
   #sidebar input[type='radio']:disabled + label {
     opacity: 0.4;
     cursor: default; }
@@ -324,13 +324,13 @@ header {
     margin: 0;
     clear: none;
     padding: 0 0 0 28px;
-    height: 20px;
+    min-height: 20px;
     font-size: 1.3rem;
     font-weight: 600;
     color: #232323;
     cursor: pointer;
     vertical-align: top;
-    background: url(../images/check-off.png) left center no-repeat; }
+    background: url(../images/check-off.png) left top no-repeat; }
   #sidebar input[type='checkbox']:disabled + label {
     opacity: 0.4;
     cursor: default; }
@@ -444,8 +444,7 @@ header {
         margin-right: 15px;
         min-width: 100px; }
 #sidebar .all-factors {
-  overflow: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   position: absolute;
   bottom: 20px;
   top: 20px;
@@ -474,31 +473,47 @@ header {
       font-size: 12px;
       margin-bottom: 5px;
       color: white; }
-  #sidebar .all-factors ul {
+  #sidebar .all-factors > ul {
     padding: 15px;
     list-style: none;
     left: 0;
     position: absolute;
     top: 85px;
     bottom: 0;
-    right: 0; }
-    #sidebar .all-factors ul ul {
-      height: auto;
-      transition: height 0.5s;
-      padding: 0;
-      margin: 10px 0 10px 23px; }
-    #sidebar .all-factors ul .collapsed > ul {
-      height: 0px;
+    right: 0;
+    margin: 0;
+    overflow: auto; }
+    #sidebar .all-factors > ul > li {
+      clear: both;
+      margin-bottom: 8px;
+      list-style: none; }
+      #sidebar .all-factors > ul > li label {
+        font-size: 14px; }
+    #sidebar .all-factors > ul ul {
+      display: block;
+      margin: 10px 0 15px 0;
+      border-top: 1px solid #F1f2f2;
+      padding: 10px 0 10px 27px;
+      border-bottom: 1px solid #f1f2f2; }
+      #sidebar .all-factors > ul ul > li {
+        list-style: none;
+        margin-bottom: 5px; }
+        #sidebar .all-factors > ul ul > li label {
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 2.0rem; }
+    #sidebar .all-factors > ul .collapsed > ul {
+      display: none;
       overflow: hidden;
       margin: 0; }
-    #sidebar .all-factors ul .collapsed .collapse-arrow {
+    #sidebar .all-factors > ul .collapsed .collapse-arrow {
       opacity: 0.5; }
-    #sidebar .all-factors ul .collapse-arrow {
+    #sidebar .all-factors > ul .collapse-arrow {
       float: left;
-      margin-right: 5px;
-      margin-top: -2px;
-      font-size: 18px; }
-      #sidebar .all-factors ul .collapse-arrow:hover {
+      font-size: 12px;
+      margin-top: 2px;
+      margin-right: 15px; }
+      #sidebar .all-factors > ul .collapse-arrow:hover {
         cursor: pointer;
         opacity: 1; }
 #sidebar .manage {
@@ -590,13 +605,13 @@ header {
       margin: 0;
       clear: none;
       padding: 0 0 0 28px;
-      height: 20px;
+      min-height: 20px;
       font-size: 1.3rem;
       font-weight: 600;
       color: #232323;
       cursor: pointer;
       vertical-align: top;
-      background: url(../images/radio-off.png) left center no-repeat; }
+      background: url(../images/radio-off.png) left top no-repeat; }
     #tool-legend-popover input[type='radio']:disabled + label {
       opacity: 0.4;
       cursor: default; }
@@ -619,13 +634,13 @@ header {
       margin: 0;
       clear: none;
       padding: 0 0 0 28px;
-      height: 20px;
+      min-height: 20px;
       font-size: 1.3rem;
       font-weight: 600;
       color: #232323;
       cursor: pointer;
       vertical-align: top;
-      background: url(../images/check-off.png) left center no-repeat; }
+      background: url(../images/check-off.png) left top no-repeat; }
     #tool-legend-popover input[type='checkbox']:disabled + label {
       opacity: 0.4;
       cursor: default; }

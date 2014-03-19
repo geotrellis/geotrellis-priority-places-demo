@@ -186,14 +186,17 @@
     	    {{#each categories}}
             <li id="{{name}}" class="collapsed">
                 <div class="collapse-arrow">
-                    <span class="glyphicon glyphicon-collapse-up"></span>
+                    <span class="glyphicon glyphicon-chevron-right"></span>
                 </div>
                 <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
                 <label for="{{name}}-checkbox" class="css-label">{{name}}</label>
                 {{#if layers}}
                 <ul>
                     {{#each layers}}
-                    <li><span class="legend-icon"></span> {{name}}</li>
+                    <li>
+                        <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
+                        <label for="{{name}}-checkbox" class="css-label">{{name}}</label>
+                    </li>
                     {{/each}}
                 </ul>
                 {{/if}}
