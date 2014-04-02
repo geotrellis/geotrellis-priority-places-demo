@@ -5,8 +5,7 @@ define(['app/map', 'app/report'], function(map, report){
 
   var template = Handlebars.compile($('#parcel-details-template').html())
   var popup = L.popup();
-
-  var parcelLayer = null; 
+  var parcelLayer = L.geoJson().addTo(map); 
 
   var fetchParcel = function(latlng, cb) {
       $.when(
@@ -38,13 +37,9 @@ define(['app/map', 'app/report'], function(map, report){
       });
   }
 
+  map.on('click', function(e) { parcelDetails(e.latlng) });
+
   return {
-      init : function() {
-          map.on('click', function(e) { parcelDetails(e.latlng) });
-          parcelLayer = L.geoJson().addTo(map);
-      },
-      popup: function(latlng) {
-          parcelDetails(latlng);
-      }
-  }
+    "popup": parcelDetails    
+  };
 });

@@ -1,4 +1,4 @@
-define(['app/geocoder', 'app/util'], function(geocoder, util){
+define(['app/geocoder', 'app/util', 'app/parcel-details'], function(geocoder, util, parcelDetails){
   var template = Handlebars.compile($('#find-address-template').html());
 
   var setAddress = function(results) {
