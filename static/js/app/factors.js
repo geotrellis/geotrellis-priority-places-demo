@@ -1,4 +1,6 @@
-define(['app/model'], function (model){
+define(
+['app/model', 'text!json/scenarios.json'], 
+function (model, scenarios_json){
   var $sidebar = {};
   var $allFactorsPanel = {};
   var $manageFactorsBtn = {};
@@ -86,29 +88,25 @@ define(['app/model'], function (model){
       // TODO: Change scenarios with the dropdown list
   };
 
-  return {
-      init : function(scenarios) {
-          // Panels
-          $sidebar           = $('#sidebar');
-          $allFactorsPanel   = $('.all-factors');
+  // Panels
+  $sidebar           = $('#sidebar');
+  $allFactorsPanel   = $('.all-factors');
 
-          loadFactors();
-          loadAllFactors();
-          loadScenarios(scenarios);
+  loadFactors();
+  loadAllFactors();
+  loadScenarios($.parseJSON(scenarios_json).scenarios);
 
-          var $toggleSidebar     = $('#toggle-sidebar');
-          var $scenarioSelect    = $('#scenario-select');
+  var $toggleSidebar     = $('#toggle-sidebar');
+  var $scenarioSelect    = $('#scenario-select');
 
-          // Buttons
-          $manageFactorsBtn  = $('.manage-factors-btn');
+  // Buttons
+  $manageFactorsBtn  = $('.manage-factors-btn');
 
-          // Panels
-          $sidebar.on('click', '.manage-factors-btn', toggleFactorsPanel);
-          $toggleSidebar.on('click', toggleSidebar);
+  // Panels
+  $sidebar.on('click', '.manage-factors-btn', toggleFactorsPanel);
+  $toggleSidebar.on('click', toggleSidebar);
 
-          // Inputs
-          $scenarioSelect.on('change', updateScenario);
-          $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
-      }
-  };
+  // Inputs
+  $scenarioSelect.on('change', updateScenario);
+  $sidebar.on('click', '.collapse-arrow', toggleAllFactorsList);
 });

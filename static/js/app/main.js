@@ -25,8 +25,8 @@ requirejs(
     scenarios_json, geoserverlayers_json)  {
     var scenariosJson       = $.parseJSON(scenarios_json);
     var geoserverLayersJson = $.parseJSON(geoserverlayers_json);
-    toolLegend.init();
-    factors.init(scenariosJson.scenarios);
+
+//    factors.init(scenariosJson.scenarios);
     parcelDetails.init();
     legend.init(geoserverLayersJson);    
     weightedOverlay.init();    
