@@ -79,12 +79,10 @@ PP.App = (function() {
         }
 
         return {
-            notifyChange: notifyChange,
-            
+            notifyChange: notifyChange,            
             onChange : function(f) {
                 listeners.push(f);
             },
-
             initialize : function(ls,cats) {
                 layers = ls;
                 var layersMap = 
@@ -109,9 +107,7 @@ PP.App = (function() {
                 activeLayers = _.map(layers, function(l) { return l.id; });
                 inactiveLayers = _.map(layers, function(l) { return l.id; });
             },
-
             getLayers: function() { return layers; },
-
             addActiveLayer: function(layer,weight) {
                 if(!_.contains(activeLayers,layer.id)) {
                     activeLayers.push(layer.id);
@@ -136,14 +132,12 @@ PP.App = (function() {
                 $.extend(true, activeLayers, inactiveLayers);
                 notifyChange();
             },
-
             updateLayerWeight: function(layer,weight) {
                 if(weights[layer.id] != weight) {
                     weights[layer.id] = weight;
                     notifyChange();
                 };
             },
-
             getActiveLayerWeights: function() {
                 var activeWeights = {};
                 _.forEach(activeLayers, function(id) {
@@ -151,16 +145,13 @@ PP.App = (function() {
                 });
                 return activeWeights;
             },
-
             setColorRamp: function(rampId) {
                 if(colorRamp != rampId) {
                     colorRamp = rampId;
                     notifyChange();
                 };
             },
-
             getColorRamp: function() { return colorRamp },
-
             getCategories: function() { return categories }
         };
     })();
