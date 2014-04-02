@@ -25,9 +25,7 @@ define(['app/geocoder', 'app/util', 'app/parcel-details'], function(geocoder, ut
   };
 
   return {
-      init : function() {
-          var $toolFindAddress  = $('.tool-address-search');
-
+      bind : function(selector) {
           var findAddrOpts = { 
               placement: 'bottom', 
               container: '.content', 
@@ -35,7 +33,7 @@ define(['app/geocoder', 'app/util', 'app/parcel-details'], function(geocoder, ut
               content: template()
           };
 
-          $toolFindAddress.popover(findAddrOpts)
+          $(selector).popover(findAddrOpts)
                           .on({'show.bs.popover': util.toggleToolActive, 
                                'hide.bs.popover': util.toggleToolActive,
                                'shown.bs.popover': onShowPopup });

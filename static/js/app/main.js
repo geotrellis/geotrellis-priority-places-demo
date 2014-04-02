@@ -18,18 +18,11 @@ requirejs(
     'app/color-ramps',
     'app/find-address',
     'app/report',
-    'text!json/scenarios.json',
-    'text!json/geoserverlayers.json'
   ], 
-  function(model, toolLegend, factors, map, parcelDetails, legend, weightedOverlay,colorRamps,findAddress,report,
-    scenarios_json, geoserverlayers_json)  {
-    var scenariosJson       = $.parseJSON(scenarios_json);
-    var geoserverLayersJson = $.parseJSON(geoserverlayers_json);
-
-    legend.init(geoserverLayersJson);    
-    weightedOverlay.init();    
+  function(model, toolLegend, factors, map, parcelDetails, legend, weightedOverlay,colorRamps,findAddress,report){
+    weightedOverlay.init();
     colorRamps.init();
-    findAddress.init();
+    findAddress.bind('.tool-address-search');
     report.init();
     model.notifyChange();
   }

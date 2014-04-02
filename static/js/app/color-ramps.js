@@ -1,4 +1,8 @@
-define(["app/model", "app/util"], function(model, util){
+define(
+["app/model", "app/util"], 
+function(model, util) {
+  var colorRampTemplate = Handlebars.compile($('#colorramp-template').html());
+  
   var updateColorRamp = function() {
       var $toolColorRamps = $('.tool-ramp');
       var src = $(this).attr('src');
@@ -10,40 +14,37 @@ define(["app/model", "app/util"], function(model, util){
       model.setColorRamp(key);
   };
 
-  var colorRampTemplate = Handlebars.compile($('#colorramp-template').html());
-
   return { 
-      init : function() {
-          $.when(
-              $.getJSON('gt/colors')
-          ).then(
-              $.proxy(
-                  function(colorsJson) {
-                      var activeColor = model.getColorRamp();
-                      _.each(colorsJson.colors, function(color) {
-                          if(color.key == activeColor) {
-                              color.active = true;
-                          } else {
-                              color.active = false;
-                          };
-                      });
-                    
-                      var $toolColorRamps = $('.tool-ramp');
+    init : function() {
+      $.when(
+        $.getJSON('gt/colors')
+      ).then(
+        function(colorsJson) {
+          var activeColor = model.getColorRamp();
+          _.each(colorsJson.colors, function(color) {
+              if(color.key == activeColor) {
+                  color.active = true;
+              } else {
+                  color.active = false;
+              };
+          });
+        
+          var $toolColorRamps = $('.tool-ramp');
 
-                      var options = { 
-                          placement: 'bottom', 
-                          container: '.content', 
-                          html: true, 
-                          content: colorRampTemplate(colorsJson)
-                      };
+          var options = { 
+              placement: 'bottom', 
+              container: '.content', 
+              html: true, 
+              content: colorRampTemplate(colorsJson)
+          };
 
-                      $toolColorRamps.popover(options)
-                          .on({'show.bs.popover': util.toggleToolActive,
-                               'hide.bs.popover': util.toggleToolActive});
+          $toolColorRamps.popover(options)
+              .on({'show.bs.popover': util.toggleToolActive,
+                   'hide.bs.popover': util.toggleToolActive});
 
-                      $('.content').on('click', '.color-ramp-selector img', updateColorRamp);
-                  })
-          );
-      }
+          $('.content').on('click', '.color-ramp-selector img', updateColorRamp);
+        }
+      );
+    }
   };
 });
