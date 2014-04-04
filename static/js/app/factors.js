@@ -35,6 +35,7 @@ function (model, scenarios_json){
   };
 
   var loadAllFactors = function() {
+      return;
       var allFactorsTemplate = Handlebars.compile($('#all-factors-template').html());
       var $container = 
           $allFactorsPanel.append(allFactorsTemplate({ categories : model.getCategories() }));

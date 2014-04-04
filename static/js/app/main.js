@@ -18,12 +18,17 @@ requirejs(
     'app/color-ramps',
     'app/find-address',
     'app/report',
+    'app/bob',
+    'app/layers-model'
   ], 
-  function(model, toolLegend, factors, map, parcelDetails, legend, weightedOverlay,colorRamps,findAddress,report){
+  function(model, toolLegend, factors, map, parcelDetails, legend, weightedOverlay,colorRamps,findAddress,report, bob, layers){
     weightedOverlay.init();
     colorRamps.init();
     findAddress.bind('.tool-address-search');
     report.init();
     model.notifyChange();
+
+    bob.bind($('#factor-categories'));
+
   }
 );

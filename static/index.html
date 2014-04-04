@@ -66,7 +66,10 @@
                         <select id="scenarios-select" class="form-control">
                         </select>
                     </div>
-                </div>				
+                    <ul id="factor-categories">
+                        <!-- List of factors by category goes here -->
+                    </ul>
+                </div>
                 <div class="manage">
                     <div class="manage-factors-btn btn btn-primary">Manage Decision Factors</div>
                     <div class="reset-factors-btn btn btn-default">Reset Factors</div>
@@ -181,6 +184,25 @@
         <li>Please choose factors.</li>
     </script>
 
+
+    <script type="text/x-handlebars-template" id="factor-checkbox-template">
+        <li>
+            <input id="factor-checkbox-{{id}}-{{counter}}" class="css-checkbox" type="checkbox"/>
+            <label for="factor-checkbox-{{id}}-{{counter}}" class="css-label">{{name}}</label>
+        </li>
+    </script>
+
+    <script type="text/x-handlebars-template" id="factor-category-template">
+        <li id="{{name}}" class="collapsed">
+            <div class="collapse-arrow">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </div>
+            <input id="category-checkbox-{{name}}" class="css-checkbox" type="checkbox"/>
+            <label for="category-checkbox-{{name}}" class="css-label">{{name}}</label>
+            <ul id="{{name}}-factors"></ul>
+        </li>
+    </script>
+
     <script type="text/x-handlebars-template" id="all-factors-template">
         <ul>
     	    {{#each categories}}
@@ -194,7 +216,7 @@
                 <ul>
                     {{#each layers}}
                     <li>
-                        <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
+                        <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />->
                         <label for="{{name}}-checkbox" class="css-label">{{name}}</label>
                     </li>
                     {{/each}}
