@@ -203,32 +203,6 @@
         </li>
     </script>
 
-    <script type="text/x-handlebars-template" id="all-factors-template">
-        <ul>
-    	    {{#each categories}}
-            <li id="{{name}}" class="collapsed">
-                <div class="collapse-arrow">
-                    <span class="glyphicon glyphicon-chevron-right"></span>
-                </div>
-                <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
-                <label for="{{name}}-checkbox" class="css-label">{{name}}</label>
-                {{#if layers}}
-                <ul>
-                    {{#each layers}}
-                    <li>
-                        <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />->
-                        <label for="{{name}}-checkbox" class="css-label">{{name}}</label>
-                    </li>
-                    {{/each}}
-                </ul>
-                {{/if}}
-            </li>
-            {{else}}
-            <li>No categories found.</li>
-            {{/each}}
-        </ul>
-    </script>
-
     <script type="text/x-handlebars-template" id="legend-template">
       {{#each legend}}
         <li id="{{name}}" class="collapsed">
