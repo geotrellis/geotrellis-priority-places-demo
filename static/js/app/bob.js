@@ -70,7 +70,7 @@ function (layers, categories) {
       //model.updateLayerWeight(layer,e.value);
       //updateLayerWeight(e);
     });
-    $container.find('.factor-remove').on('click', function(e) {
+    $slider.find('.factor-remove').on('click', function(e) {
       layer.setActive(false);
       //model.removeActiveLayer(layer);
       //removeFactor(e);
