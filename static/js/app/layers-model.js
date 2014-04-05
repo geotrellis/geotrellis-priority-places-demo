@@ -10,15 +10,16 @@ define(['text!json/layers.json'], function(layers){
     layer.weight = 0;
     layer.counter = 0; //Need unique ids for <label> elements
     layer.active = false;
-    layer.setActive =
-      function(val) {
-        if (val != layer.active) {
-          layer.active = val;
-          $(layer).trigger("changed", layer);
-        }else{
-          layer.active = val;
-        }
-      };
+    layer.setActive = function(val) {
+      if (val != layer.active) {
+        layer.active = val;
+        $(layer).trigger("changed", layer);
+      }else{
+        layer.active = val;
+      }
+    };
+
+    layer.setWeight = function (val) { layer.weight = val };
 
     return [layer.id, layer];
   }));

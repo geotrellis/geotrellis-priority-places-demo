@@ -93,7 +93,7 @@ function (model, scenarios_json){
   $sidebar           = $('#sidebar');
   $allFactorsPanel   = $('.all-factors');
 
-  loadFactors();
+  // replacing: loadFactors();
   loadAllFactors();
   loadScenarios($.parseJSON(scenarios_json).scenarios);
 
