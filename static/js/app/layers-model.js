@@ -14,7 +14,7 @@ define(['text!json/layers.json'], function(layers){
     layer.setActive = function(val) {
       if (val != layer.active) {
         layer.active = val;
-        $(layer).trigger("changed", layer);
+        $(layer).trigger("changed-active", layer);
         $(module).trigger("changed");
       }
     };
@@ -22,6 +22,7 @@ define(['text!json/layers.json'], function(layers){
     layer.setWeight = function (val) {
       if (val != layer.weight) {
         layer.weight = val;
+        $(layer).trigger("changed-weight", layer);
         $(module).trigger("changed");
       }
     };
@@ -35,7 +36,7 @@ define(['text!json/layers.json'], function(layers){
       highlighted = layers[id];
       highlighted.highlighted = true;
     } else {
-      highlighted.highlighted = false;
+      if (highlighted) highlighted.highlighted = false;
       highlighted = null;
     }
     $(module).trigger("changed")

@@ -32,7 +32,7 @@ function(categories, layers) {
     category.layers =
       _.map(category.layers, function (layerId) {
         var layer = layers.list[layerId];
-        $(layer).on("changed", layerChanged);
+        $(layer).on("changed-active", layerChanged);
         return layer;
       });
 
