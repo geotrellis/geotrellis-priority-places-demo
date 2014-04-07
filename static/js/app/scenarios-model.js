@@ -11,11 +11,11 @@ function (scenarios, layers){
     //iterate through all the layers once to avoid event spam
     _.forEach(layers.list, function(layer) {
       if (scenario.weights[layer.id]) {
-        layer.weight = scenario.weights[layer.id];
-        layer.active = true;
+        layer.setWeight(scenario.weights[layer.id]);
+        layer.setActive(true);
       }else{
-        layer.weight = 0;
-        layer.active = false;
+        layer.setWeight(0);
+        layer.setActive(false);
       }
     });
   };

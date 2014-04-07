@@ -12,80 +12,88 @@ function(constants, map, model, ramps){
   var numBreaks = 10;
 
   var getLayerStrings = function() {
-      var layers = model.getActiveLayerWeights();
-      var ls = [];
-      var ws = [];
-      for(var id in layers) {
-          if(layers.hasOwnProperty(id)) {
-              if(layers[id] != 0) {
-                  ls.push(id);
-                  ws.push(layers[id]);
-              };
-          };
+    var layers = model.getActiveLayerWeights();
+    var ls = [];
+    var ws = [];
+    for(var id in layers) {
+      if(layers.hasOwnProperty(id)) {
+        if(layers[id] != 0) {
+          ls.push(id);
+          ws.push(layers[id]);
+        };
       };
-      return {
-          layers: ls.join(","),
-          weights: ws.join(",")
-      };
+    };
+    return {
+        layers: ls.join(","),
+        weights: ws.join(",")
+    };
   };
+
+  var timeoutId = null;
 
   var update = function() {
-    console.log("Updating WO");
-          var layerStrings = getLayerStrings();
-          if(layerStrings.layers == "") { 
-              if (WOLayer) {
-                  map.lc.removeLayer(WOLayer);
-                  map.removeLayer(WOLayer);
-                  WOLayer = null;
-              }
-              return;
+    timeoutId = null;
+      var layerStrings = getLayerStrings();
+      if(layerStrings.layers == "") {
+          if (WOLayer) {
+              map.lc.removeLayer(WOLayer);
+              map.removeLayer(WOLayer);
+              WOLayer = null;
+          }
+          return;
+      };
+
+      $.ajax({
+        url: 'gt/breaks',
+        data: {
+          'bbox' : constants.BOUNDING_BOX,
+          'cols' : 400,
+          'rows' : 400,
+          'layers' : layerStrings.layers,
+          'weights' : layerStrings.weights,
+          'numBreaks': numBreaks
+        },
+        dataType: "json",
+        success: function(r) {
+          breaks = r.classBreaks;
+
+          if (WOLayer) {
+            map.lc.removeLayer(WOLayer);
+            map.removeLayer(WOLayer);
           };
 
-          $.ajax({
-              url: 'gt/breaks',
-              data: { 
-                  'bbox' : constants.BOUNDING_BOX,
-                  'cols' : 400,
-                  'rows' : 400,
-                  'layers' : layerStrings.layers, 
-                  'weights' : layerStrings.weights,
-                  'numBreaks': numBreaks 
-              },
-              dataType: "json",
-              success: function(r) {
-                  breaks = r.classBreaks;
+          // Call again in case things have changed.
+          layerStrings = getLayerStrings();
+          if(layerStrings.layers == "") return;
 
-                  if (WOLayer) {
-                      map.lc.removeLayer(WOLayer);
-                      map.removeLayer(WOLayer);
-                  };
+          WOLayer = new L.TileLayer.WMS("gt/wo", {
+            breaks: breaks,
+            //                                    transparent: true,
+            layers: layerStrings.layers,
+            weights: layerStrings.weights,
+            colorRamp: ramps.getColorRamp(),
+            //                                    mask: geoJson,
+            attribution: 'Azavea'
+          })
 
-                  // Call again in case things have changed.
-                  layerStrings = getLayerStrings();
-                  if(layerStrings.layers == "") return;
-
-                  WOLayer = new L.TileLayer.WMS("gt/wo", {
-                      breaks: breaks,
-                      //                                    transparent: true,
-                      layers: layerStrings.layers,
-                      weights: layerStrings.weights,
-                      colorRamp: ramps.getColorRamp(),
-                      //                                    mask: geoJson,
-                      attribution: 'Azavea'
-                  })
-
-                  WOLayer.setOpacity(opacity);
-                  WOLayer.addTo(map);
-                  map.lc.addOverlay(WOLayer, "Suitability Map");
-              }
-          });
+          WOLayer.setOpacity(opacity);
+          WOLayer.addTo(map);
+          map.lc.addOverlay(WOLayer, "Suitability Map");
+        }
+      });
   };
 
+  //Events can accumulate fast, especially with group un-checks and scenario switching
+  //  lets collapse update requests that fired very close in time.
+  var scheduleUpdate = function() {
+    if (timeoutId) { window.clearTimeout(timeoutId) }
+    timeoutId = window.setTimeout(update, 100);
+  };
 
   return {
     bind: function () {
-        $(model).on('changed', update);
-        $(ramps).on('changed', update);
+        $(model).on('changed', scheduleUpdate);
+        $(ramps).on('changed', scheduleUpdate);
         update();
       },
     setOpacity: function(v) {
