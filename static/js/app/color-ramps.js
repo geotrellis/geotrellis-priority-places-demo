@@ -21,7 +21,6 @@ function(util, colorsJson) {
   module['getColorRamp'] = function() { return activeColorRamp};
 
   module.setColorRamp('blue-to-red');
-  console.log(colors);
 
   //Setup the UI elements
   var updateColorRamp = function() {
