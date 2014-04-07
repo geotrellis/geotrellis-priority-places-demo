@@ -1,7 +1,9 @@
-define(["app/constants", "app/map", "app/model"], function(constants, map, model){
+define(
+["app/constants", "app/map", "app/layers-model", "app/color-ramps"],
+function(constants, map, model, ramps){
   var layers = [];
 
-  var layersToWeights = {}
+  var layersToWeights = {};
 
   var breaks = null;
 
@@ -28,6 +30,7 @@ define(["app/constants", "app/map", "app/model"], function(constants, map, model
   };
 
   var update = function() {
+    console.log("Updating WO");
           var layerStrings = getLayerStrings();
           if(layerStrings.layers == "") { 
               if (WOLayer) {
@@ -66,7 +69,7 @@ define(["app/constants", "app/map", "app/model"], function(constants, map, model
                       //                                    transparent: true,
                       layers: layerStrings.layers,
                       weights: layerStrings.weights,
-                      colorRamp: model.getColorRamp(),
+                      colorRamp: ramps.getColorRamp(),
                       //                                    mask: geoJson,
                       attribution: 'Azavea'
                   })
@@ -78,22 +81,19 @@ define(["app/constants", "app/map", "app/model"], function(constants, map, model
           });
   };
 
+
   return {
-      init : function() {
-          model.onChange(function () {
-              update();
-          });
+    bind: function () {
+        $(model).on('changed', update);
+        $(ramps).on('changed', update);
+        update();
       },
-    
-      setOpacity: function(v) {
-          opacity = v;
-          if(WOLayer) { WOLayer.setOpacity(opacity); }
-          else { console.log("NO OVERLAY"); };
-        
+    setOpacity: function(v) {
+      opacity = v;
+      if(WOLayer) { WOLayer.setOpacity(opacity); }
+      else { console.log("NO OVERLAY"); }
       },
-
-      getOpacity: function() { return opacity ; },
-
-      update: update
+    getOpacity: function() { return opacity ; },
+    update: update
   };
 });

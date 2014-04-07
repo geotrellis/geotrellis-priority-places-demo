@@ -2,6 +2,7 @@ requirejs.config({
     baseUrl: 'js/lib',
     paths: {
         json: '../../json',
+        gt: '../../gt',
         app: '../app'
     }
 });
@@ -21,14 +22,10 @@ requirejs(
     'app/bob',
     'app/layers-model'
   ], 
-  function(model, toolLegend, factors, map, parcelDetails, legend, weightedOverlay,colorRamps,findAddress,report, bob, layers){
-    weightedOverlay.init();
-    colorRamps.init();
+  function(model, toolLegend, factors, map, parcelDetails, legend, wo,colorRamps,findAddress,report, bob, layers){
     findAddress.bind('.tool-address-search');
     report.init();
-    model.notifyChange();
-
     bob.bind($('#factor-categories'));
-
+    wo.bind();
   }
 );

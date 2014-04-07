@@ -94,8 +94,8 @@ function (model, scenarios_json){
   $allFactorsPanel   = $('.all-factors');
 
   // replacing: loadFactors();
-  loadAllFactors();
-  loadScenarios($.parseJSON(scenarios_json).scenarios);
+  //loadAllFactors();
+  //loadScenarios($.parseJSON(scenarios_json).scenarios);
 
   var $toggleSidebar     = $('#toggle-sidebar');
   var $scenarioSelect    = $('#scenario-select');

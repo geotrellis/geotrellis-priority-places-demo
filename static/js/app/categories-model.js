@@ -1,5 +1,4 @@
 /** Model for concept of a category */
-  //TODO: I allow to activate all layers for a group
 define(
 ['text!json/categories.json', 'app/layers-model'],
 function(categories, layers) {
@@ -32,7 +31,7 @@ function(categories, layers) {
     //Link layers field to the layers model
     category.layers =
       _.map(category.layers, function (layerId) {
-        var layer = layers[layerId];
+        var layer = layers.list[layerId];
         $(layer).on("changed", layerChanged);
         return layer;
       });

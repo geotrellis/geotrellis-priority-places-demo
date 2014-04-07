@@ -1,10 +1,9 @@
 /**
  * Controller for DOM elements that represent a layer
  */
-// TODO - Add category weight sliders
 define(
-['app/layers-model', 'app/categories-model'],
-function (layers, categories) {
+['app/layers-model', 'app/categories-model', 'app/scenarios-model'],
+function (layers, categories, scenarios) {
   var checkboxTemplate = Handlebars.compile($('#factor-checkbox-template').html());
   /** map layer.id -> $slider */
   var sliders = {}
@@ -46,42 +45,68 @@ function (layers, categories) {
     return $category;
   };
 
+
+  /** Generate slider boxes for the factors */
   var sliderBoxTemplate = Handlebars.compile($('#factor-template').html());;
+  var setSliderStyle = function($slider, weight){
+    if (weight === 0) {
+      $slider.parent().prevAll('.css-radio').prop('disabled', true);
+      $slider.parent().next('.count').addClass('zero').text(weight);
+    } else {
+      $slider.parent().prevAll('.css-radio').prop('disabled', false);
+      $slider.parent().next('.count').removeClass('zero').text(weight);
+    }
+  };
+
   var appendSliderBox = function($container, layer) {
     var $slider = $(sliderBoxTemplate(layer));
     $container.append($slider);
     $slider.find('.factor-info').tooltip({ placement:'left', container:'#sidebar' });
-    $slider.find('.css-radio').on('change', function(e) {
-      //TODO - clicking this should keep  only THIS layer "rendered"
-      //layers.setActiveLayer(layer.id);
-      //model.toggleActiveLayer(layer,e.target);
-      //toggleFactorRadio(e);
+    $slider.find('.css-radio').on('click', function(e) {
+      layers.highlight(layer.id);
     });
-    $slider.find('.slider').slider().on('slide', function(e) {
-      layer.setWeight(e.value);
-      if (e.value === 0) {
-        $(e.target).parent().prevAll('.css-radio').prop('disabled', true);
-        $(e.target).parent().next('.count').addClass('zero').text(e.value);
-      } else {
-        $(e.target).parent().prevAll('.css-radio').prop('disabled', false);
-        $(e.target).parent().next('.count').removeClass('zero').text(e.value);
-      }
 
-      //model.updateLayerWeight(layer,e.value);
-      //updateLayerWeight(e);
+
+    var $slider_input = $slider.find('.slider');
+    $slider_input.slider().on('slide', function(e) {
+      layer.setWeight(e.value);
+      setSliderStyle($(e.target), layer.weight);
     });
+
+    if (layer.weight > 0){ //Init the UI to be in sync with model
+      $slider_input.slider('setValue', layer.weight);
+      setSliderStyle($slider_input, layer.weight);
+    }
+
     $slider.find('.factor-remove').on('click', function(e) {
       layer.setActive(false);
-      //model.removeActiveLayer(layer);
-      //removeFactor(e);
+      if (layer.highlighted){
+        $('#all-radio').prop("checked", true);
+        layers.highlight(null);
+      }
     });
 
     return $slider;
   };
 
+  /** Populate Scenario Drop Downs */
+  var loadScenarios = function($select) {
+    _.each(scenarios.list, function(scenario) {
+      var option = $("<option>" + scenario.name + "</option>");
+      $select.append(option);
+    });
+    $select.on("change", function(e) { scenarios.load(e.target.value) });
+    scenarios.load(scenarios.list[0].name);
+  };
+
 
   var bind = function($container) {
-    _.forEach(categories, _.partial(appendCategory, $container))
+    //This will populate categories checkboxes and their factors
+    _.forEach(categories, _.partial(appendCategory, $container));
+    $('#all-radio').on('change', function(e) {layers.highlight(null)});
+
+      //This will populate the drop down and set active factors and their weights
+    loadScenarios($('#scenarios-select'));
   };
 
   return {

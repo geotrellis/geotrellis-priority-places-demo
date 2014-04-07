@@ -2,35 +2,24 @@
   "scenarios" : [
       {
           "name" : "Residentail Potential Template",
-          "layers" : [
-              { "id" : "low_tax",
-                "weight" : 4 },
-              { "id" : "bus_nextto",
-                "weight" : 4 },
-              { "id" : "msk_nonres",
-                "weight" : 4 },
-              { "id" : "river_wa",
-                "weight" : 3 },
-              { "id" : "water_density",
-                "weight" : 4 },
-              { "id" : "sewer_density",
-                "weight" : 4 },
-              { "id" : "inter_access",
-                "weight" : 4 }
-          ]
+          "weights" : {
+            "low_tax": 4,
+            "bus_nextto": 4,
+            "msk_nonres": 4,
+            "river_wa": 3,
+            "water_density": 4,
+            "sewer_density": 4,
+            "inter_access": 4
+              }
       },
       {
           "name" : "Transit Template",
-          "layers" : [
-              { "id" : "bus_nextto",
-                "weight" : 3 },
-              { "id" : "inter_access",
-                "weight" : 3 },
-              { "id" : "air_drive",
-                "weight" : 3 },
-              { "id" : "bike_route",
-                "weight" : 3 }
-          ]          
+          "weights" : {
+            "bus_nextto": 3,
+            "inter_access": 3,
+            "air_drive": 3,
+            "bike_route": 3
+          }
       }
   ]
 }
