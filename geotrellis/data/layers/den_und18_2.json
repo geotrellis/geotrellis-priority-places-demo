@@ -5,7 +5,6 @@
     "datatype": "int8",
     "epsg": 3785,
     "layer": "den_und18_2",
-    "path": "/home/rob/data/gt/priorityplaces/den_und18_2.arg",
     "rows": 1654,
     "type": "arg",
     "xmax": -9179452.41805008,

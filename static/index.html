@@ -66,7 +66,10 @@
                         <select id="scenarios-select" class="form-control">
                         </select>
                     </div>
-                </div>				
+                    <ul id="factor-categories">
+                        <!-- List of factors by category goes here -->
+                    </ul>
+                </div>
                 <div class="manage">
                     <div class="manage-factors-btn btn btn-primary">Manage Decision Factors</div>
                     <div class="reset-factors-btn btn btn-default">Reset Factors</div>
@@ -181,30 +184,23 @@
         <li>Please choose factors.</li>
     </script>
 
-    <script type="text/x-handlebars-template" id="all-factors-template">
-        <ul>
-    	    {{#each categories}}
-            <li id="{{name}}" class="collapsed">
-                <div class="collapse-arrow">
-                    <span class="glyphicon glyphicon-chevron-right"></span>
-                </div>
-                <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
-                <label for="{{name}}-checkbox" class="css-label">{{name}}</label>
-                {{#if layers}}
-                <ul>
-                    {{#each layers}}
-                    <li>
-                        <input id="{{name}}-checkbox" class="css-checkbox" type="checkbox" checked />
-                        <label for="{{name}}-checkbox" class="css-label">{{name}}</label>
-                    </li>
-                    {{/each}}
-                </ul>
-                {{/if}}
-            </li>
-            {{else}}
-            <li>No categories found.</li>
-            {{/each}}
-        </ul>
+
+    <script type="text/x-handlebars-template" id="factor-checkbox-template">
+        <li>
+            <input id="factor-checkbox-{{id}}-{{counter}}" class="css-checkbox" type="checkbox"/>
+            <label for="factor-checkbox-{{id}}-{{counter}}" class="css-label">{{name}}</label>
+        </li>
+    </script>
+
+    <script type="text/x-handlebars-template" id="factor-category-template">
+        <li id="{{name}}" class="collapsed">
+            <div class="collapse-arrow">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </div>
+            <input id="category-checkbox-{{name}}" class="css-checkbox" type="checkbox"/>
+            <label for="category-checkbox-{{name}}" class="css-label">{{name}}</label>
+            <ul id="{{name}}-factors"></ul>
+        </li>
     </script>
 
     <script type="text/x-handlebars-template" id="legend-template">
@@ -439,14 +435,14 @@
       </div>
     </script>
 
-    <script src="js/vendor/jquery.js"></script>
-    <script src="js/vendor/leaflet.0.7.2.js"></script>
-    <script src="js/vendor/leaflet.draw.js"></script>
-    <script src="js/vendor/Control.MiniMap.js"></script>
-    <script src="js/vendor/handlebars.js"></script>
-    <script src="js/vendor/underscore.js"></script>
-    <script src="js/vendor/bootstrap.min.js"></script>
-    <script src="js/vendor/bootstrap-slider.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/leaflet.0.7.2.js"></script>
+    <script src="js/lib/leaflet.draw.js"></script>
+    <script src="js/lib/Control.MiniMap.js"></script>
+    <script src="js/lib/handlebars.js"></script>
+    <script src="js/lib/underscore.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/bootstrap-slider.js"></script>
+    <script data-main="js/app/main" src="js/lib/require.js"></script>    
 </body>
 </html>
