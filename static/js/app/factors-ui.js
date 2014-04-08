@@ -48,7 +48,7 @@ function (layers, categories, scenarios) {
 
 
   /** Generate slider boxes for the factors */
-  var sliderBoxTemplate = Handlebars.compile($('#factor-template').html());;
+  var sliderBoxTemplate = Handlebars.compile($('#factor-template').html());
   var setSliderStyle = function($slider, weight){
     if (weight === 0) {
       $slider.parent().prevAll('.css-radio').prop('disabled', true);
@@ -77,7 +77,7 @@ function (layers, categories, scenarios) {
 
     var $slider_input = $slider.find('.slider');
     //initial render
-    if (layer.weight > 0){ //Init the UI to be in sync with model
+    if (layer.weight != 0){ //Init the UI to be in sync with model
       $slider_input.slider('setValue', layer.weight);
       setSliderStyle($slider_input, layer.weight);
     }
