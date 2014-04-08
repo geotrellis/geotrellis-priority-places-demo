@@ -72,7 +72,7 @@ function (layers, categories, scenarios) {
     });
     $slider.find('.factor-remove').on('click', function(e) {
       layer.setActive(false);
-      if (layer.highlighted) resetLayerHighlight;
+      if (layer.highlighted) resetLayerHighlight();
     });
 
     var $slider_input = $slider.find('.slider');
