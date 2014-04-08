@@ -11,6 +11,9 @@ import akka.actor.{ActorSystem, Props}
 import akka.io.IO
 import spray.can.Http
 
+import scala.util.Properties
+
+
 object Main {
   val server = Server("asheville",
                       Catalog.fromPath("data/catalog.json"))
@@ -24,6 +27,7 @@ object Main {
     val service = system.actorOf(Props[PriorityPlacesServiceActor], "pp-service")
 
     // start a new HTTP server on port 8080 with our service actor as the handler
-    IO(Http) ! Http.Bind(service, "localhost", port = 8080)
+    val port = Properties.envOrElse("PORT", "8080").toInt
+    IO(Http) ! Http.Bind(service, "0.0.0.0", port = port)
   }
 }
