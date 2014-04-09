@@ -37,7 +37,7 @@ define([], function() {
       "Blank" : getLayer(Layers.mapBox.worldBlank,Layers.mapBox.attrib)
   };
 
-  map = L.map('map').setView(viewCoords, 11);
+  map = L.map('map').setView(viewCoords, 12);
   selected.addTo(map);
 
   map.lc = L.control.layers(baseLayers).addTo(map);
