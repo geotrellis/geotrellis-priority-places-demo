@@ -23,10 +23,5 @@ requirejs(
     report.init();
     factorsUI.bind();
     wo.bind();
-
-    var shit = {
-      '$categories': $('#factor-categories'),
-      '$siderbar': $('#sidebar'),
-    }
   }
 );
