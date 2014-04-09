@@ -1,10 +1,10 @@
 requirejs.config({
-    baseUrl: 'js/lib',
-    paths: {
-        json: '../../json',
-        gt: '../../gt',
-        app: '../app'
-    }
+  baseUrl: 'js/lib',
+  paths: {
+    json: '../../json',
+    gt: '../../gt',
+    app: '../app'
+  }
 });
 
 requirejs(

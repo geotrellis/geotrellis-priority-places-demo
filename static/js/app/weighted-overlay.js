@@ -1,46 +1,46 @@
 define(
-["app/constants", "app/map", "app/layers-model", "app/color-ramps"],
-function(constants, map, model, ramps){
-  var layers = [];
+  ["app/constants", "app/map", "app/layers-model", "app/color-ramps"],
+  function(constants, map, model, ramps){
+    var layers = [];
 
-  var layersToWeights = {};
+    var layersToWeights = {};
 
-  var breaks = null;
+    var breaks = null;
 
-  var WOLayer = null;
-  var opacity = constants.DEFAULT_OPACITY;
-  var numBreaks = 10;
+    var WOLayer = null;
+    var opacity = constants.DEFAULT_OPACITY;
+    var numBreaks = 10;
 
-  var getLayerStrings = function() {
-    var layers = model.getActiveLayerWeights();
-    var ls = [];
-    var ws = [];
-    for(var id in layers) {
-      if(layers.hasOwnProperty(id)) {
-        if(layers[id] != 0) {
-          ls.push(id);
-          ws.push(layers[id]);
+    var getLayerStrings = function() {
+      var layers = model.getActiveLayerWeights();
+      var ls = [];
+      var ws = [];
+      for(var id in layers) {
+        if(layers.hasOwnProperty(id)) {
+          if(layers[id] != 0) {
+            ls.push(id);
+            ws.push(layers[id]);
+          };
         };
       };
-    };
-    return {
+      return {
         layers: ls.join(","),
         weights: ws.join(",")
+      };
     };
-  };
 
-  var timeoutId = null;
+    var timeoutId = null;
 
-  var update = function() {
-    timeoutId = null;
+    var update = function() {
+      timeoutId = null;
       var layerStrings = getLayerStrings();
       if(layerStrings.layers == "") {
-          if (WOLayer) {
-              map.lc.removeLayer(WOLayer);
-              map.removeLayer(WOLayer);
-              WOLayer = null;
-          }
-          return;
+        if (WOLayer) {
+          map.lc.removeLayer(WOLayer);
+          map.removeLayer(WOLayer);
+          WOLayer = null;
+        }
+        return;
       };
 
       $.ajax({
@@ -81,27 +81,27 @@ function(constants, map, model, ramps){
           map.lc.addOverlay(WOLayer, "Suitability Map");
         }
       });
-  };
+    };
 
-  //Events can accumulate fast, especially with group un-checks and scenario switching
-  //  lets collapse update requests that fired very close in time.
-  var scheduleUpdate = function() {
-    if (timeoutId) { window.clearTimeout(timeoutId) }
-    timeoutId = window.setTimeout(update, 100);
-  };
+    //Events can accumulate fast, especially with group un-checks and scenario switching
+    //  lets collapse update requests that fired very close in time.
+    var scheduleUpdate = function() {
+      if (timeoutId) { window.clearTimeout(timeoutId) }
+      timeoutId = window.setTimeout(update, 100);
+    };
 
-  return {
-    bind: function () {
+    return {
+      bind: function () {
         $(model).on('changed', scheduleUpdate);
         $(ramps).on('changed', scheduleUpdate);
         update();
       },
-    setOpacity: function(v) {
-      opacity = v;
-      if(WOLayer) { WOLayer.setOpacity(opacity); }
-      else { console.log("NO OVERLAY"); }
+      setOpacity: function(v) {
+        opacity = v;
+        if(WOLayer) { WOLayer.setOpacity(opacity); }
+        else { console.log("NO OVERLAY"); }
       },
-    getOpacity: function() { return opacity ; },
-    update: update
-  };
-});
+      getOpacity: function() { return opacity ; },
+      update: update
+    };
+  });
