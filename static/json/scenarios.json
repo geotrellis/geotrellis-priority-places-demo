@@ -1,25 +1,25 @@
 {
   "scenarios" : [
-      {
-          "name" : "Residentail Potential Template",
-          "weights" : {
-            "low_tax": 4,
-            "bus_nextto": 4,
-            "msk_nonres": 4,
-            "river_wa": 3,
-            "water_density": 4,
-            "sewer_density": 4,
-            "inter_access": 4
-              }
-      },
-      {
-          "name" : "Transit Template",
-          "weights" : {
-            "bus_nextto": 3,
-            "inter_access": 3,
-            "air_drive": 3,
-            "bike_route": 3
-          }
+    {
+      "name" : "Transit Template",
+      "weights" : {
+        "bus_nextto": 3,
+        "inter_access": 3,
+        "air_drive": 3,
+        "bike_route": 3
       }
+    },
+    {
+      "name" : "Residentail Potential Template",
+      "weights" : {
+        "low_tax": 4,
+        "bus_nextto": 4,
+        "msk_nonres": 4,
+        "river_wa": 3,
+        "water_density": 4,
+        "sewer_density": 4,
+        "inter_access": 4
+      }
+    }
   ]
 }
