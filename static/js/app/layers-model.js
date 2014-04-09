@@ -7,28 +7,28 @@ define(['text!json/layers.json'], function(layers){
   layers = $.parseJSON(layers).layers;
 
   layers =
-  _.object(_.map(layers, function(layer){
-    layer.weight = 0;
-    layer.counter = 0; //Need unique ids for <label> elements
-    layer.active = false;
-    layer.setActive = function(val) {
-      if (val != layer.active) {
-        layer.active = val;
-        $(layer).trigger("changed-active", layer);
-        $(module).trigger("changed");
-      }
-    };
+    _.object(_.map(layers, function(layer){
+      layer.weight = 0;
+      layer.counter = 0; //Need unique ids for <label> elements
+      layer.active = false;
+      layer.setActive = function(val) {
+        if (val != layer.active) {
+          layer.active = val;
+          $(layer).trigger("changed-active", layer);
+          $(module).trigger("changed");
+        }
+      };
 
-    layer.setWeight = function (val) {
-      if (val != layer.weight) {
-        layer.weight = val;
-        $(layer).trigger("changed-weight", layer);
-        $(module).trigger("changed");
-      }
-    };
+      layer.setWeight = function (val) {
+        if (val != layer.weight) {
+          layer.weight = val;
+          $(layer).trigger("changed-weight", layer);
+          $(module).trigger("changed");
+        }
+      };
 
-    return [layer.id, layer];
-  }));
+      return [layer.id, layer];
+    }));
 
   var highlighted = null;
   var highlight = function(id) {
