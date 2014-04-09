@@ -40,7 +40,23 @@ function (layers, categories, scenarios) {
     _.forEach(category.layers, _.partial(appendCheckbox, $category.find("ul")));
 
     var $cb = $category.find('> input');
-    $(category).on('changed', function(){ $cb.prop("checked", category.active); });
+    var $label = $cb.siblings('label');
+    console.log($cb);
+    $(category).on('changed', function(){
+
+      switch (category.status){
+        case "empty":
+          $label.css("background", "url(../images/check-off.png) no-repeat");
+          break;
+        case "half":
+          $label.css("background", "url(../images/dash.png) no-repeat");
+          break;
+        case "full":
+          $label.css("background", "url(../images/check.png) no-repeat");
+          break;
+      }
+      $cb.prop("checked", category.active);
+    });
     $cb.change(function() {category.setActive($cb.prop("checked")); });
 
     return $category;
