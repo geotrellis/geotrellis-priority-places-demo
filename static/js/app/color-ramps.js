@@ -6,7 +6,7 @@ function(util, colorsJson) {
 
   var colors = $.parseJSON(colorsJson).colors;
   var colorRampTemplate = Handlebars.compile($('#colorramp-template').html());
-  var activeColorRamp = null;
+  var activeColorRamp = 'blue-to-orange';
 
   module['colors'] = colors;
   module['active'] = activeColorRamp;
@@ -19,8 +19,7 @@ function(util, colorsJson) {
     $(module).trigger('changed');
   };
   module['getColorRamp'] = function() { return activeColorRamp};
-
-  module.setColorRamp('blue-to-red');
+  module.setColorRamp('blue-to-orange');
 
   //Setup the UI elements
   var updateColorRamp = function() {

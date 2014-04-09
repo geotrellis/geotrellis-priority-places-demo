@@ -8,14 +8,11 @@ function(categories, layers) {
   _.object(_.map(categories, function(category) {
     category.activeLayerCount = 0;
     category.active = false;
+    category.max = category.layers.length;
+    category.status = 'empty'; // empty/half/full
 
     /** Layer changed, adjust the counts (this func closes over category) */
     var layerChanged = function (e, layer){
-      if (category.activeLayerCount == 0){
-        category.active = true; //Logic
-        $(category).trigger("changed");
-      }
-
       if (layer.active) {
         category.activeLayerCount += 1;
       }else{
@@ -23,9 +20,17 @@ function(categories, layers) {
       }
 
       if (category.activeLayerCount == 0){
-        category.active = false; //Logic again
-        $(category).trigger("changed");
+        category.status = 'empty';
+        category.active = false;
+      }else if(category.activeLayerCount == category.max) {
+        category.status = 'full';
+        category.active = true;
+      }else{
+        category.status = 'half';
+        category.active = true;
       }
+
+      $(category).trigger("changed");
     };
 
     //Link layers field to the layers model

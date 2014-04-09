@@ -2,6 +2,7 @@ define([], function() {
   var map = {};
 
   var viewCoords = [35.576917,-82.55275];
+  var defaultZoom = 12;
 
   var getLayer = function(url,attrib) {
       return L.tileLayer(url, { maxZoom: 18, attribution: attrib });
@@ -37,7 +38,8 @@ define([], function() {
       "Blank" : getLayer(Layers.mapBox.worldBlank,Layers.mapBox.attrib)
   };
 
-  map = L.map('map').setView(viewCoords, 11);
+  map = L.map('map').setView(viewCoords, defaultZoom);
+
   selected.addTo(map);
 
   map.lc = L.control.layers(baseLayers).addTo(map);
@@ -60,6 +62,9 @@ define([], function() {
   // Overview Map
   var overviewLayer = getLayer(Layers.mapBox.azavea,Layers.mapBox.attrib);
   var miniMap = new L.Control.MiniMap(overviewLayer).addTo(map);
+
+  //hook reset-zoom to "View Region" button
+  $(".tool-region").click(function() {map.setView(viewCoords, defaultZoom)});
   
   return map;
 });

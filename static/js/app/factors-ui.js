@@ -40,7 +40,22 @@ function (layers, categories, scenarios) {
     _.forEach(category.layers, _.partial(appendCheckbox, $category.find("ul")));
 
     var $cb = $category.find('> input');
-    $(category).on('changed', function(){ $cb.prop("checked", category.active); });
+    var $label = $cb.siblings('label');
+    $(category).on('changed', function(){
+
+      switch (category.status){
+        case "empty":
+          $label.css("background", "url(../images/check-off.png) no-repeat");
+          break;
+        case "half":
+          $label.css("background", "url(../images/dash.png) no-repeat");
+          break;
+        case "full":
+          $label.css("background", "url(../images/check.png) no-repeat");
+          break;
+      }
+      $cb.prop("checked", category.active);
+    });
     $cb.change(function() {category.setActive($cb.prop("checked")); });
 
     return $category;
@@ -48,7 +63,7 @@ function (layers, categories, scenarios) {
 
 
   /** Generate slider boxes for the factors */
-  var sliderBoxTemplate = Handlebars.compile($('#factor-template').html());;
+  var sliderBoxTemplate = Handlebars.compile($('#factor-template').html());
   var setSliderStyle = function($slider, weight){
     if (weight === 0) {
       $slider.parent().prevAll('.css-radio').prop('disabled', true);
@@ -77,7 +92,7 @@ function (layers, categories, scenarios) {
 
     var $slider_input = $slider.find('.slider');
     //initial render
-    if (layer.weight > 0){ //Init the UI to be in sync with model
+    if (layer.weight != 0){ //Init the UI to be in sync with model
       $slider_input.slider('setValue', layer.weight);
       setSliderStyle($slider_input, layer.weight);
     }
