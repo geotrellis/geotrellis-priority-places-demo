@@ -41,7 +41,6 @@ function (layers, categories, scenarios) {
 
     var $cb = $category.find('> input');
     var $label = $cb.siblings('label');
-    console.log($cb);
     $(category).on('changed', function(){
 
       switch (category.status){
