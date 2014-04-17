@@ -4,7 +4,7 @@ This directory contains the ansible playbook for deploying *priority places* to 
 
 #### ESRI credentials
 
-There is a file `credentials.yaml` that is not contained in source code but is required for running this application. This contains information on ESRI API OAuth credentials (see http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000268000000).
+There is a file `credentials.yaml` that is not contained in source code but is required for running this application. This contains information on ESRI API OAuth credentials (see http://resources.arcgis.com/en/help/arcgis-rest-api/index.html#//02r300000268000000). It should go in the `deployment` (this) directory.
 
 credentials.yml should look like this:
 
