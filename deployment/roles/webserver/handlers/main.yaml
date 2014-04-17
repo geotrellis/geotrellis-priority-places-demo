@@ -1,0 +1,6 @@
+---
+- name: restore iptables
+  shell: /usr/sbin/iptables-restore -! < /etc/iptables.rules
+
+- name: restart nginx
+  service: name=nginx state=restarted
