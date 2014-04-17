@@ -1,0 +1,13 @@
+---
+- name: Install Priority Places server on deployment
+  hosts: deploy
+  sudo: yes
+
+  vars:
+    - home_dir: /home/ubuntu
+
+  vars_files:
+    - credentials.yml
+
+  roles:
+    - webserver

@@ -1,0 +1,13 @@
+---
+- name: Install Priority Places server on dev VM
+  hosts: local
+  sudo: yes
+
+  vars:
+    - home_dir: /home/vagrant
+
+  vars_files:
+    - credentials.yml
+
+  roles:
+    - webserver

@@ -3,6 +3,8 @@ project/boot
 project/plugins/project
 project/plugins/target
 project/target
+deployment/.vagrant
+deployment/credentials.yml
 target
 .ensime
 .DS_Store

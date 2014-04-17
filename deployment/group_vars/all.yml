@@ -1,0 +1,12 @@
+---
+system_packages:
+  - openjdk-7-jre
+  - nginx
+  - git
+  - screen
+
+spray_port: 8080
+
+pp_repo: https://github.com/geotrellis/priority-places
+pp_version: master
+pp_path: "{{ home_dir }}/priority_places"

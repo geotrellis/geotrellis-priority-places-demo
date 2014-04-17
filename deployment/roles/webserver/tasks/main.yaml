@@ -1,0 +1,31 @@
+---
+- name: Install system packages
+  apt: pkg={{ item }} state=latest update_cache=yes
+  with_items: system_packages
+
+- name: Copy iptable rules
+  copy: src=iptables.rules dest=/etc/iptables.rules
+
+- name: apply iptables
+  shell: iptables-restore < /etc/iptables.rules
+
+- name: Clone priority_places
+  git: repo={{ pp_repo }} version={{ pp_version}} dest={{ pp_path }}
+
+- name: Copy application.conf
+  template: src=application.conf dest={{ pp_path }}/geotrellis/src/main/resources/application.conf
+
+- name: Setup ESRI credentials
+  template: src=credentials.conf dest={{ pp_path }}/geotrellis/src/main/resources/credentials.conf
+
+- name: Compile the code
+  shell: ./sbt compile chdir="{{ pp_path }}/geotrellis"
+
+- name: Start spray server
+  shell: screen -L -d -m bash -c "./sbt run" chdir="{{ pp_path }}/geotrellis"
+
+- name: Copy nginx configuration for proxy pass
+  template: src=default.conf dest=/etc/nginx/conf.d/default.conf
+
+- name: restart nginx
+  service: name=nginx state=restarted
