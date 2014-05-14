@@ -1,7 +1,7 @@
 Priority Places
 ============
 
-This project is an update to the current application that can be found http://gis.ashevillenc.gov/mapasheville/priorityplaces/. 
+This project is an update to the current application that can be found http://priorityplaces.ashevillenc.gov/index.html. 
 
 To run, clone this repository, change to current working directory to the 'geotrellis' subfolder, and type 
 
